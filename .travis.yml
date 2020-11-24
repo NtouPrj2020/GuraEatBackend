@@ -1,3 +1,18 @@
 language: php
+
+php:
+  - 7.4
+  - hhvm
+
+sudo: false
+
+env:
+  - APP_DEBUG=false
+
+install:
+  - composer install --prefer-dist --optmize-autoloader --quiet
+  - npm install
+
 script:
   - php artisan l5-swagger:generate
+
