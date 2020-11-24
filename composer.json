@@ -7,13 +7,23 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories":
+    [
+        {
+            "type": "vcs",
+            "url": "https://github.com/SmoothieNoIce/L5-Swagger"
+        }
+    ],
     "require": {
         "php": "^7.3",
+        "darkaonline/l5-swagger": "dev-master",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
-        "laravel/tinker": "^2.0"
+        "laravel/sanctum": "^2.8",
+        "laravel/tinker": "^2.0",
+        "zircote/swagger-php": "^3.1"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

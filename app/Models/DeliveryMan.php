@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
-class DeliveryMan extends Model
+class DeliveryMan extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory,HasApiTokens;
 
     protected $table = 'DeliveryMans';
 
     protected $fillable = [
         'phone',
-        'email',    
+        'email',
         'name',
         'license_id'
     ];
@@ -31,5 +33,5 @@ class DeliveryMan extends Model
     {
         return $this->hasOne('App\Models\DeliveryManRate','delivery_man_id');
     }
-    
+
 }
