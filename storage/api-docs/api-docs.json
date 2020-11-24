@@ -1,0 +1,505 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GuraEat API",
+        "description": "AAAAA",
+        "contact": {
+            "email": "aci5722@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "v1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Localhost"
+        },
+        {
+            "url": "https://gura-eat.herokuapp.com",
+            "description": "正式主機"
+        }
+    ],
+    "paths": {
+        "/api/v1/guest/customer_signup": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "顧客註冊",
+                "description": "顧客註冊",
+                "operationId": "customerSignUp",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "使用者名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "phone",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "顧客註冊成功"
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "401": {
+                        "description": "顧客已註冊"
+                    }
+                }
+            }
+        },
+        "/api/v1/guest/delivery_man_signup": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "外送員註冊",
+                "description": "外送員註冊",
+                "operationId": "deliveryManSignUp",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "使用者名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "phone",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "license_id",
+                        "in": "query",
+                        "description": "license_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "外送員註冊成功"
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "401": {
+                        "description": "外送員已註冊"
+                    }
+                }
+            }
+        },
+        "/api/v1/guest/customer_login": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "顧客登入",
+                "description": "顧客登入",
+                "operationId": "customerLogin",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_name",
+                        "in": "query",
+                        "description": "device_name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "登入成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "customerLogin"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "description": "token",
+                                                    "type": "string",
+                                                    "example": "wefgwehwehwgt8798t97g79erg"
+                                                },
+                                                "name": {
+                                                    "description": "name",
+                                                    "type": "string",
+                                                    "example": "ㄐㄐ"
+                                                },
+                                                "email": {
+                                                    "description": "email",
+                                                    "type": "string",
+                                                    "example": "00857211@mail.ntou.edu.tw"
+                                                },
+                                                "phone": {
+                                                    "description": "phone",
+                                                    "type": "string",
+                                                    "example": "0987654321"
+                                                },
+                                                "address": {
+                                                    "description": "address",
+                                                    "type": "string",
+                                                    "example": "xxxxxxxxxx"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "403": {
+                        "description": "帳號不存在或密碼錯誤"
+                    }
+                }
+            }
+        },
+        "/api/v1/guest/delivery_man_login": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "外送員登入",
+                "description": "外送員登入",
+                "operationId": "deliveryManLogin",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_name",
+                        "in": "query",
+                        "description": "device_name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "登入成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "deliveryManLogin"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "description": "token",
+                                                    "type": "string",
+                                                    "example": "wefgwehwehwgt8798t97g79erg"
+                                                },
+                                                "name": {
+                                                    "description": "name",
+                                                    "type": "string",
+                                                    "example": "ㄐㄐ"
+                                                },
+                                                "email": {
+                                                    "description": "email",
+                                                    "type": "string",
+                                                    "example": "00857211@mail.ntou.edu.tw"
+                                                },
+                                                "phone": {
+                                                    "description": "phone",
+                                                    "type": "string",
+                                                    "example": "0987654321"
+                                                },
+                                                "license_id": {
+                                                    "description": "license_id",
+                                                    "type": "string",
+                                                    "example": "C87-630"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "403": {
+                        "description": "帳號不存在或密碼錯誤"
+                    }
+                }
+            }
+        },
+        "/api/v1/users/customer/logout": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "顧客登出",
+                "description": "顧客登出",
+                "operationId": "customerLogout",
+                "parameters": [
+                    {
+                        "name": "device_name",
+                        "in": "query",
+                        "description": "device_name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "登出成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "customerLogout"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "403": {
+                        "description": "認證錯誤"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/delivery_man/logout": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "外送員登出",
+                "description": "外送員登出",
+                "operationId": "deliveryManLogout",
+                "parameters": [
+                    {
+                        "name": "device_name",
+                        "in": "query",
+                        "description": "device_name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "登出成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "deliveryManLogin"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "請求格式錯誤"
+                    },
+                    "403": {
+                        "description": "認證錯誤"
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "Authorization": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}
