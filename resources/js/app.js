@@ -2,15 +2,16 @@ require('./bootstrap');
 import Vue from 'vue'
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
+import VueRouter from 'vue-router'
 
-import router from './routes';    
-import App from './components/App.vue'; 
+import router from './routes';
+import App from './components/App.vue';
 import 'vuetify/dist/vuetify.min.css'
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 Vue.use(Vuetify);
-
+Vue.use(VueRouter)
 const vuetify = new Vuetify({
     theme: {
         themes: {

@@ -1,5 +1,11 @@
 import VueRouter from 'vue-router';
+
 let routes = [
+    {
+        path: '/',
+        component: require('./components/AppHome.vue').default,
+        props: true,
+    },
     {
         path: '/login',
         component: require('./components/guest/Login.vue').default,
@@ -21,30 +27,30 @@ let routes = [
             default: require('./components/customer/CustomerApp.vue').default,
         },
         children: [
-        {
-            path: '/home',
-            components: {
-                consoleView: require('./components/customer/Home.vue').default,
-            }
-        }, 
-        {
-            path: '/search',
-            components: {
-                consoleView: require('./components/customer/Search.vue').default,
-            }
-        }, 
-        {
-            path: '/cart',
-            components: {
-                consoleView: require('./components/customer/Cart.vue').default,
-            }
-        }, 
-        {
-            path: '/info',
-            components: {
-                consoleView: require('./components/customer/Info.vue').default,
-            }
-        }, 
+            {
+                path: 'home',
+                components: {
+                    customerView: require('./components/customer/Home.vue').default,
+                }
+            },
+            {
+                path: 'search',
+                components: {
+                    customerView: require('./components/customer/Search.vue').default,
+                }
+            },
+            {
+                path: 'cart',
+                components: {
+                    customerView: require('./components/customer/Cart.vue').default,
+                }
+            },
+            {
+                path: 'info',
+                components: {
+                    customerView: require('./components/customer/Info.vue').default,
+                }
+            },
         ]
     },
     {

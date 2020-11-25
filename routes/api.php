@@ -21,10 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => 'guest'], function () {
-        Route::post('/customer_signup', 'App\Http\Controllers\AuthController@customerSignUp');
-        Route::post('/delivery_man_signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
-        Route::post('/customer_login', 'App\Http\Controllers\AuthController@customerLogin');
-        Route::post('/delivery_man_login', 'App\Http\Controllers\AuthController@deliveryManLogin');
+        Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp');
+        Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin');
+        Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest');
+
+        Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
+        Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
     });
 
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {

@@ -80,7 +80,31 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "顧客註冊成功"
+                        "description": "顧客註冊成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "deliveryManSignUp"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "請求格式錯誤"
@@ -148,7 +172,31 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "外送員註冊成功"
+                        "description": "外送員註冊成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "description": "status",
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "method": {
+                                            "description": "method",
+                                            "type": "string",
+                                            "example": "deliveryManSignUp"
+                                        },
+                                        "message": {
+                                            "description": "message",
+                                            "type": "string",
+                                            "example": "ok"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "請求格式錯誤"

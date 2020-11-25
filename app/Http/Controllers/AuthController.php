@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerPasswordReset;
 use App\Models\DeliveryMan;
+use App\Models\DeliveryManPasswordReset;
+use App\Notifications\CustomerPasswordResetRequest;
+use App\Notifications\DeliveryManPasswordResetRequest;
+use App\Notifications\PasswordResetSuccess;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
 {
     /** @OA\Post(
-     *      path="/api/v1/guest/customer_signup",
+     *      path="/api/v1/guest/customer/signup",
      *      operationId="customerSignUp",
      *      tags={"AuthController"},
      *      summary="顧客註冊",
@@ -64,7 +70,32 @@ class AuthController extends Controller
      *      ),
      *      @OA\Response(
      *          response=201,
-     *          description="顧客註冊成功"
+     *          description="顧客註冊成功",
+     *          content={
+     *             @OA\MediaType(
+     *                 mediaType="application/json",
+     *                 @OA\Schema(
+     *                     @OA\Property(
+     *                         property="status",
+     *                         type="integer",
+     *                         description="status",
+     *                         example=200
+     *                     ),
+     *                     @OA\Property(
+     *                         property="method",
+     *                         type="string",
+     *                         description="method",
+     *                         example = "deliveryManSignUp"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         description="message",
+     *                         example = "ok"
+     *                     )
+     *                 )
+     *             )
+     *         }
      *       ),
      *      @OA\Response(
      *          response=400,
@@ -127,7 +158,7 @@ class AuthController extends Controller
     }
 
     /** @OA\Post(
-     *      path="/api/v1/guest/delivery_man_signup",
+     *      path="/api/v1/guest/delivery_man/signup",
      *      operationId="deliveryManSignUp",
      *      tags={"AuthController"},
      *      summary="外送員註冊",
@@ -179,7 +210,32 @@ class AuthController extends Controller
      *      ),
      *      @OA\Response(
      *          response=201,
-     *          description="外送員註冊成功"
+     *          description="外送員註冊成功",
+     *          content={
+     *             @OA\MediaType(
+     *                 mediaType="application/json",
+     *                 @OA\Schema(
+     *                     @OA\Property(
+     *                         property="status",
+     *                         type="integer",
+     *                         description="status",
+     *                         example=200
+     *                     ),
+     *                     @OA\Property(
+     *                         property="method",
+     *                         type="string",
+     *                         description="method",
+     *                         example = "deliveryManSignUp"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         description="message",
+     *                         example = "ok"
+     *                     )
+     *                 )
+     *             )
+     *         }
      *       ),
      *      @OA\Response(
      *          response=400,
@@ -240,7 +296,7 @@ class AuthController extends Controller
     }
 
     /** @OA\Post(
-     *      path="/api/v1/guest/customer_login",
+     *      path="/api/v1/guest/customer/login",
      *      operationId="customerLogin",
      *      tags={"AuthController"},
      *      summary="顧客登入",
@@ -389,7 +445,7 @@ class AuthController extends Controller
     }
 
     /** @OA\Post(
-     *      path="/api/v1/guest/delivery_man_login",
+     *      path="/api/v1/guest/delivery_man/login",
      *      operationId="deliveryManLogin",
      *      tags={"AuthController"},
      *      summary="外送員登入",
@@ -698,4 +754,191 @@ class AuthController extends Controller
             return response()->json($data, 403);
         }
     }
+
+    public function customerCreatePasswordResetRequest(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $user = Customer::where('email', $request->email)->first();
+        if (!$user)
+            return response()->json([
+                'message' => 'We have e-mailed your password reset link!'
+            ], 200);
+        $passwordReset = CustomerPasswordReset::updateOrCreate(
+            ['email' => $user->email],
+            [
+                'email' => $user->email,
+                'token' => Str::random(60)
+            ]
+        );
+        if ($user && $passwordReset) {
+            $user->sendPasswordResetNotification($passwordReset->token);
+            return response()->json([
+                'status' => 200,
+                'method' => "customerCreatePasswordResetRequest",
+                'message' => 'password reset link e-mailed'
+            ], 200);
+        }
+
+
+    }
+
+    public function deliveryManCreatePasswordResetRequest(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+        $user = DeliveryMan::where('email', $request->email)->first();
+        if (!$user)
+            return response()->json([
+                'message' => 'We have e-mailed your password reset link!'
+            ], 200);
+        $passwordReset = DeliveryManPasswordReset::updateOrCreate(
+            ['email' => $user->email],
+            [
+                'email' => $user->email,
+                'token' => Str::random(60)
+            ]
+        );
+        if ($user && $passwordReset) {
+            $user->sendPasswordResetNotification($passwordReset->token);
+            return response()->json([
+                'status' => 200,
+                'method' => "deliveryManCreatePasswordResetRequest",
+                'message' => 'password reset link e-mailed'
+            ], 200);
+        }
+
+
+    }
+
+    public function customerCheckPasswordResetRequestToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+        ]);
+        $passwordReset = CustomerPasswordReset::where('token', $request->token)->first();
+        if (!$passwordReset){
+            return response()->json([
+                'status' => 200,
+                'method' => 'customerCheckPasswordResetRequestToken',
+                'message' => 'This password reset token is invalid'
+            ], 404);
+        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+            $passwordReset->delete();
+            return response()->json([
+                'status' => 403,
+                'method' => 'customerCheckPasswordResetRequestToken',
+                'message' => 'This password reset token is expired'
+            ], 403);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'method' => 'customerCheckPasswordResetRequestToken',
+                'message' => 'token is valid'
+            ], 200);
+        }
+    }
+
+    public function deliveryManCheckPasswordResetRequestToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+        ]);
+        $passwordReset = DeliveryManPasswordReset::where('token', $request->token)->first();
+        if (!$passwordReset){
+            return response()->json([
+                'status' => 200,
+                'method' => 'deliveryManCheckPasswordResetRequestToken',
+                'message' => 'This password reset token is invalid'
+            ], 404);
+        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+            $passwordReset->delete();
+            return response()->json([
+                'status' => 403,
+                'method' => 'deliveryManCheckPasswordResetRequestToken',
+                'message' => 'This password reset token is expired'
+            ], 403);
+        }else{
+            return response()->json([
+                'status' => 200,
+                'method' => 'deliveryManCheckPasswordResetRequestToken',
+                'message' => 'token is valid'
+            ], 200);
+        }
+    }
+
+    public function customerPasswordReset(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'token' => 'required'
+        ]);
+
+        $passwordReset = CustomerPasswordReset::where('token', $request->token)->first();
+
+        if (!$passwordReset){
+            return response()->json([
+                'status' => 200,
+                'method' => 'customerPasswordReset',
+                'message' => 'This password reset token is invalid'
+            ], 404);
+        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+            $passwordReset->delete();
+            return response()->json([
+                'status' => 403,
+                'method' => 'customerPasswordReset',
+                'message' => 'This password reset token is expired'
+            ], 403);
+        }else{
+            $user = Customer::where('email', $passwordReset->email)->first();
+            $user->password = bcrypt($request->password);
+            $user->save();
+            $passwordReset->delete();
+            $user->notify(new PasswordResetSuccess($passwordReset));
+            return response()->json([
+                'status' => 200,
+                'method' => 'customerPasswordReset',
+                'message' => 'password reset success'
+            ], 200);
+        }
+    }
+
+    public function deliveryManPasswordReset(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'token' => 'required'
+        ]);
+
+        $passwordReset = DeliveryManPasswordReset::where('token', $request->token)->first();
+
+        if (!$passwordReset){
+            return response()->json([
+                'status' => 200,
+                'method' => 'customerPasswordReset',
+                'message' => 'This password reset token is invalid'
+            ], 404);
+        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+            $passwordReset->delete();
+            return response()->json([
+                'status' => 403,
+                'method' => 'customerPasswordReset',
+                'message' => 'This password reset token is expired'
+            ], 403);
+        }else{
+            $user = DeliveryMan::where('email', $passwordReset->email)->first();
+            $user->password = bcrypt($request->password);
+            $user->save();
+            $passwordReset->delete();
+            $user->notify(new PasswordResetSuccess($passwordReset));
+            return response()->json([
+                'status' => 200,
+                'method' => 'deliveryManPasswordReset',
+                'message' => 'password reset success'
+            ], 200);
+        }
+    }
+
 }
