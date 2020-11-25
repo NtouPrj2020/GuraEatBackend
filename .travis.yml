@@ -11,7 +11,3 @@ env:
 install:
   - composer install
   - npm install
-
-script:
-  - php artisan l5-swagger:generate
-
