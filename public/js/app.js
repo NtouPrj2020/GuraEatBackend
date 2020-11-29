@@ -2001,6 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/customer/Home.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/customer/Home.vue?vue&type=script&lang=js& ***!
@@ -2012,6 +2013,8 @@ throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index
 
 /***/ }),
 
+=======
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
 /***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vuetify/dist/vuetify.min.css":
 /*!***********************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vuetify/dist/vuetify.min.css ***!
@@ -20587,6 +20590,7 @@ var render = function() {
           [
             _c(
               "v-card",
+<<<<<<< HEAD
               { staticClass: "mx-auto", attrs: { "max-width": "400" } },
               [
                 _c(
@@ -20665,12 +20669,86 @@ var render = function() {
                     _vm._v(" "),
                     _c("v-btn", { attrs: { color: "orange", text: "" } }, [
                       _vm._v(" Explore ")
+=======
+              {
+                staticClass: "mx-auto my-12",
+                attrs: { loading: _vm.loading, "max-width": "374" }
+              },
+              [
+                _c(
+                  "template",
+                  { slot: "progress" },
+                  [
+                    _c("v-progress-linear", {
+                      attrs: {
+                        color: "deep-purple",
+                        height: "10",
+                        indeterminate: ""
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("v-img", {
+                  attrs: {
+                    height: "250",
+                    src: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-card-title", [_vm._v("Cafe Badilico")]),
+                _vm._v(" "),
+                _c(
+                  "v-card-text",
+                  [
+                    _c(
+                      "v-row",
+                      { staticClass: "mx-0", attrs: { align: "center" } },
+                      [
+                        _c("v-rating", {
+                          attrs: {
+                            value: 4.5,
+                            color: "amber",
+                            dense: "",
+                            "half-increments": "",
+                            readonly: "",
+                            size: "14"
+                          }
+                        }),
+                        _vm._v(
+                          "\n                        W\n                        "
+                        ),
+                        _c("div", { staticClass: "grey--text ml-4" }, [
+                          _vm._v(
+                            "\n                            4.5 (413)\n                        "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "my-4 subtitle-1" }, [
+                      _vm._v(
+                        "\n                        $ • Italian, Cafe\n                    "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _vm._v(
+                        "Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio\n                        seating.\n                    "
+                      )
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
                     ])
                   ],
                   1
                 )
               ],
+<<<<<<< HEAD
               1
+=======
+              2
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
             )
           ],
           1
@@ -81779,17 +81857,28 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Home_vue_vue_type_template_id_5d238855___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Home.vue?vue&type=template&id=5d238855& */ "./resources/js/components/customer/Home.vue?vue&type=template&id=5d238855&");
+<<<<<<< HEAD
 /* harmony import */ var _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Home.vue?vue&type=script&lang=js& */ "./resources/js/components/customer/Home.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+=======
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+var script = {}
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
 
 
 /* normalize component */
 
+<<<<<<< HEAD
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+=======
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  script,
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
   _Home_vue_vue_type_template_id_5d238855___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Home_vue_vue_type_template_id_5d238855___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -81806,6 +81895,7 @@ component.options.__file = "resources/js/components/customer/Home.vue"
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./resources/js/components/customer/Home.vue?vue&type=script&lang=js&":
 /*!****************************************************************************!*\
   !*** ./resources/js/components/customer/Home.vue?vue&type=script&lang=js& ***!
@@ -81820,6 +81910,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+=======
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
 /***/ "./resources/js/components/customer/Home.vue?vue&type=template&id=5d238855&":
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/customer/Home.vue?vue&type=template&id=5d238855& ***!
@@ -82115,8 +82207,13 @@ var routes = [{
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
 __webpack_require__(/*! C:\xampp\htdocs\GuraEatBackend\resources\js\app.js */"./resources/js/app.js");
 module.exports = __webpack_require__(/*! C:\xampp\htdocs\GuraEatBackend\resources\css\app.css */"./resources/css/app.css");
+=======
+__webpack_require__(/*! D:\xampp\htdocs\GuraEatBackend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\xampp\htdocs\GuraEatBackend\resources\css\app.css */"./resources/css/app.css");
+>>>>>>> c7c9864923a5d0d6eb01a43935da4abb0dbd8ed6
 
 
 /***/ })
