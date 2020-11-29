@@ -32,7 +32,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => 'customer'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@customerLogout');
-            Route::get('/info', 'App\Http\Controllers\CustomerController@customerAccount');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
