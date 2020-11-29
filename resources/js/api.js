@@ -51,3 +51,4 @@ export const customerLoginAPI = (data) => guestRequest.post('/api/v1/guest/custo
 export const deliveryManLoginAPI = (data) => guestRequest.post('/api/v1/guest/delivery_man_login', data);
 export const customerLogoutAPI = (data,config) => userRequest.post('/api/v1/users/customer/logout', data,config);
 export const deliveryManLogoutAPI = (data,config) => userRequest.post('/api/v1/users/delivery_man/logout', data,config);
+export const getRestaurantall = (data) => userRequest.post('/api/v1/users/customer/restaurant/all', data);
