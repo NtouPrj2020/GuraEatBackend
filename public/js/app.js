@@ -2005,10 +2005,93 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/customer/Home.vue?vue&type=script&lang=js& ***!
   \************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\xampp\\htdocs\\GuraEatBackend\\resources\\js\\components\\customer\\Home.vue: Unexpected token (61:19)\n\n\u001b[0m \u001b[90m 59 | \u001b[39m    data\u001b[33m:\u001b[39m () \u001b[33m=>\u001b[39m ({\u001b[0m\n\u001b[0m \u001b[90m 60 | \u001b[39m        getRestaurantall(\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 | \u001b[39m            {\u001b[32m\"page\"\u001b[39m}\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 62 | \u001b[39m        )\u001b[33m.\u001b[39mthen((res) \u001b[33m=>\u001b[39m { console\u001b[33m.\u001b[39mtable(res\u001b[33m.\u001b[39mdata) })\u001b[0m\n\u001b[0m \u001b[90m 63 | \u001b[39m    \u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error) \u001b[33m=>\u001b[39m { console\u001b[33m.\u001b[39merror(error) })\u001b[0m\n\u001b[0m \u001b[90m 64 | \u001b[39m    })\u001b[33m,\u001b[39m\u001b[0m\n    at Parser._raise (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:790:17)\n    at Parser.raiseWithData (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:783:17)\n    at Parser.raise (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:777:17)\n    at Parser.unexpected (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9095:16)\n    at Parser.parseObjPropValue (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11081:21)\n    at Parser.parsePropertyDefinition (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11004:10)\n    at Parser.parseObjectLike (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10894:25)\n    at Parser.parseBindingAtom (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9455:21)\n    at Parser.parseMaybeDefault (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9520:50)\n    at Parser.parseAssignableListItem (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9500:23)\n    at Parser.parseBindingList (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9492:24)\n    at Parser.parseFunctionParams (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:12377:24)\n    at Parser.parseMethod (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11117:10)\n    at Parser.parseObjectMethod (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11047:19)\n    at Parser.parseObjPropValue (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11080:23)\n    at Parser.parsePropertyDefinition (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11004:10)\n    at Parser.parseObjectLike (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10894:25)\n    at Parser.parseExprAtom (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10445:23)\n    at Parser.parseExprSubscripts (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10094:23)\n    at Parser.parseUpdate (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10074:21)\n    at Parser.parseMaybeUnary (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10063:17)\n    at Parser.parseExprOps (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9933:23)\n    at Parser.parseMaybeConditional (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9907:23)\n    at Parser.parseMaybeAssign (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9870:21)\n    at C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9837:39\n    at Parser.allowInAnd (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11510:12)\n    at Parser.parseMaybeAssignAllowIn (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9837:17)\n    at Parser.parseParenAndDistinguishExpression (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10706:28)\n    at Parser.parseExprAtom (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10424:21)\n    at Parser.parseExprSubscripts (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10094:23)\n    at Parser.parseUpdate (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10074:21)\n    at Parser.parseMaybeUnary (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:10063:17)\n    at Parser.parseExprOps (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9933:23)\n    at Parser.parseMaybeConditional (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9907:23)\n    at Parser.parseMaybeAssign (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:9870:21)\n    at Parser.parseFunctionBody (C:\\xampp\\htdocs\\GuraEatBackend\\node_modules\\@babel\\parser\\lib\\index.js:11177:24)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      page: 1
+    };
+  },
+  mounted: function mounted() {
+    var config = {
+      params: {
+        "page": this.page
+      },
+      headers: {
+        Authorization: "Bearer " + "2|BFZMyvO5kPHPKrX2bfCuoy1JPgYE7RW0ITUCiW8P"
+      }
+    };
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getRestaurantall"])(config).then(function (res) {
+      console.log(res.data);
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }
+});
 
 /***/ }),
 
@@ -82365,9 +82448,7 @@ component.options.__file = "resources/js/components/customer/Home.vue"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/customer/Home.vue?vue&type=script&lang=js&");
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

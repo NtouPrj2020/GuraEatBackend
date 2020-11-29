@@ -44,6 +44,7 @@ if (process.env.APP_ENV === "local") {
 //統一管理 API Call
 //data: 放資料
 //config: 放header資料, 像是authorization
+
 export const customerSignUpAPI = data =>
     guestRequest.post("/api/v1/guest/customer/signup", data);
 export const deliveryManSignUpAPI = data =>

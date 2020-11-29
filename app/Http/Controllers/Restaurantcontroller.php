@@ -10,11 +10,11 @@ class Restaurantcontroller extends Controller
     public function restaurants(Request $request){
         $restaurants = Restaurant::paginate(20);
         $data = [
-            "status" => 401,
+            "status" => 200,
             "method" => "customerLogin",
             "message" => "failed",
             "data" => $restaurants
         ];
-        return response()->json($data, 401);
+        return response()->json($data, 200);
     }
 }
