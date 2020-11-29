@@ -54,14 +54,22 @@
     </div>
 </template>
 <script>
-import getRestaurantall from "../../api";
+import {getRestaurantall} from "../../api";
+import axios from "axios";
 export default {
     data: () => ({
-        getRestaurantall(
-            {"page"}
-        ).then((res) => { console.table(res.data) })
-    .catch((error) => { console.error(error) })
+        page:1,
     }),
-    mount() {},
+    mounted() {
+        let config = {
+            params:{"page":this.page,},
+            headers: {Authorization: "Bearer " + "2|BFZMyvO5kPHPKrX2bfCuoy1JPgYE7RW0ITUCiW8P"}
+        };
+        getRestaurantall(
+            config
+        ).then((res) => { console.log(res.data) })
+            .catch((error) => { console.error(error) })
+
+    },
 };
 </script>
