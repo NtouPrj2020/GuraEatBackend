@@ -15,7 +15,7 @@ class CustomerInfoController extends Controller
             "message" => "user not found",
             "data" =>"customerAccount"
         ];
-        return response();
+        return response()->json($data,403);
     }
     public function editCustomer(Request $request)
     {
