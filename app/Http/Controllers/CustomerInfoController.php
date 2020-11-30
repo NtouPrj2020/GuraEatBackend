@@ -17,8 +17,8 @@ class CustomerInfoController extends Controller
         {
             $data = [
                         "status" => 200,
-                        "method" => "customerLogout",
-                        "message" => "user not found",
+                        "method" => "getCustomer",
+                        "message" => "sucess",
                         "data" =>$customer
                     ];
                     return response()->json($data, 200);
