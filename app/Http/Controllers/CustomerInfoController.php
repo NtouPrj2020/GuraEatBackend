@@ -8,18 +8,45 @@ class CustomerInfoController extends Controller
 {
     public function getCustomer(Request $request)
     {
-        $customerAccount=Customer::paginate(20);
-        $data = [
-            "status" => 403,
-            "method" => "customerLogout",
-            "message" => "user not found",
-            "data" =>"customerAccount"
-        ];
-        return response()->json($data,403);
+        $
+
+        $customer=Customer::paginate(20);
+        if ($user != null)
+        {
+            $data = [
+                        "status" => 200,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                        "data" =>"customerAccount"
+                    ];
+                    return response()->json($data,200);
+        }
+        elseif()
+        {
+            $data = [
+                        "status" => 403,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                        "data" =>"customerAccount"
+                    ];
+                    return response()->json($data,403);
+        }
+        else//
+        {
+            $data = [
+                        "status" => 404,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                        "data" =>"customerAccount"
+                    ];
+                    return response()->json($data,404);
+        }
+        
+        
     }
     public function editCustomer(Request $request)
     {
-        $customerAccount=Customer::paginate(20);
+        $customer=Customer::paginate(20);
         $data = [
             "status" => 403,
             "method" => "customerLogout",
