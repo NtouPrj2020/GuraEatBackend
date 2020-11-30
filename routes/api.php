@@ -27,6 +27,9 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
         Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
+
+        Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
+        Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin');
     });
 
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
