@@ -38,33 +38,67 @@ class CustomerInfoController extends Controller
         
         
     }
-    /*
+    
     public function editCustomer(Request $request)
     {
         $request->validate([
             'customer_id' => 'required',
             'authorization' => 'required',
         ]);
-
-
-        $customer=Customer::;
+        $customer = Customer:: where("id=",$request->customer_id);
+        
+        if ($customer != null)
+        {
+            $data = [
+                        "status" => 200,
+                        "method" => "editCustomer",
+                        "message" => "sucess",
+                        "data" =>$customer
+                    ];
+                    return response()->json($data, 200);
+        }
+        else
+        {
+            $data = [
+                        "status" => 403,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                        "data" =>null
+                    ];
+                    
+                    return response()->json($data,403);
+        }
     }
+    /*
     public function deleteCustomer(Request $request)
     {
         $request->validate([
             'customer_id' => 'required',
             'authorization' => 'required',
         ]);
-
-
-        $customerAccount=Customer::paginate(20);
-        $data = [
-            "status" => 403,
-            "method" => "customerLogout",
-            "message" => "user not found",
-            "data" =>"customerAccount"
-        ];
-        return response();
+        $customer = Customer:: where("id=",$request->customer_id);
+        
+        if ($customer != null)
+        {
+            $data = [
+                        "status" => 200,
+                        "method" => "editCustomer",
+                        "message" => "sucess",
+                        "data" =>$customer
+                    ];
+                    return response()->json($data, 200);
+        }
+        else
+        {
+            $data = [
+                        "status" => 403,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                        "data" =>null
+                    ];
+                    
+                    return response()->json($data,403);
+        }
     }
     */
 }
