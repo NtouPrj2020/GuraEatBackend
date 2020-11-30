@@ -28,14 +28,13 @@
             class="px-14"
             :rules="passwordRules"
           ></v-text-field>
-
           <v-btn
-            @click="login"
+            @click="register"
             color="0xFFFF"
             elevation="2"
             :style="{ left: '50%', transform: 'translateX(-50%)' }"
           >
-            登入
+            註冊
           </v-btn>
         </v-form>
       </v-main>
