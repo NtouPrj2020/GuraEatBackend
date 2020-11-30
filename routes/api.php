@@ -32,7 +32,10 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => 'customer'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@customerLogout');
-            Route::get('/restaurant/all', 'App\Http\Controllers\Restaurantcontroller@restaurants');
+            Route::get('/restaurant/all', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllRestaurant');
+            Route::get('/restaurant/searchByID', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByID');
+            Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword');
+            Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
