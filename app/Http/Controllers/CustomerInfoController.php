@@ -8,55 +8,54 @@ class CustomerInfoController extends Controller
 {
     public function getCustomer(Request $request)
     {
-        $
+        $validatedata = $request->validate([
+            'customer_id' => 'required',
+        ]);
 
-        $customer=Customer::paginate(20);
-        if ($user != null)
+        $customer = Customer:: where("id=",$request->customer_id);
+        if ($customer != null)
         {
             $data = [
                         "status" => 200,
                         "method" => "customerLogout",
                         "message" => "user not found",
-                        "data" =>"customerAccount"
+                        "data" =>$customer
                     ];
-                    return response()->json($data,200);
+                    return response()->json($data, 200);
         }
-        elseif()
+        else
         {
             $data = [
                         "status" => 403,
                         "method" => "customerLogout",
                         "message" => "user not found",
-                        "data" =>"customerAccount"
+                        "data" =>
                     ];
                     return response()->json($data,403);
         }
-        else//
-        {
-            $data = [
-                        "status" => 404,
-                        "method" => "customerLogout",
-                        "message" => "user not found",
-                        "data" =>"customerAccount"
-                    ];
-                    return response()->json($data,404);
-        }
+        
         
         
     }
+    /*
     public function editCustomer(Request $request)
     {
-        $customer=Customer::paginate(20);
-        $data = [
-            "status" => 403,
-            "method" => "customerLogout",
-            "message" => "user not found",
-            "data" =>"customerAccount"
-        ];
-        return response();
+        $request->validate([
+            'customer_id' => 'required',
+            'authorization' => 'required',
+        ]);
+
+
+        $customer=Customer::;
     }
     public function deleteCustomer(Request $request)
     {
+        $request->validate([
+            'customer_id' => 'required',
+            'authorization' => 'required',
+        ]);
+
+
         $customerAccount=Customer::paginate(20);
         $data = [
             "status" => 403,
@@ -66,5 +65,7 @@ class CustomerInfoController extends Controller
         ];
         return response();
     }
+    */
 }
+
 ?>
