@@ -69,7 +69,7 @@ class CustomerInfoController extends Controller
                     return response()->json($data,403);
         }
     }
-    
+    /*
     public function deleteCustomer(Request $request)
     {
         $request->validate([
@@ -100,7 +100,7 @@ class CustomerInfoController extends Controller
                     return response()->json($data,403);
         }
     }
-    
+    */
 }
 
 ?>
