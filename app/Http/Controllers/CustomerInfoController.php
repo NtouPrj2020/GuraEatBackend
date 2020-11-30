@@ -29,8 +29,9 @@ class CustomerInfoController extends Controller
                         "status" => 403,
                         "method" => "customerLogout",
                         "message" => "user not found",
-                        "data" =>
+                        "data" =>null
                     ];
+                    
                     return response()->json($data,403);
         }
         
