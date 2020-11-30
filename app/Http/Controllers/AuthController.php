@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\CustomerPasswordReset;
 use App\Models\DeliveryMan;
 use App\Models\DeliveryManPasswordReset;
+use App\Models\Restaurant;
 use App\Notifications\CustomerPasswordResetRequest;
 use App\Notifications\DeliveryManPasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
@@ -938,6 +939,99 @@ class AuthController extends Controller
                 'method' => 'deliveryManPasswordReset',
                 'message' => 'password reset success'
             ], 200);
+        }
+    }
+
+    public function restaurantSignUp(Request $request)
+    {
+        //驗證資料
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'img' => 'required',
+            'address' => 'required',
+            'password' => 'required',
+        ]);
+
+        //查詢是否存在
+        $user = Restaurant::where('email', $request->email)->first();
+        if ($user != null) {
+            $data = [
+                "status" => 401,
+                "method" => "restaurantSignUp",
+                "message" => "already sign",
+            ];
+            return response()->json($data, 401);
+        }
+
+        //建立帳戶
+        $user = new Restaurant();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->img = $request->img;
+        $user->address = $request->address;
+        $user->password = bcrypt($request['password']);
+        $user->save();
+
+        if ($user != null) {
+            $data = [
+                "status" => 201,
+                "method" => "restaurantSignUp",
+                "message" => "success",
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                "method" => "restaurantSignUp",
+                "message" => "unexpected error",
+            ];
+            return response()->json($data, 500);
+        }
+
+    }
+
+    public function restaurantLogin(Request $request)
+    {
+        //驗證資料
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_name' => 'required'
+        ]);
+
+        //找尋使用者
+        $user = Restaurant::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            $data = [
+                "status" => 401,
+                "method" => "restaurantLogin",
+                "message" => "failed",
+                "data" => [
+                    "access_token" => "",
+                    "name" => "",
+                    "email" => "",
+                    "phone" => "",
+                    "address" => ""
+                ]
+            ];
+            return response()->json($data, 401);
+        } else {
+            $data = [
+                "status" => 200,
+                "method" => "restaurantLogin",
+                "message" => "success",
+                "data" => [
+                    "access_token" => $user->createToken($request->device_name)->plainTextToken,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "phone" => $user->phone,
+                    "address" => $user->address
+                ]
+            ];
+            return response()->json($data, 200);
         }
     }
 

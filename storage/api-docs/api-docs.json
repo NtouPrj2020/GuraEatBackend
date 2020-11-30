@@ -23,7 +23,7 @@
         }
     ],
     "paths": {
-        "/api/v1/guest/customer_signup": {
+        "/api/v1/guest/customer/signup": {
             "post": {
                 "tags": [
                     "AuthController"
@@ -115,7 +115,7 @@
                 }
             }
         },
-        "/api/v1/guest/delivery_man_signup": {
+        "/api/v1/guest/delivery_man/signup": {
             "post": {
                 "tags": [
                     "AuthController"
@@ -207,7 +207,7 @@
                 }
             }
         },
-        "/api/v1/guest/customer_login": {
+        "/api/v1/guest/customer/login": {
             "post": {
                 "tags": [
                     "AuthController"
@@ -311,7 +311,7 @@
                 }
             }
         },
-        "/api/v1/guest/delivery_man_login": {
+        "/api/v1/guest/delivery_man/login": {
             "post": {
                 "tags": [
                     "AuthController"
