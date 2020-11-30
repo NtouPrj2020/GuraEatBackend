@@ -59,6 +59,13 @@ let routes = [
                     customerView: require("./components/customer/Info.vue")
                         .default
                 }
+            },
+            {
+                path: "/restaurant/:id",
+                components: {
+                    customerView: require("./components/customer/RestaurantInfo.vue")
+                        .default
+                }
             }
         ]
     },

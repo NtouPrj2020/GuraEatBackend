@@ -58,4 +58,4 @@ export const customerLogoutAPI = (data, config) =>
 export const deliveryManLogoutAPI = (data, config) =>
     userRequest.post("/api/v1/users/delivery_man/logout", data, config);
 export const getRestaurantall = data =>
-    userRequest.post("/api/v1/users/customer/restaurant/all", data);
+    userRequest.get("/api/v1/users/customer/restaurant/all", data);
