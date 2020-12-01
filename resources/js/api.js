@@ -48,7 +48,7 @@ if (process.env.APP_ENV === "local") {
 export const customerSignUpAPI = data =>
     guestRequest.post("/api/v1/guest/customer/signup", data);
 export const deliveryManSignUpAPI = data =>
-    guestRequest.post("/api/v1/guest/customer/signup", data);
+    guestRequest.post("/api/v1/guest/delivery_man/signup", data);
 export const customerLoginAPI = data =>
     guestRequest.post("/api/v1/guest/customer/login", data);
 export const deliveryManLoginAPI = data =>
