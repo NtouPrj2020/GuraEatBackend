@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Customer;
+
 use Illuminate\Http\Request;
 
 class CustomerInfoController extends Controller
@@ -13,6 +15,7 @@ class CustomerInfoController extends Controller
         ]);
 
         $customer = Customer:: where("id=",$request->customer_id);
+        
         if ($customer != null)
         {
             $data = [
