@@ -66,10 +66,13 @@ let routes = [
                 }
             },
             {
-                path: "/restaurant/:id",
+                path: "restaurant/:id",
                 components: {
                     customerView: require("./components/customer/RestaurantInfo.vue")
                         .default
+                },
+                props: {
+                    id : 1
                 }
             }
         ]
