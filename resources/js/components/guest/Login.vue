@@ -24,6 +24,7 @@
           <v-text-field
             label="password"
             v-model="password"
+            type="password"
             outlined
             class="px-14"
             :rules="passwordRules"
@@ -33,6 +34,7 @@
             @click="login"
             color="0xFFFF"
             elevation="2"
+            :loading="loading"
             :style="{ left: '50%', transform: 'translateX(-50%)' }"
           >
             登入
@@ -44,12 +46,19 @@
 </template>
 
 <script>
-import { customerLoginAPI } from "../../api";
+import { customerLoginAPI, deliveryManLoginAPI } from "../../api";
 export default {
   props: {},
-  mounted() {},
+  mounted() {
+    if (this.$store.getters.getAccessToken != "") {
+      console.log("in");
+      this.$router.push("/");
+    }
+  },
   data: () => ({
     valid: true,
+    fail: false,
+    loading: false,
     email: "",
     emailRules: [
       (v) => !!v || "請填入信箱!",
@@ -57,26 +66,108 @@ export default {
     ],
     password: "",
     passwordRules: [(v) => !!v || "請填入密碼!"],
-    loading: false,
+    mode: 0,
     type: null,
     typeRules: [(v) => !!v || "請選擇身分!"],
     items: ["顧客", "外送員", "餐廳"],
   }),
   methods: {
     login() {
-      this.$refs.form.validate();
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+      this.loading = true;
       console.log(this.email);
       console.log(this.password);
-      customerLoginAPI({
-        email: this.email,
-        password: this.password,
-        device_name: this.email,
-      }).then((resp) => {
-        if (resp.status === 200) {
-          this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-        }
-        console.log(resp.data);
-      });
+      console.log(this.mode);
+      console.log(this.type);
+      if (this.type === "顧客") {
+        this.mode = 1;
+        customerLoginAPI({
+          email: this.email,
+          password: this.password,
+          device_name: this.email,
+        })
+          .then((resp) => {
+            if (resp.status === 200) {
+              this.loading = false;
+              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+              this.$store.commit("USER_NAME", resp.data.data.access_token);
+              this.$store.commit("MODE", this.mode);
+              this.$router.push("/");
+            }
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              this.loading = false;
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 400) {
+              this.loading = false;
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
+            console.log(err);
+          });
+      } else if (this.type === "外送員") {
+        this.mode = 2;
+        deliveryManLoginAPI({
+          email: this.email,
+          password: this.password,
+          device_name: this.email,
+        })
+          .then((resp) => {
+            if (resp.status === 200) {
+              this.loading = false;
+              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+              this.$store.commit("USER_NAME", resp.data.data.access_token);
+              this.$store.commit("MODE", this.mode);
+            }
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              this.loading = false;
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 404) {
+              this.loading = false;
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
+            console.log(err);
+          });
+      }
+      if (this.type === "餐廳") {
+        this.loading = false;
+        this.mode = 3;
+        customerLoginAPI({
+          //need to change later,don't have api yet
+          email: this.email,
+          password: this.password,
+          device_name: this.email,
+        })
+          .then((resp) => {
+            if (resp.status === 200) {
+              this.loading = false;
+              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+              this.$store.commit("USER_NAME", resp.data.data.access_token);
+              this.$store.commit("MODE", this.mode);
+            }
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 404) {
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
+            console.log(err);
+          });
+      }
     },
   },
 };

@@ -27,6 +27,11 @@ let routes = [
         props: true
     },
     {
+        path: "/signout",
+        component: require("./components/guest/SignOut.vue").default,
+        props: true
+    },
+    {
         path: "/customer",
         components: {
             default: require("./components/customer/CustomerApp.vue").default
@@ -58,6 +63,16 @@ let routes = [
                 components: {
                     customerView: require("./components/customer/Info.vue")
                         .default
+                }
+            },
+            {
+                path: "restaurant/:id",
+                components: {
+                    customerView: require("./components/customer/RestaurantInfo.vue")
+                        .default
+                },
+                props: {
+                    id : 1
                 }
             }
         ]

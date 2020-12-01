@@ -27,18 +27,26 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
         Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
+
+        Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
+        Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin');
     });
 
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => 'customer'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@customerLogout');
-            Route::get('/restaurant/all', 'App\Http\Controllers\Restaurantcontroller@restaurants');
-            Route::get('/info', 'App\Http\Controllers\CustomerController@customerAccount');
+            Route::get('/restaurant/all', 'App\Http\Controllers\CustomerGetRestaurantInfoController@restaurants');
+            Route::get('/info', 'App\Http\Controllers\CustomerInfoController@getCustomer');
+            Route::get('/restaurant/searchByID', 'App\Http\Controllers\CustomerInfoController@getRestaurantByID');
+            Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerInfoController@getRestaurantByKeyword');
+            Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerInfoController@getRestaurantByTag');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
         });
         Route::group(['prefix' => 'restaurant'], function () {
+            Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getInfo');
+            Route::post('/menu', 'App\Http\Controllers\RestaurantMenuController@addmenu');
         });
     });
 });
