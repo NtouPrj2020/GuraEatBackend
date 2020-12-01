@@ -8,7 +8,7 @@ class CustomerInfoController extends Controller
 {
     public function getCustomer(Request $request)
     {
-        $validatedata = $request->validate([
+        $request->validate([
             'customer_id' => 'required',
         ]);
 
