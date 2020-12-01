@@ -35,7 +35,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
         Route::group(['prefix' => 'customer'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@customerLogout');
-            Route::get('/restaurant/all', 'App\Http\Controllers\CustomerGetRestaurantInfoController@restaurants');
+            Route::get('/restaurant/all', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllRestaurant');
             Route::get('/info', 'App\Http\Controllers\CustomerInfoController@getCustomer');
             Route::get('/restaurant/searchByID', 'App\Http\Controllers\CustomerInfoController@getRestaurantByID');
             Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerInfoController@getRestaurantByKeyword');
@@ -46,7 +46,8 @@ Route::group(['prefix' => 'v1'], function () {
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getInfo');
-            Route::post('/menu', 'App\Http\Controllers\RestaurantMenuController@addmenu');
+            Route::post('/menu', 'App\Http\Controllers\RestaurantMenuController@addDish');
+            Route::get('/menu', 'App\Http\Controllers\RestaurantMenuController@getAllDish');
         });
     });
 });
