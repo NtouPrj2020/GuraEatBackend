@@ -42,7 +42,7 @@ class CustomerGetRestaurantInfoController extends Controller
         $request->validate([
             'Keyword' => 'required|string',
         ]);
-        $restaurants = Restaurant::where('name','like','%'.$request->Keyword.'%')->get()->paginate(20);
+        $restaurants = Restaurant::where('name','like','%'.$request->Keyword.'%')->get();
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
         }
