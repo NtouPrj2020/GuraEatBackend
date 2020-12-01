@@ -13,6 +13,7 @@
             class="px-14"
             outlined
             :rules="typeRules"
+            @change="changeType"
           ></v-select>
           <v-text-field
             label="email"
@@ -29,15 +30,42 @@
             class="px-14"
             :rules="passwordRules"
           ></v-text-field>
-
+          <v-text-field
+            label="重新輸入password"
+            v-model="repassword"
+            type="password"
+            outlined
+            class="px-14"
+            :rules="repasswordRules.concat(passwordConfirmationRule)"
+          ></v-text-field>
+          <v-text-field
+            label="姓名"
+            v-model="name"
+            outlined
+            class="px-14"
+            :rules="basicRules"
+          ></v-text-field>
+          <v-text-field
+            label="電話"
+            v-model="phone"
+            outlined
+            class="px-14"
+            :rules="basicRules"
+          ></v-text-field>
+          <v-text-field
+            v-bind:label="addressOrLicenseLabel"
+            v-model="addressOrlicense"
+            outlined
+            class="px-14"
+            :rules="basicRules"
+          ></v-text-field>
           <v-btn
-            @click="login"
+            @click="register"
             color="0xFFFF"
             elevation="2"
-            :loading="loading"
             :style="{ left: '50%', transform: 'translateX(-50%)' }"
           >
-            登入
+            註冊
           </v-btn>
         </v-form>
       </v-main>
@@ -46,46 +74,59 @@
 </template>
 
 <script>
-import { customerLoginAPI, deliveryManLoginAPI } from "../../api";
+import { customerSignUpAPI, deliveryManSignUpAPI } from "../../api";
 export default {
   props: {},
   mounted() {},
   data: () => ({
     valid: true,
-    fail: false,
-    loading: false,
+    type: null,
     email: "",
+    password: "",
+    name: "",
+    phone: "",
+    addressOrlicense: "",
+    mode: 0,
+    addressOrLicenseLabel: "外送接收地址",
     emailRules: [
       (v) => !!v || "請填入信箱!",
       (v) => /.+@.+\..+/.test(v) || "請填入正確的信箱!",
     ],
-    password: "",
-    passwordRules: [(v) => !!v || "請填入密碼!"],
-    mode: 0,
-    type: null,
+    passwordRules: [(v) => !!v || "請輸入密碼!"],
+    repassword: "",
+    repasswordRules: [(v) => !!v || "請重新輸入密碼!"],
+    loading: false,
     typeRules: [(v) => !!v || "請選擇身分!"],
-    items: ["顧客", "外送員", "餐廳"],
+    items: ["顧客", "外送員"],
+    basicRules: [(v) => !!v || "請填入資料!"],
   }),
   methods: {
-    login() {
+    changeType() {
+      if (this.type == "顧客") {
+        this.addressOrLicenseLabel = "外送接收地址";
+      } else if (this.type == "外送員") {
+        this.addressOrLicenseLabel = "車牌";
+      }
+    },
+    register() {
       if (!this.$refs.form.validate()) {
         return;
       }
       this.loading = true;
       console.log(this.email);
       console.log(this.password);
-      console.log(this.mode);
       console.log(this.type);
       if (this.type === "顧客") {
         this.mode = 1;
-        customerLoginAPI({
+        customerSignUpAPI({
+          name: this.name,
           email: this.email,
+          phone: this.phone,
+          address: this.addressOrlicense,
           password: this.password,
-          device_name: this.email,
         })
           .then((resp) => {
             if (resp.status === 200) {
-              this.loading = false;
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
@@ -94,26 +135,25 @@ export default {
           })
           .catch((err) => {
             if (err.response.status === 401) {
-              this.loading = false;
-              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              this.$emit("showSnackBar", "顧客帳號已註冊");
               console.log(err);
             } else if (err.response.status === 400) {
-              this.loading = false;
               this.$emit("showSnackBar", "未知的錯誤");
               console.log(err);
             }
             console.log(err);
           });
       } else if (this.type === "外送員") {
-        this.mode = 2;
-        deliveryManLoginAPI({
+        this.mode = 1;
+        deliveryManSignUpAPI({
+          name: this.name,
           email: this.email,
+          phone: this.phone,
+          license_id: this.addressOrlicense,
           password: this.password,
-          device_name: this.email,
         })
           .then((resp) => {
             if (resp.status === 200) {
-              this.loading = false;
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
@@ -122,46 +162,20 @@ export default {
           })
           .catch((err) => {
             if (err.response.status === 401) {
-              this.loading = false;
-              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              this.$emit("showSnackBar", "外送員帳號已註冊");
               console.log(err);
-            } else if (err.response.status === 404) {
-              this.loading = false;
+            } else if (err.response.status === 400) {
               this.$emit("showSnackBar", "未知的錯誤");
               console.log(err);
             }
             console.log(err);
           });
       }
-      if (this.type === "餐廳") {
-        this.loading = false;
-        this.mode = 3;
-        customerLoginAPI({
-          //need to change later,don't have api yet
-          email: this.email,
-          password: this.password,
-          device_name: this.email,
-        })
-          .then((resp) => {
-            if (resp.status === 200) {
-              this.loading = false;
-              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-              this.$store.commit("USER_NAME", resp.data.data.access_token);
-              this.$store.commit("MODE", this.mode);
-            }
-            console.log(resp.data);
-          })
-          .catch((err) => {
-            if (err.response.status === 401) {
-              this.$emit("showSnackBar", "信箱/密碼錯誤");
-              console.log(err);
-            } else if (err.response.status === 404) {
-              this.$emit("showSnackBar", "未知的錯誤");
-              console.log(err);
-            }
-            console.log(err);
-          });
-      }
+    },
+  },
+  computed: {
+    passwordConfirmationRule() {
+      return () => this.password === this.repassword || "密碼不一致!";
     },
   },
 };

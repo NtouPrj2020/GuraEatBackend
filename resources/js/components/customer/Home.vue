@@ -1,58 +1,60 @@
 <template>
     <div>
         <div class="panel-heading text-center">Home</div>
-        <div class="container">
-            <v-main>
-                <v-card
-                    :loading="loading"
-                    class="mx-auto my-12"
-                    max-width="374"
-                >
-                    <template slot="progress">
-                        <v-progress-linear
-                            color="deep-purple"
-                            height="10"
-                            indeterminate
-                        ></v-progress-linear>
-                    </template>
-
-                    <v-img
-                        height="250"
-                        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                    ></v-img>
-
-                    <v-card-title>Cafe Badilico</v-card-title>
-
-                    <v-card-text>
-                        <v-row
-                            align="center"
-                            class="mx-0"
+        <div class="container mb-12" >
+            <v-row dense>
+                <v-col v-for="(item,i) in list" :key="i"  :cols="12">
+                    <v-card class="mx-auto" max-width="400" @click="selectRest(item.id)">
+                        <v-img
+                            class="white--text align-end"
+                            height="120px"
+                            :src="item.img"
                         >
-                            <v-rating
-                                :value="4.5"
-                                color="amber"
-                                dense
-                                half-increments
-                                readonly
-                                size="14"
-                            ></v-rating>
-                            W
-                            <div class="grey--text ml-4">
-                                4.5 (413)
-                            </div>
-                        </v-row>
 
-                        <div class="my-4 subtitle-1">
-                            $ • Italian, Cafe
-                        </div>
+                        </v-img>
+                        <v-card-title>{{item.name}}</v-card-title>
+                        <!--<v-card-subtitle class="pb-0">
+                            <div>地址:{{item.address}}</div>
+                            <div>電話:{{item.phone}}</div>
+                            <div>email:{{item.email}}</div>
+                        </v-card-subtitle>
 
-                        <div>Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio
-                            seating.
-                        </div>
-                    </v-card-text>
-
-                </v-card>
-            </v-main>
+                        <v-card-text class="text--primary">
+                            <div>Whitehaven Beach</div>
+                            <div>Whitsunday Island, Whitsunday Islands</div>
+                        </v-card-text>-->
+                    </v-card>
+                </v-col>
+            </v-row>
         </div>
     </div>
 </template>
+<script>
+import {getRestaurantall} from "../../api";
+import axios from "axios";
+export default {
+    data: () => ({
+        page:1,
+        list:[],
+    }),
+    mounted() {
+        let config = {
+            params:{"page":this.page,},
+            headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
+        };
+        getRestaurantall(
+            config
+        ).then((res) => {
+            this.list = res.data.data.data
+            console.log(this.list)
+        })
+            .catch((error) => { console.error(error) })
+
+    },
+    methods:{
+        selectRest(RID){
+            this.$router.push("/customer/restaurant/"+RID);
+        }
+    }
+};
+</script>
