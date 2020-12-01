@@ -10,17 +10,8 @@ class CustomerInfoController extends Controller
 {
     public function getCustomer(Request $request)
     {
-<<<<<<< HEAD
-        $request->validate([
-            'customer_id' => 'required',
-        ]);
-
-        $customer = Customer:: where("id=",$request->customer_id);
-        
-=======
         $customer = $request->user();
 
->>>>>>> 478cc4bf7053c46aa18c1fe6339d774a7d10b465
         if ($customer != null)
         {
             $data = [
