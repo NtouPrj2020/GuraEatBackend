@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="panel-heading text-center">Home</div>
-        <div class="container mb-12" >
+        <div class="container mb-12">
             <v-row dense>
-                <v-col v-for="(item,i) in list" :key="i"  :cols="12">
+                <v-col v-for="(item,i) in list" :key="i" :cols="12">
                     <v-card class="mx-auto" max-width="400" @click="selectRest(item.id)">
                         <v-img
                             class="white--text align-end"
@@ -12,7 +12,7 @@
                         >
 
                         </v-img>
-                        <v-card-title>{{item.name}}</v-card-title>
+                        <v-card-title>{{ item.name }}</v-card-title>
                         <!--<v-card-subtitle class="pb-0">
                             <div>地址:{{item.address}}</div>
                             <div>電話:{{item.phone}}</div>
@@ -32,14 +32,15 @@
 <script>
 import {getRestaurantall} from "../../api";
 import axios from "axios";
+
 export default {
     data: () => ({
-        page:1,
-        list:[],
+        page: 1,
+        list: [],
     }),
     mounted() {
         let config = {
-            params:{"page":this.page,},
+            params: {"page": this.page,},
             headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
         };
         getRestaurantall(
@@ -48,12 +49,14 @@ export default {
             this.list = res.data.data.data
             console.log(this.list)
         })
-            .catch((error) => { console.error(error) })
+            .catch((error) => {
+                console.error(error)
+            })
 
     },
-    methods:{
-        selectRest(RID){
-            this.$router.push("/customer/restaurant/"+RID);
+    methods: {
+        selectRest(RID) {
+            this.$router.push("/customer/restaurant/" + RID);
         }
     }
 };

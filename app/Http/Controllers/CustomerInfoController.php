@@ -10,12 +10,17 @@ class CustomerInfoController extends Controller
 {
     public function getCustomer(Request $request)
     {
+<<<<<<< HEAD
         $request->validate([
             'customer_id' => 'required',
         ]);
 
         $customer = Customer:: where("id=",$request->customer_id);
         
+=======
+        $customer = $request->user();
+
+>>>>>>> 478cc4bf7053c46aa18c1fe6339d774a7d10b465
         if ($customer != null)
         {
             $data = [
@@ -32,77 +37,12 @@ class CustomerInfoController extends Controller
                         "status" => 403,
                         "method" => "customerLogout",
                         "message" => "user not found",
-                        "data" =>null
+                        "data" => ""
                     ];
-                    
-                    return response()->json($data,403);
-        }
-        
-        
-        
-    }
-    /*
-    public function editCustomer(Request $request)
-    {
-        $request->validate([
-            'customer_id' => 'required',
-            'authorization' => 'required',
-        ]);
-        $customer = Customer:: where("id=",$request->customer_id);
-        
-        if ($customer != null)
-        {
-            $data = [
-                        "status" => 200,
-                        "method" => "editCustomer",
-                        "message" => "sucess",
-                        "data" =>$customer
-                    ];
-                    return response()->json($data, 200);
-        }
-        else
-        {
-            $data = [
-                        "status" => 403,
-                        "method" => "customerLogout",
-                        "message" => "user not found",
-                        "data" =>null
-                    ];
-                    
+
                     return response()->json($data,403);
         }
     }
-    public function deleteCustomer(Request $request)
-    {
-        $request->validate([
-            'customer_id' => 'required',
-            'authorization' => 'required',
-        ]);
-        $customer = Customer:: where("id=",$request->customer_id);
-        
-        if ($customer != null)
-        {
-            $data = [
-                        "status" => 200,
-                        "method" => "editCustomer",
-                        "message" => "sucess",
-                        "data" =>$customer
-                    ];
-                    return response()->json($data, 200);
-        }
-        else
-        {
-            $data = [
-                        "status" => 403,
-                        "method" => "customerLogout",
-                        "message" => "user not found",
-                        "data" =>null
-                    ];
-                    
-                    return response()->json($data,403);
-        }
-    }
-    */
 }
 
 ?>
