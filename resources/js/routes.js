@@ -27,6 +27,11 @@ let routes = [
         props: true
     },
     {
+        path: "/signout",
+        component: require("./components/guest/SignOut.vue").default,
+        props: true
+    },
+    {
         path: "/customer",
         components: {
             default: require("./components/customer/CustomerApp.vue").default
