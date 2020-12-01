@@ -27,7 +27,7 @@ class Restaurant extends Authenticatable
 
     public function tags()
     {
-        return $this->belongsToMany('App\Models\RestaurantTag','restaurant_id');
+        return $this->belongsToMany('App\Models\RestaurantTag','restauranttags_xref','restaurant_id','restaurant_id');
     }
 
     public function dishes()

@@ -2115,23 +2115,73 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      menu: []
+      menu: [],
+      panel: [0, 1],
+      readonly: false
     };
   },
   props: ['id'],
   mounted: function mounted() {
     var _this = this;
 
-    console.log(this.id);
+    console.log(this.$route.params.id);
     var data = {};
     var config = {
       params: {
-        "page": this.page
+        "restaurant_id": this.$route.params.id
       },
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken
@@ -2145,7 +2195,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    selectRest: function selectRest(RID) {
+    RollBack: function RollBack() {
       this.$router.push("/customer/home");
     }
   }
@@ -2163,8 +2213,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
-//
-//
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2215,7 +2265,9 @@ __webpack_require__.r(__webpack_exports__);
   props: {},
   mounted: function mounted() {},
   data: function data() {
-    return {
+    var _ref;
+
+    return _ref = {
       valid: true,
       fail: false,
       loading: false,
@@ -2229,22 +2281,16 @@ __webpack_require__.r(__webpack_exports__);
       passwordRules: [function (v) {
         return !!v || "請填入密碼!";
       }],
-      mode: 0,
-      type: null,
-      typeRules: [function (v) {
-        return !!v || "請選擇身分!";
-      }],
-      items: ["顧客", "外送員", "餐廳"]
-    };
+      mode: 0
+    }, _defineProperty(_ref, "loading", false), _defineProperty(_ref, "type", null), _defineProperty(_ref, "typeRules", [function (v) {
+      return !!v || "請選擇身分!";
+    }]), _defineProperty(_ref, "items", ["顧客", "外送員", "餐廳"]), _ref;
   },
   methods: {
     login: function login() {
       var _this = this;
 
-      if (!this.$refs.form.validate()) {
-        return;
-      }
-
+      this.$refs.form.validate();
       this.loading = true;
       console.log(this.email);
       console.log(this.password);
@@ -2252,15 +2298,18 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.type);
 
       if (this.type === "顧客") {
+        this.loading = false;
         this.mode = 1;
+        setTimeout(function () {
+          return 500;
+        }); //test
+
         Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerLoginAPI"])({
           email: this.email,
           password: this.password,
           device_name: this.email
         }).then(function (resp) {
           if (resp.status === 200) {
-            _this.loading = false;
-
             _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
 
             _this.$store.commit("USER_NAME", resp.data.data.access_token);
@@ -2270,23 +2319,12 @@ __webpack_require__.r(__webpack_exports__);
 
           console.log(resp.data);
         })["catch"](function (err) {
-          if (err.response.status === 401) {
-            _this.loading = false;
-
-            _this.$emit("showSnackBar", "信箱/密碼錯誤");
-
-            console.log(err);
-          } else if (err.response.status === 400) {
-            _this.loading = false;
-
-            _this.$emit("showSnackBar", "未知的錯誤");
-
-            console.log(err);
-          }
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
 
           console.log(err);
         });
       } else if (this.type === "外送員") {
+        this.loading = false;
         this.mode = 2;
         Object(_api__WEBPACK_IMPORTED_MODULE_0__["deliveryManLoginAPI"])({
           email: this.email,
@@ -2294,8 +2332,6 @@ __webpack_require__.r(__webpack_exports__);
           device_name: this.email
         }).then(function (resp) {
           if (resp.status === 200) {
-            _this.loading = false;
-
             _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
 
             _this.$store.commit("USER_NAME", resp.data.data.access_token);
@@ -2305,19 +2341,7 @@ __webpack_require__.r(__webpack_exports__);
 
           console.log(resp.data);
         })["catch"](function (err) {
-          if (err.response.status === 401) {
-            _this.loading = false;
-
-            _this.$emit("showSnackBar", "信箱/密碼錯誤");
-
-            console.log(err);
-          } else if (err.response.status === 404) {
-            _this.loading = false;
-
-            _this.$emit("showSnackBar", "未知的錯誤");
-
-            console.log(err);
-          }
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
 
           console.log(err);
         });
@@ -2333,8 +2357,6 @@ __webpack_require__.r(__webpack_exports__);
           device_name: this.email
         }).then(function (resp) {
           if (resp.status === 200) {
-            _this.loading = false;
-
             _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
 
             _this.$store.commit("USER_NAME", resp.data.data.access_token);
@@ -2344,15 +2366,7 @@ __webpack_require__.r(__webpack_exports__);
 
           console.log(resp.data);
         })["catch"](function (err) {
-          if (err.response.status === 401) {
-            _this.$emit("showSnackBar", "信箱/密碼錯誤");
-
-            console.log(err);
-          } else if (err.response.status === 404) {
-            _this.$emit("showSnackBar", "未知的錯誤");
-
-            console.log(err);
-          }
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
 
           console.log(err);
         });
@@ -2417,37 +2431,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
@@ -2455,128 +2438,42 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       valid: true,
-      type: null,
       email: "",
-      password: "",
-      name: "",
-      phone: "",
-      addressOrlicense: "",
-      mode: 0,
-      addressOrLicenseLabel: "外送接收地址",
       emailRules: [function (v) {
         return !!v || "請填入信箱!";
       }, function (v) {
         return /.+@.+\..+/.test(v) || "請填入正確的信箱!";
       }],
+      password: "",
       passwordRules: [function (v) {
-        return !!v || "請輸入密碼!";
-      }],
-      repassword: "",
-      repasswordRules: [function (v) {
-        return !!v || "請重新輸入密碼!";
+        return !!v || "請填入密碼!";
       }],
       loading: false,
+      type: null,
       typeRules: [function (v) {
         return !!v || "請選擇身分!";
       }],
-      items: ["顧客", "外送員"],
-      basicRules: [function (v) {
-        return !!v || "請填入資料!";
-      }]
+      items: ["顧客", "外送員", "餐廳"]
     };
   },
   methods: {
-    changeType: function changeType() {
-      if (this.type == "顧客") {
-        this.addressOrLicenseLabel = "外送接收地址";
-      } else if (this.type == "外送員") {
-        this.addressOrLicenseLabel = "車牌";
-      }
-    },
-    register: function register() {
+    login: function login() {
       var _this = this;
 
-      if (!this.$refs.form.validate()) {
-        return;
-      }
-
-      this.loading = true;
+      this.$refs.form.validate();
       console.log(this.email);
       console.log(this.password);
-      console.log(this.type);
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerLoginAPI"])({
+        email: this.email,
+        password: this.password,
+        device_name: this.email
+      }).then(function (resp) {
+        if (resp.status === 200) {
+          _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+        }
 
-      if (this.type === "顧客") {
-        this.mode = 1;
-        Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerSignUpAPI"])({
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          address: this.addressOrlicense,
-          password: this.password
-        }).then(function (resp) {
-          if (resp.status === 200) {
-            _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-
-            _this.$store.commit("USER_NAME", resp.data.data.access_token);
-
-            _this.$store.commit("MODE", _this.mode);
-          }
-
-          console.log(resp.data);
-        })["catch"](function (err) {
-          if (err.response.status === 401) {
-            _this.$emit("showSnackBar", "顧客帳號已註冊");
-
-            console.log(err);
-          } else if (err.response.status === 400) {
-            _this.$emit("showSnackBar", "未知的錯誤");
-
-            console.log(err);
-          }
-
-          console.log(err);
-        });
-      } else if (this.type === "外送員") {
-        this.mode = 1;
-        Object(_api__WEBPACK_IMPORTED_MODULE_0__["deliveryManSignUpAPI"])({
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          license_id: this.addressOrlicense,
-          password: this.password
-        }).then(function (resp) {
-          if (resp.status === 200) {
-            _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-
-            _this.$store.commit("USER_NAME", resp.data.data.access_token);
-
-            _this.$store.commit("MODE", _this.mode);
-          }
-
-          console.log(resp.data);
-        })["catch"](function (err) {
-          if (err.response.status === 401) {
-            _this.$emit("showSnackBar", "外送員帳號已註冊");
-
-            console.log(err);
-          } else if (err.response.status === 400) {
-            _this.$emit("showSnackBar", "未知的錯誤");
-
-            console.log(err);
-          }
-
-          console.log(err);
-        });
-      }
-    }
-  },
-  computed: {
-    passwordConfirmationRule: function passwordConfirmationRule() {
-      var _this2 = this;
-
-      return function () {
-        return _this2.password === _this2.repassword || "密碼不一致!";
-      };
+        console.log(resp.data);
+      });
     }
   }
 });
@@ -21295,22 +21192,115 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "panel-heading text-center" }, [_vm._v("Home")]),
+  return _c(
+    "div",
+    [
+      _c(
+        "v-app-bar",
+        {
+          attrs: {
+            absolute: "",
+            color: "white",
+            "elevate-on-scroll": "",
+            "scroll-target": "#scrolling-techniques-7"
+          }
+        },
+        [
+          _c(
+            "v-btn",
+            { attrs: { icon: "" }, on: { click: _vm.RollBack } },
+            [_c("v-icon", [_vm._v("mdi-arrow-left")])],
+            1
+          ),
+          _vm._v(" "),
+          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.id))]),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            { attrs: { icon: "" } },
+            [_c("v-icon", [_vm._v("mdi-dots-vertical")])],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("div", { staticClass: "container mb-12" }, [
-        _vm._v("\n      info\n    ")
-      ])
-    ])
-  }
-]
+      _c(
+        "div",
+        { staticClass: "d-flex" },
+        [
+          _c("v-checkbox", {
+            attrs: { label: "Readonly" },
+            model: {
+              value: _vm.readonly,
+              callback: function($$v) {
+                _vm.readonly = $$v
+              },
+              expression: "readonly"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-expansion-panels",
+        {
+          attrs: { readonly: _vm.readonly, multiple: "" },
+          model: {
+            value: _vm.panel,
+            callback: function($$v) {
+              _vm.panel = $$v
+            },
+            expression: "panel"
+          }
+        },
+        [
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 1")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 2")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 3")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -21434,7 +21424,6 @@ var render = function() {
                   staticClass: "px-14",
                   attrs: {
                     label: "password",
-                    type: "password",
                     outlined: "",
                     rules: _vm.passwordRules
                   },
@@ -21451,11 +21440,7 @@ var render = function() {
                   "v-btn",
                   {
                     style: { left: "50%", transform: "translateX(-50%)" },
-                    attrs: {
-                      color: "0xFFFF",
-                      elevation: "2",
-                      loading: _vm.loading
-                    },
+                    attrs: { color: "0xFFFF", elevation: "2" },
                     on: { click: _vm.login }
                   },
                   [_vm._v("\n          登入\n        ")]
@@ -21531,7 +21516,6 @@ var render = function() {
                     outlined: "",
                     rules: _vm.typeRules
                   },
-                  on: { change: _vm.changeType },
                   model: {
                     value: _vm.type,
                     callback: function($$v) {
@@ -21561,7 +21545,6 @@ var render = function() {
                   staticClass: "px-14",
                   attrs: {
                     label: "password",
-                    type: "password",
                     outlined: "",
                     rules: _vm.passwordRules
                   },
@@ -21571,65 +21554,6 @@ var render = function() {
                       _vm.password = $$v
                     },
                     expression: "password"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-text-field", {
-                  staticClass: "px-14",
-                  attrs: {
-                    label: "重新輸入password",
-                    type: "password",
-                    outlined: "",
-                    rules: _vm.repasswordRules.concat(
-                      _vm.passwordConfirmationRule
-                    )
-                  },
-                  model: {
-                    value: _vm.repassword,
-                    callback: function($$v) {
-                      _vm.repassword = $$v
-                    },
-                    expression: "repassword"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-text-field", {
-                  staticClass: "px-14",
-                  attrs: { label: "姓名", outlined: "", rules: _vm.basicRules },
-                  model: {
-                    value: _vm.name,
-                    callback: function($$v) {
-                      _vm.name = $$v
-                    },
-                    expression: "name"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-text-field", {
-                  staticClass: "px-14",
-                  attrs: { label: "電話", outlined: "", rules: _vm.basicRules },
-                  model: {
-                    value: _vm.phone,
-                    callback: function($$v) {
-                      _vm.phone = $$v
-                    },
-                    expression: "phone"
-                  }
-                }),
-                _vm._v(" "),
-                _c("v-text-field", {
-                  staticClass: "px-14",
-                  attrs: {
-                    label: _vm.addressOrLicenseLabel,
-                    outlined: "",
-                    rules: _vm.basicRules
-                  },
-                  model: {
-                    value: _vm.addressOrlicense,
-                    callback: function($$v) {
-                      _vm.addressOrlicense = $$v
-                    },
-                    expression: "addressOrlicense"
                   }
                 }),
                 _vm._v(" "),
@@ -82034,7 +81958,7 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/api.js ***!
   \*****************************/
-/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall */
+/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall, getRestaurantByID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -82046,6 +81970,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLogoutAPI", function() { return customerLogoutAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLogoutAPI", function() { return deliveryManLogoutAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantall", function() { return getRestaurantall; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByID", function() { return getRestaurantByID; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
  //初始化
@@ -82108,7 +82033,7 @@ var customerSignUpAPI = function customerSignUpAPI(data) {
   return guestRequest.post("/api/v1/guest/customer/signup", data);
 };
 var deliveryManSignUpAPI = function deliveryManSignUpAPI(data) {
-  return guestRequest.post("/api/v1/guest/delivery_man/signup", data);
+  return guestRequest.post("/api/v1/guest/customer/signup", data);
 };
 var customerLoginAPI = function customerLoginAPI(data) {
   return guestRequest.post("/api/v1/guest/customer/login", data);
@@ -82124,6 +82049,9 @@ var deliveryManLogoutAPI = function deliveryManLogoutAPI(data, config) {
 };
 var getRestaurantall = function getRestaurantall(data) {
   return userRequest.get("/api/v1/users/customer/restaurant/all", data);
+};
+var getRestaurantByID = function getRestaurantByID(data) {
+  return userRequest.get("/api/v1/customer/restaurant/info", data);
 };
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
@@ -83088,9 +83016,12 @@ var routes = [{
       customerView: __webpack_require__(/*! ./components/customer/Info.vue */ "./resources/js/components/customer/Info.vue")["default"]
     }
   }, {
-    path: "/restaurant/:id",
+    path: "restaurant/:id",
     components: {
       customerView: __webpack_require__(/*! ./components/customer/RestaurantInfo.vue */ "./resources/js/components/customer/RestaurantInfo.vue")["default"]
+    },
+    props: {
+      id: 1
     }
   }]
 }, {
