@@ -24,6 +24,7 @@
           <v-text-field
             label="password"
             v-model="password"
+            type="password"
             outlined
             class="px-14"
             :rules="passwordRules"
@@ -33,6 +34,7 @@
             @click="login"
             color="0xFFFF"
             elevation="2"
+            :loading="loading"
             :style="{ left: '50%', transform: 'translateX(-50%)' }"
           >
             登入
@@ -60,23 +62,22 @@ export default {
     password: "",
     passwordRules: [(v) => !!v || "請填入密碼!"],
     mode: 0,
-    loading: false,
     type: null,
     typeRules: [(v) => !!v || "請選擇身分!"],
     items: ["顧客", "外送員", "餐廳"],
   }),
   methods: {
     login() {
-      this.$refs.form.validate();
+      if (!this.$refs.form.validate()) {
+        return;
+      }
       this.loading = true;
       console.log(this.email);
       console.log(this.password);
       console.log(this.mode);
       console.log(this.type);
       if (this.type === "顧客") {
-        this.loading = false;
         this.mode = 1;
-        setTimeout(() => 500); //test
         customerLoginAPI({
           email: this.email,
           password: this.password,
@@ -84,6 +85,7 @@ export default {
         })
           .then((resp) => {
             if (resp.status === 200) {
+              this.loading = false;
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
@@ -91,11 +93,18 @@ export default {
             console.log(resp.data);
           })
           .catch((err) => {
-            this.$emit("showSnackBar", "信箱/密碼錯誤");
+            if (err.response.status === 401) {
+              this.loading = false;
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 400) {
+              this.loading = false;
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
             console.log(err);
           });
       } else if (this.type === "外送員") {
-        this.loading = false;
         this.mode = 2;
         deliveryManLoginAPI({
           email: this.email,
@@ -104,6 +113,7 @@ export default {
         })
           .then((resp) => {
             if (resp.status === 200) {
+              this.loading = false;
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
@@ -111,7 +121,15 @@ export default {
             console.log(resp.data);
           })
           .catch((err) => {
-            this.$emit("showSnackBar", "信箱/密碼錯誤");
+            if (err.response.status === 401) {
+              this.loading = false;
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 404) {
+              this.loading = false;
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
             console.log(err);
           });
       }
@@ -126,6 +144,7 @@ export default {
         })
           .then((resp) => {
             if (resp.status === 200) {
+              this.loading = false;
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
@@ -133,7 +152,13 @@ export default {
             console.log(resp.data);
           })
           .catch((err) => {
-            this.$emit("showSnackBar", "信箱/密碼錯誤");
+            if (err.response.status === 401) {
+              this.$emit("showSnackBar", "信箱/密碼錯誤");
+              console.log(err);
+            } else if (err.response.status === 404) {
+              this.$emit("showSnackBar", "未知的錯誤");
+              console.log(err);
+            }
             console.log(err);
           });
       }

@@ -17,6 +17,6 @@ class RestaurantTag extends Model
 
     public function restaurants()
     {
-        return $this->belongsToMany('App\Models\Restaurant');
+        return $this->belongsToMany('App\Models\Restaurant','restauranttags_xref','restaurant_tag');
     }
 }
