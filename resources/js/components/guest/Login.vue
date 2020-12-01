@@ -49,7 +49,12 @@
 import { customerLoginAPI, deliveryManLoginAPI } from "../../api";
 export default {
   props: {},
-  mounted() {},
+  mounted() {
+    if (this.$store.getters.getAccessToken != "") {
+      console.log("in");
+      this.$router.push("/");
+    }
+  },
   data: () => ({
     valid: true,
     fail: false,
@@ -89,6 +94,7 @@ export default {
               this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
               this.$store.commit("USER_NAME", resp.data.data.access_token);
               this.$store.commit("MODE", this.mode);
+              this.$router.push("/");
             }
             console.log(resp.data);
           })
