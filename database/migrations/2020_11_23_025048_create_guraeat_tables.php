@@ -15,7 +15,7 @@ class CreateGuraeatTables extends Migration
     {
         Schema::create('Customers', function (Blueprint $table) {
             $table->id();
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->string('email')->unique();
             $table->string('name');
             $table->string('address');
@@ -24,7 +24,7 @@ class CreateGuraeatTables extends Migration
         });
         Schema::create('DeliveryMans', function (Blueprint $table) {
             $table->id();
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->string('email')->unique();
             $table->string('name');
             $table->string('license_id');
@@ -42,7 +42,7 @@ class CreateGuraeatTables extends Migration
         });
         Schema::create('Restaurants', function (Blueprint $table) {
             $table->id();
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->string('name');
             $table->string('address');
             $table->text('img');
