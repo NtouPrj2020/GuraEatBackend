@@ -77,7 +77,16 @@
 import { customerSignUpAPI, deliveryManSignUpAPI } from "../../api";
 export default {
   props: {},
-  mounted() {},
+  mounted() {
+    if (
+      this.$store.getters.getMode == 1 ||
+      this.$store.getters.getMode == 2 ||
+      this.$store.getters.getMode == 3
+    ) {
+      this.$emit("showSnackBar", "請先登出再進行註冊!");
+      setTimeout(() => this.$router.push("/"), 3000);
+    }
+  },
   data: () => ({
     valid: true,
     type: null,
@@ -126,11 +135,11 @@ export default {
           password: this.password,
         })
           .then((resp) => {
-            if (resp.status === 200) {
-              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-              this.$store.commit("USER_NAME", resp.data.data.access_token);
-              this.$store.commit("MODE", this.mode);
+            if (resp.status === 201) {
+              this.$emit("showSnackBar", "帳號註冊成功，即將跳轉至登入頁面");
+              setTimeout(() => this.$router.push("/"), 3000);
             }
+            console.log("done");
             console.log(resp.data);
           })
           .catch((err) => {
@@ -153,10 +162,9 @@ export default {
           password: this.password,
         })
           .then((resp) => {
-            if (resp.status === 200) {
-              this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-              this.$store.commit("USER_NAME", resp.data.data.access_token);
-              this.$store.commit("MODE", this.mode);
+            if (resp.status === 201) {
+              this.$emit("showSnackBar", "帳號註冊成功，即將跳轉至登入頁面");
+              setTimeout(() => this.$router.push("/"), 3000);
             }
             console.log(resp.data);
           })
