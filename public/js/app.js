@@ -1915,6 +1915,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {
@@ -1924,7 +1932,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       snackbar: false,
       snackbarText: "Hello, I'm a snackbar",
-      snackBarTimeout: 2000
+      snackBarTimeout: 3000
     };
   },
   methods: {
@@ -1977,9 +1985,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    if (this.$store.getters.getMode == 0) {
+      this.$router.push("login");
+    }
+  },
   data: function data() {
     return {};
   },
@@ -2100,23 +2115,73 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      menu: []
+      menu: [],
+      panel: [0, 1],
+      readonly: false
     };
   },
   props: ['id'],
   mounted: function mounted() {
     var _this = this;
 
-    console.log(this.id);
+    console.log(this.$route.params.id);
     var data = {};
     var config = {
       params: {
-        "page": this.page
+        "restaurant_id": this.$route.params.id
       },
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken
@@ -2130,7 +2195,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    selectRest: function selectRest(RID) {
+    RollBack: function RollBack() {
       this.$router.push("/customer/home");
     }
   }
@@ -2148,6 +2213,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2198,8 +2265,12 @@ __webpack_require__.r(__webpack_exports__);
   props: {},
   mounted: function mounted() {},
   data: function data() {
-    return {
+    var _ref;
+
+    return _ref = {
       valid: true,
+      fail: false,
+      loading: false,
       email: "",
       emailRules: [function (v) {
         return !!v || "請填入信箱!";
@@ -2210,32 +2281,96 @@ __webpack_require__.r(__webpack_exports__);
       passwordRules: [function (v) {
         return !!v || "請填入密碼!";
       }],
-      loading: false,
-      type: null,
-      typeRules: [function (v) {
-        return !!v || "請選擇身分!";
-      }],
-      items: ["顧客", "外送員", "餐廳"]
-    };
+      mode: 0
+    }, _defineProperty(_ref, "loading", false), _defineProperty(_ref, "type", null), _defineProperty(_ref, "typeRules", [function (v) {
+      return !!v || "請選擇身分!";
+    }]), _defineProperty(_ref, "items", ["顧客", "外送員", "餐廳"]), _ref;
   },
   methods: {
     login: function login() {
       var _this = this;
 
       this.$refs.form.validate();
+      this.loading = true;
       console.log(this.email);
       console.log(this.password);
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerLoginAPI"])({
-        email: this.email,
-        password: this.password,
-        device_name: this.email
-      }).then(function (resp) {
-        if (resp.status === 200) {
-          _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-        }
+      console.log(this.mode);
+      console.log(this.type);
 
-        console.log(resp.data);
-      });
+      if (this.type === "顧客") {
+        this.loading = false;
+        this.mode = 1;
+        setTimeout(function () {
+          return 500;
+        }); //test
+
+        Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerLoginAPI"])({
+          email: this.email,
+          password: this.password,
+          device_name: this.email
+        }).then(function (resp) {
+          if (resp.status === 200) {
+            _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+
+            _this.$store.commit("USER_NAME", resp.data.data.access_token);
+
+            _this.$store.commit("MODE", _this.mode);
+          }
+
+          console.log(resp.data);
+        })["catch"](function (err) {
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
+
+          console.log(err);
+        });
+      } else if (this.type === "外送員") {
+        this.loading = false;
+        this.mode = 2;
+        Object(_api__WEBPACK_IMPORTED_MODULE_0__["deliveryManLoginAPI"])({
+          email: this.email,
+          password: this.password,
+          device_name: this.email
+        }).then(function (resp) {
+          if (resp.status === 200) {
+            _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+
+            _this.$store.commit("USER_NAME", resp.data.data.access_token);
+
+            _this.$store.commit("MODE", _this.mode);
+          }
+
+          console.log(resp.data);
+        })["catch"](function (err) {
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
+
+          console.log(err);
+        });
+      }
+
+      if (this.type === "餐廳") {
+        this.loading = false;
+        this.mode = 3;
+        Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerLoginAPI"])({
+          //need to change later,don't have api yet
+          email: this.email,
+          password: this.password,
+          device_name: this.email
+        }).then(function (resp) {
+          if (resp.status === 200) {
+            _this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+
+            _this.$store.commit("USER_NAME", resp.data.data.access_token);
+
+            _this.$store.commit("MODE", _this.mode);
+          }
+
+          console.log(resp.data);
+        })["catch"](function (err) {
+          _this.$emit("showSnackBar", "信箱/密碼錯誤");
+
+          console.log(err);
+        });
+      }
     }
   }
 });
@@ -2376,7 +2511,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.panel-heading {\r\n    font-size: 30px;\r\n    font-weight:bold;\n}\n#app {\r\n    font-family: 'Noto Sans TC',serif;\r\n    background: #30d6f5;\r\n    color: #fff;\n}\r\n\r\n", ""]);
+exports.push([module.i, "\n.panel-heading {\r\n  font-size: 30px;\r\n  font-weight: bold;\n}\n#app {\r\n  font-family: \"Noto Sans TC\", serif;\r\n  background: #30d6f5;\r\n  color: #fff;\n}\r\n", ""]);
 
 // exports
 
@@ -20695,7 +20830,51 @@ var render = function() {
   return _c(
     "v-app",
     { attrs: { id: "app" } },
-    [_c("router-view", { on: { showSnackBar: _vm.showSnackBar } })],
+    [
+      _c("router-view", { on: { showSnackBar: _vm.showSnackBar } }),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: { timeout: _vm.snackBarTimeout },
+          scopedSlots: _vm._u([
+            {
+              key: "action",
+              fn: function(ref) {
+                var attrs = ref.attrs
+                return [
+                  _c(
+                    "v-btn",
+                    _vm._b(
+                      {
+                        attrs: { color: "pink", text: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.snackbar = false
+                          }
+                        }
+                      },
+                      "v-btn",
+                      attrs,
+                      false
+                    ),
+                    [_vm._v("Close")]
+                  )
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [_vm._v("\n    " + _vm._s(_vm.snackbarText) + "\n    ")]
+      )
+    ],
     1
   )
 }
@@ -20793,7 +20972,10 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
-      _c("router-view", { attrs: { name: "customerView" } }),
+      _c("router-view", {
+        attrs: { name: "customerView" },
+        on: { showSnackBar: _vm.showSnackBar }
+      }),
       _vm._v(" "),
       _c(
         "v-bottom-navigation",
@@ -21010,22 +21192,115 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "panel-heading text-center" }, [_vm._v("Home")]),
+  return _c(
+    "div",
+    [
+      _c(
+        "v-app-bar",
+        {
+          attrs: {
+            absolute: "",
+            color: "white",
+            "elevate-on-scroll": "",
+            "scroll-target": "#scrolling-techniques-7"
+          }
+        },
+        [
+          _c(
+            "v-btn",
+            { attrs: { icon: "" }, on: { click: _vm.RollBack } },
+            [_c("v-icon", [_vm._v("mdi-arrow-left")])],
+            1
+          ),
+          _vm._v(" "),
+          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.id))]),
+          _vm._v(" "),
+          _c("v-spacer"),
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            { attrs: { icon: "" } },
+            [_c("v-icon", [_vm._v("mdi-dots-vertical")])],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("div", { staticClass: "container mb-12" }, [
-        _vm._v("\n      info\n    ")
-      ])
-    ])
-  }
-]
+      _c(
+        "div",
+        { staticClass: "d-flex" },
+        [
+          _c("v-checkbox", {
+            attrs: { label: "Readonly" },
+            model: {
+              value: _vm.readonly,
+              callback: function($$v) {
+                _vm.readonly = $$v
+              },
+              expression: "readonly"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-expansion-panels",
+        {
+          attrs: { readonly: _vm.readonly, multiple: "" },
+          model: {
+            value: _vm.panel,
+            callback: function($$v) {
+              _vm.panel = $$v
+            },
+            expression: "panel"
+          }
+        },
+        [
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 1")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 2")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-expansion-panel",
+            [
+              _c("v-expansion-panel-header", [_vm._v("Panel 3")]),
+              _vm._v(" "),
+              _c("v-expansion-panel-content", [
+                _vm._v("\n                Some content\n            ")
+              ])
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -81878,7 +82153,7 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/api.js ***!
   \*****************************/
-/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall */
+/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall, getRestaurantByID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81890,6 +82165,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLogoutAPI", function() { return customerLogoutAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLogoutAPI", function() { return deliveryManLogoutAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantall", function() { return getRestaurantall; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByID", function() { return getRestaurantByID; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
  //初始化
@@ -81969,6 +82245,9 @@ var deliveryManLogoutAPI = function deliveryManLogoutAPI(data, config) {
 var getRestaurantall = function getRestaurantall(data) {
   return userRequest.get("/api/v1/users/customer/restaurant/all", data);
 };
+var getRestaurantByID = function getRestaurantByID(data) {
+  return userRequest.get("/api/v1/customer/restaurant/info", data);
+};
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
@@ -82014,7 +82293,7 @@ var vuetify = new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a({
     }
   },
   icons: {
-    iconfont: 'fa4' // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
+    iconfont: "fa4" // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4' || 'faSvg'
 
   }
 });
@@ -82022,16 +82301,20 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
   plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_7__["default"])()],
   state: {
     user_email: "",
+    user_name: "",
     mode: 2,
     //0admin 1user 2guest
     access_token: null,
     device_name: "",
-    cstfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    cstfToken: document.querySelector('meta[name="csrf-token"]').getAttribute("content")
   },
   actions: {},
   mutations: {
     USER_EMAIL: function USER_EMAIL(state, user_email) {
       state.user_email = user_email;
+    },
+    USER_NAME: function USER_NAME(state, user_name) {
+      state.user_name = user_name;
     },
     MODE: function MODE(state, mode) {
       state.mode = mode;
@@ -82047,6 +82330,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
     getMode: function getMode(state) {
       return state.mode;
     },
+    getUserName: function getUserName(state) {
+      return state.user_name;
+    },
     getAccessToken: function getAccessToken(state) {
       return state.access_token;
     },
@@ -82061,10 +82347,10 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
     }
   }
 });
-_routes__WEBPACK_IMPORTED_MODULE_4__["default"].mode = 'html5';
+_routes__WEBPACK_IMPORTED_MODULE_4__["default"].mode = "html5";
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-  el: '#app',
+  el: "#app",
   store: store,
   vuetify: vuetify,
   router: _routes__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -82925,9 +83211,12 @@ var routes = [{
       customerView: __webpack_require__(/*! ./components/customer/Info.vue */ "./resources/js/components/customer/Info.vue")["default"]
     }
   }, {
-    path: "/restaurant/:id",
+    path: "restaurant/:id",
     components: {
       customerView: __webpack_require__(/*! ./components/customer/RestaurantInfo.vue */ "./resources/js/components/customer/RestaurantInfo.vue")["default"]
+    },
+    props: {
+      id: 1
     }
   }]
 }, {
