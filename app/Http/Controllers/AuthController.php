@@ -330,7 +330,7 @@ class AuthController extends Controller
      *          )
      *      ),
      *      @OA\Response(
-     *          response=201,
+     *          response=200,
      *          description="登入成功",
      *          content={
      *             @OA\MediaType(

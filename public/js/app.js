@@ -2030,7 +2030,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {
-    if (this.$store.getters.getMode == 0) {
+    if (this.$store.getters.getMode === 0) {
       this.$router.push("login");
     }
   },
@@ -2128,6 +2128,73 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     selectRest: function selectRest(RID) {
       this.$router.push("/customer/restaurant/" + RID);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/customer/Info.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/customer/Info.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {},
+  mounted: function mounted() {
+    var config = {
+      params: {
+        "page": this.page
+      },
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken()
+      }
+    };
+  },
+  data: function data() {
+    return {
+      info: [],
+      items: ["顧客", "外送員", "餐廳", "OMG"]
+    };
+  },
+  methods: {
+    switch_user: function switch_user() {},
+    history_order: function history_order() {},
+    modify_info: function modify_info() {},
+    signout: function signout() {
+      this.$router.push("/signout");
     }
   }
 });
@@ -2242,73 +2309,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/customer/Info.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/customer/Info.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: {},
-  mounted: function mounted() {
-    var config = {
-      params: {
-        "page": this.page
-      },
-      headers: {
-        Authorization: "Bearer " + this.$store.getters.getAccessToken()
-      }
-    };
-  },
-  data: function data() {
-    return {
-      info: [],
-      items: ["顧客", "外送員", "餐廳", "OMG"]
-    };
-  },
-  methods: {
-    switch_user: function switch_user() {},
-    history_order: function history_order() {},
-    modify_info: function modify_info() {},
-    signout: function signout() {
-      this.$router.push("/signout");
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/guest/Login.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/guest/Login.vue?vue&type=script&lang=js& ***!
@@ -2369,12 +2369,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
-  mounted: function mounted() {
-    if (this.$store.getters.getAccessToken != "") {
-      console.log("in");
-      this.$router.push("/");
-    }
-  },
+  mounted: function mounted() {},
   data: function data() {
     return {
       valid: true,

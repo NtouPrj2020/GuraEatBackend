@@ -50,10 +50,6 @@ import { customerLoginAPI, deliveryManLoginAPI } from "../../api";
 export default {
   props: {},
   mounted() {
-    if (this.$store.getters.getAccessToken != "") {
-      console.log("in");
-      this.$router.push("/");
-    }
   },
   data: () => ({
     valid: true,
