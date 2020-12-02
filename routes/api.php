@@ -46,8 +46,11 @@ Route::group(['prefix' => 'v1'], function () {
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getInfo');
-            Route::post('/menu', 'App\Http\Controllers\RestaurantMenuController@addDish');
-            Route::get('/menu', 'App\Http\Controllers\RestaurantMenuController@getAllDish');
+            Route::post('/menu/addDish', 'App\Http\Controllers\RestaurantMenuController@addDish');
+            Route::delete('/menu/deleteDish', 'App\Http\Controllers\RestaurantMenuController@deleteDish');
+            Route::put('/menu/editDish', 'App\Http\Controllers\RestaurantMenuController@editDish');
+            Route::get('/menu/getAllDish', 'App\Http\Controllers\RestaurantMenuController@getAllDish');
+            Route::get('/menu/getDishbyID', 'App\Http\Controllers\RestaurantMenuController@getDishbyID');
         });
     });
 });

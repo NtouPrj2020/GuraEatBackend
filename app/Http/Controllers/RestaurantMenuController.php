@@ -14,26 +14,25 @@ class RestaurantMenuController extends Controller
             "status" => 200,
             "method" => "getAllRestaurant",
             "message" => "success",
-            "data"=> $restaurants
+            "data"=> $Dish
         ];
         return response()->json($data, 200);
     }
 
-    public function getRestaurantByID(Request $request)
+    public function getDishbyID(Request $request)
     {
         $request->validate([
             'ID' => 'required|string',
         ]);
-        $restaurants = Restaurant::where('id', '=', $request->ID)->get();
-        for ($i = 0; $i < count($restaurants); $i++) {
-            $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
-        }
+        $restaurant = $request->user();
+        $dish = Dish::where('id', '=', $request->ID)->get();
         $data = [
             "status" => 200,
             "method" => "getRestaurantByID",
             "message" => "success",
-            "data" => $restaurants
+            "data" => $dish
         ];
+        return response()->json($data, 200);
     }
     public function addDish(Request $request)
     {
@@ -54,11 +53,30 @@ class RestaurantMenuController extends Controller
     }
     public function editDish(Request $request)
     {
-
+        $restaurant = $request->user();
+        $request->validate([
+            'ID' => 'required|string',
+            'making_time' => 'required|int',
+            'name'=>'required|string',
+            'img'=>'required|string',
+            'price'=>'required|int'
+        ]);
+        $dish = Dish::findOrFail($request->ID);
+        $dish->name=$request->name;
+        $dish->making_time=$request->making_time;
+        $dish->img=$request->img;
+        $dish->price=$request->price;
+        $dish->restaurant_id=$restaurant->id;
+        $dish->save();
     }
     public function deleteDish(Request $request)
     {
-
+        $restaurant = $request->user();
+        $request->validate([
+            'ID' => 'required|string',
+        ]);
+        $dish = Dish::findOrFail($request->ID);
+        $dish->delete();
     }
 }
 
