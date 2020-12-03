@@ -9,10 +9,10 @@ class RestaurantMenuController extends Controller
 {
     public function getAllDish(Request $request){
         $restaurant = $request->user();
-        $Dish = Dish::paginate(20);
+        $Dish = Dish::where('restaurant_id', '=', $restaurant->id)->get();
         $data = [
             "status" => 200,
-            "method" => "getAllRestaurant",
+            "method" => "getAllDish",
             "message" => "success",
             "data"=> $Dish
         ];
@@ -28,7 +28,7 @@ class RestaurantMenuController extends Controller
         $dish = Dish::where('id', '=', $request->ID)->get();
         $data = [
             "status" => 200,
-            "method" => "getRestaurantByID",
+            "method" => "getDishbyID",
             "message" => "success",
             "data" => $dish
         ];
@@ -50,6 +50,12 @@ class RestaurantMenuController extends Controller
         $dish->price=$request->price;
         $dish->restaurant_id=$restaurant->id;
         $dish->save();
+        $data = [
+            "status" => 200,
+            "method" => "addDish",
+            "message" => "success"
+        ];
+        return response()->json($data, 200);
     }
     public function editDish(Request $request)
     {
@@ -68,6 +74,12 @@ class RestaurantMenuController extends Controller
         $dish->price=$request->price;
         $dish->restaurant_id=$restaurant->id;
         $dish->save();
+        $data = [
+            "status" => 200,
+            "method" => "editDish",
+            "message" => "success"
+        ];
+        return response()->json($data, 200);
     }
     public function deleteDish(Request $request)
     {
@@ -77,6 +89,12 @@ class RestaurantMenuController extends Controller
         ]);
         $dish = Dish::findOrFail($request->ID);
         $dish->delete();
+        $data = [
+            "status" => 200,
+            "method" => "deleteDish",
+            "message" => "success"
+        ];
+        return response()->json($data, 200);
     }
 }
 
