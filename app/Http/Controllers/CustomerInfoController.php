@@ -26,7 +26,7 @@ class CustomerInfoController extends Controller
         {
             $data = [
                         "status" => 403,
-                        "method" => "customerLogout",
+                        "method" => "getCustomer",
                         "message" => "user not found",
                         "data" => ""
                     ];
@@ -37,18 +37,16 @@ class CustomerInfoController extends Controller
 
     public function editCustomer(Request $request)
     {
-        $customer = $request->user();
+        //dd($request);
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
         ]);
-   
+        $customer = $request->user();
         if ($customer != null)
         {
-             
-            $customer = Customer::findOrFail($request->ID);
             $customer->phone=$request->phone;
             $customer->email=$request->email;
             $customer->name=$request->name;
@@ -56,7 +54,7 @@ class CustomerInfoController extends Controller
             $customer->save();
             $data = [
                         "status" => 200,
-                        "method" => "getCustomer",
+                        "method" => "editCustomer",
                         "message" => "sucess",
                     ];
                     return response()->json($data, 200);
@@ -65,7 +63,7 @@ class CustomerInfoController extends Controller
         {
             $data = [
                         "status" => 403,
-                        "method" => "customerLogout",
+                        "method" => "editCustomer",
                         "message" => "user not found",
                     ];
 
