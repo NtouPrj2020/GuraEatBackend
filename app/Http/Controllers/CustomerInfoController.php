@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -38,27 +39,38 @@ class CustomerInfoController extends Controller
     {
         $customer = $request->user();
         $request->validate([
-            'ID' => 'required|string',
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
         ]);
-        $customer = User::findOrFail($request->ID);
-        $customer->name=$request->name;
-        $customer->password=$request->password;
-        $customer->email=$request->email;
-        $customer->customer_id=$request->id;
-        $customer->save();
-        ///
-    }
-    public function deleteCustomer(Request $request)
-    {
-        $customer = $request->user();
-        $request->validate([
-            'ID' => 'required|string',
-        ]);
-        $customer = User::findOrFail($request->ID);
-        $customer->delete();
+   
+        if ($customer != null)
+        {
+             
+            $customer = Customer::findOrFail($request->ID);
+            $customer->phone=$request->phone;
+            $customer->email=$request->email;
+            $customer->name=$request->name;
+            $customer->address=$request->address;
+            $customer->save();
+            $data = [
+                        "status" => 200,
+                        "method" => "getCustomer",
+                        "message" => "sucess",
+                    ];
+                    return response()->json($data, 200);
+        }
+        else
+        {
+            $data = [
+                        "status" => 403,
+                        "method" => "customerLogout",
+                        "message" => "user not found",
+                    ];
+
+                    return response()->json($data,403);
+        }
     }
 }
 
