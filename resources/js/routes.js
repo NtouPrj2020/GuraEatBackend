@@ -72,7 +72,23 @@ let routes = [
                         .default
                 },
                 props: {
-                    id : 1
+                    id: 1
+                }
+            }
+        ]
+    },
+    {
+        path: "/restaurant",
+        components: {
+            default: require("./components/restaurant/RestaurantApp.vue")
+                .default
+        },
+        children: [
+            {
+                path: "home",
+                components: {
+                    customerView: require("./components/restaurant/Home.vue")
+                        .default
                 }
             }
         ]
