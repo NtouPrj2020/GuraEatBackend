@@ -7,14 +7,15 @@ use Illuminate\Http\Request;
 
 class RestaurantMenuController extends Controller
 {
-    public function getAllDish(Request $request){
+    public function getAllDish(Request $request)
+    {
         $restaurant = $request->user();
-        $Dish = Dish::paginate(20);
+        $Dish = Dish::where('restaurant_id','=', $restaurant->id)->get();
         $data = [
             "status" => 200,
             "method" => "getAllRestaurant",
             "message" => "success",
-            "data"=> $Dish
+            "data" => $Dish
         ];
         return response()->json($data, 200);
     }
@@ -34,41 +35,44 @@ class RestaurantMenuController extends Controller
         ];
         return response()->json($data, 200);
     }
+
     public function addDish(Request $request)
     {
         $restaurant = $request->user();
         $request->validate([
             'making_time' => 'required|int',
-            'name'=>'required|string',
-            'img'=>'required|string',
-            'price'=>'required|int'
+            'name' => 'required|string',
+            'img' => 'required|string',
+            'price' => 'required|int'
         ]);
-        $dish=new Dish;
-        $dish->name=$request->name;
-        $dish->making_time=$request->making_time;
-        $dish->img=$request->img;
-        $dish->price=$request->price;
-        $dish->restaurant_id=$restaurant->id;
+        $dish = new Dish;
+        $dish->name = $request->name;
+        $dish->making_time = $request->making_time;
+        $dish->img = $request->img;
+        $dish->price = $request->price;
+        $dish->restaurant_id = $restaurant->id;
         $dish->save();
     }
+
     public function editDish(Request $request)
     {
         $restaurant = $request->user();
         $request->validate([
             'ID' => 'required|string',
             'making_time' => 'required|int',
-            'name'=>'required|string',
-            'img'=>'required|string',
-            'price'=>'required|int'
+            'name' => 'required|string',
+            'img' => 'required|string',
+            'price' => 'required|int'
         ]);
         $dish = Dish::findOrFail($request->ID);
-        $dish->name=$request->name;
-        $dish->making_time=$request->making_time;
-        $dish->img=$request->img;
-        $dish->price=$request->price;
-        $dish->restaurant_id=$restaurant->id;
+        $dish->name = $request->name;
+        $dish->making_time = $request->making_time;
+        $dish->img = $request->img;
+        $dish->price = $request->price;
+        $dish->restaurant_id = $restaurant->id;
         $dish->save();
     }
+
     public function deleteDish(Request $request)
     {
         $restaurant = $request->user();

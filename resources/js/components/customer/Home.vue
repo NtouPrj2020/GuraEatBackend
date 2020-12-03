@@ -39,25 +39,42 @@ export default {
         list: [],
     }),
     mounted() {
-        let config = {
-            params: {"page": this.page,},
-            headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
-        };
-        getRestaurantall(
-            config
-        ).then((res) => {
-            this.list = res.data.data.data
-            console.log(this.list)
-        })
-            .catch((error) => {
-                console.error(error)
-            })
-
+        this.getRestaurant(this.page)
     },
     methods: {
         selectRest(RID) {
+            this.$emit("showSnackBar","test")
             this.$router.push("/customer/restaurant/" + RID);
-        }
-    }
+        },
+        getRestaurant(page){
+            let config = {
+                params: {"page": page,},
+                headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
+            };
+            getRestaurantall(
+                config
+            ).then((res) => {
+                if(page === 1){
+                    this.loop(res.data.data.last_page)
+                }
+                for(let i =0;i<res.data.data.data.length;i++){
+                    this.list.push(res.data.data.data[i])
+                }
+                console.log(this.list)
+            })
+                .catch((error) => {
+                    console.error(error)
+                })
+        },
+        loop(last_page){
+            if(last_page !== 1){
+                for(let i = 2;i<=last_page;i++){
+                    this.getRestaurant(i);
+                }
+            }
+        },
+
+    },
+
 };
 </script>
