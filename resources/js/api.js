@@ -60,4 +60,6 @@ export const deliveryManLogoutAPI = (data, config) =>
 export const getRestaurantall = data =>
     userRequest.get("/api/v1/users/customer/restaurant/all", data);
 export const getRestaurantByID = data =>
-    userRequest.get("/api/v1/customer/restaurant/info", data);
+    userRequest.get("/api/v1/users/customer/restaurant/searchByID", data);
+export const getDishByRestaurantID = data =>
+    userRequest.get("/api/v1/users/restaurant/menu/getAllDish", data);
