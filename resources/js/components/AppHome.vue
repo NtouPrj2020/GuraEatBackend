@@ -16,7 +16,7 @@ export default {
     } else if (this.$store.getters.getMode == 2) {
       this.$router.push("/login");
     } else if (this.$store.getters.getMode == 3) {
-      this.$router.push("/login");
+      this.$router.push("/restaurant");
     } else {
       this.$router.push("/login");
     }
