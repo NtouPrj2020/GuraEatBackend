@@ -4,7 +4,7 @@ import Vuetify from "vuetify";
 import Vuex from "vuex";
 import VueRouter from "vue-router";
 
-import router from "./routes";
+import GuraEatRouter from "./GuraEatRouter"
 import App from "./components/App.vue";
 import "vuetify/dist/vuetify.min.css";
 import createPersistedState from "vuex-persistedstate";
@@ -29,7 +29,7 @@ const store = new Vuex.Store({
     state: {
         user_email: "",
         user_name: "",
-        mode: 2, //0admin 1user 2guest
+        mode: 0, //0guest 1customer 2delivery 3restaurant
         access_token: null,
         device_name: "",
         cstfToken: document
@@ -75,6 +75,16 @@ const store = new Vuex.Store({
         }
     }
 });
+
+let route = new GuraEatRouter(store)
+
+let router = new VueRouter({
+    mode: "history", //因為Vue router 會自動產生hashtag(#)，俗果你覺得礙事可以加入這行。
+    linkActiveClass: "active",
+    base: "/",
+    routes:route.builds() //ES6語法，當key和value一樣時可省略key
+});
+
 
 router.mode = "html5";
 

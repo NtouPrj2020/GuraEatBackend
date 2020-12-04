@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view
-      name="customerView"
+      name="deliveryManView"
       v-on:showSnackBar="showSnackBar"
     ></router-view>
 
@@ -10,17 +10,6 @@
         <span>首頁</span>
 
         <v-icon>mdi-home</v-icon>
-      </v-btn>
-      <v-btn value="search" @click="toSearch()">
-        <span>搜尋</span>
-
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn value="cart" @click="toCart()">
-        <span>購物車</span>
-
-        <v-icon>mdi-cart</v-icon>
       </v-btn>
 
       <v-btn value="info" @click="toInfo()">
@@ -41,12 +30,6 @@ export default {
   methods: {
     toHome() {
       this.$router.push("/customer/home");
-    },
-    toSearch() {
-      this.$router.push("/customer/search");
-    },
-    toCart() {
-      this.$router.push("/customer/cart");
     },
     toInfo() {
       this.$router.push("/customer/info");
