@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dish;
 use App\Models\RestaurantTag;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
@@ -68,6 +69,19 @@ class CustomerGetRestaurantInfoController extends Controller
             "method" => "getRestaurantByTag",
             "message" => "success",
             "data" => $restaurants
+        ];
+        return response()->json($data, 200);
+    }
+    public function getAllDish(Request $request){
+        $request->validate([
+            'restaurant_id' => 'required|int',
+        ]);
+        $dish = Dish::where('restaurant_id', '=', $request->restaurant_id)->get();
+        $data = [
+            "status" => 200,
+            "method" => "getAllDish",
+            "message" => "success",
+            "data"=> $dish
         ];
         return response()->json($data, 200);
     }

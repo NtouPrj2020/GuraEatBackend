@@ -41,6 +41,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByID', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByID');
             Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword');
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
+            Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
