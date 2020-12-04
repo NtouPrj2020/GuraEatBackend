@@ -6,7 +6,6 @@ use App\Models\Dish;
 use App\Models\RestaurantTag;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
-use Illuminate\Support\Facades\Hash;
 
 class CustomerGetRestaurantInfoController extends Controller
 {
@@ -74,12 +73,12 @@ class CustomerGetRestaurantInfoController extends Controller
     }
     public function getAllDish(Request $request){
         $request->validate([
-            'restaurant_id' => 'required|int',
+            'restaurant_id' => 'required|string',
         ]);
-        $dish = Dish::where('restaurant_id', '=', $request->restaurant_id)->get();
+        $dish = Dish::where('restaurant_id','=',$request->restaurant_id)->get();
         $data = [
             "status" => 200,
-            "method" => "getAllDish",
+            "method" => "getRestaurantByID",
             "message" => "success",
             "data"=> $dish
         ];
