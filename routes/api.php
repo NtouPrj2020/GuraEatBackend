@@ -42,10 +42,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
-            Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
+            Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');
+            Route::put('/info', 'App\Http\Controllers\DeliveryManInfoController@editDeliveryMan');
+            Route::post('/logout', 'App\Http\Controllers\DeliveryManInfoController@deliveryManLogout');
         });
         Route::group(['prefix' => 'restaurant'], function () {
-            Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getInfo');
+            Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
+            Route::put('/info', 'App\Http\Controllers\RestaurantInfoController@editRestaurant');
+            Route::get('/tags', 'App\Http\Controllers\RestaurantInfoController@getAllTags');
             Route::post('/menu/addDish', 'App\Http\Controllers\RestaurantMenuController@addDish');
             Route::delete('/menu/deleteDish', 'App\Http\Controllers\RestaurantMenuController@deleteDish');
             Route::put('/menu/editDish', 'App\Http\Controllers\RestaurantMenuController@editDish');

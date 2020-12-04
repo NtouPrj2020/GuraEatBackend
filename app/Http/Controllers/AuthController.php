@@ -566,7 +566,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             $data = [
                 "status" => 401,
-                "method" => "customerLogin",
+                "method" => "deliveryManLogin",
                 "message" => "failed",
                 "data" => [
                     "access_token" => "",
@@ -580,7 +580,7 @@ class AuthController extends Controller
         } else {
             $data = [
                 "status" => 200,
-                "method" => "customerLogin",
+                "method" => "deliveryManLogin",
                 "message" => "success",
                 "data" => [
                     "access_token" => $user->createToken($request->device_name)->plainTextToken,

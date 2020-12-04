@@ -12,26 +12,22 @@ class CustomerInfoController extends Controller
     {
         $customer = $request->user();
 
-        if ($customer != null)
-        {
+        if ($customer != null) {
             $data = [
-                        "status" => 200,
-                        "method" => "getCustomer",
-                        "message" => "sucess",
-                        "data" =>$customer
-                    ];
-                    return response()->json($data, 200);
-        }
-        else
-        {
+                "status" => 200,
+                "method" => "getCustomer",
+                "message" => "sucess",
+                "data" => $customer
+            ];
+            return response()->json($data, 200);
+        } else {
             $data = [
-                        "status" => 403,
-                        "method" => "customerLogout",
-                        "message" => "user not found",
-                        "data" => ""
-                    ];
-
-                    return response()->json($data,403);
+                "status" => 403,
+                "method" => "customerLogout",
+                "message" => "user not found",
+                "data" => ""
+            ];
+            return response()->json($data, 403);
         }
     }
 }
