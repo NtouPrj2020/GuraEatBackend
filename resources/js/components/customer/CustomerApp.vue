@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <router-view
       name="customerView"
       v-on:showSnackBar="showSnackBar"
@@ -36,7 +36,7 @@
 export default {
   props: {},
   mounted() {
-    if (this.$store.getters.getMode === 0) {
+    if (this.$store.getters.getMode == 0) {
       this.$router.push("login");
     }
   },

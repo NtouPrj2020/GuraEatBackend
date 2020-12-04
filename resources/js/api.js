@@ -53,6 +53,8 @@ export const customerLoginAPI = data =>
     guestRequest.post("/api/v1/guest/customer/login", data);
 export const deliveryManLoginAPI = data =>
     guestRequest.post("/api/v1/guest/delivery_man/login", data);
+export const restaurantLoginAPI = data =>
+    guestRequest.post("/api/v1/guest/restaurant/login", data);
 export const customerLogoutAPI = (data, config) =>
     userRequest.post("/api/v1/users/customer/logout", data, config);
 export const deliveryManLogoutAPI = (data, config) =>
@@ -60,4 +62,14 @@ export const deliveryManLogoutAPI = (data, config) =>
 export const getRestaurantall = data =>
     userRequest.get("/api/v1/users/customer/restaurant/all", data);
 export const getRestaurantByID = data =>
-    userRequest.get("/api/v1/customer/restaurant/info", data);
+    userRequest.get("/api/v1/users/customer/restaurant/searchByID", data);
+export const getDishByRestaurantID = data =>
+    userRequest.get("/api/v1/users/restaurant/menu/getAllDish", data);
+export const getDishByDishID = data =>
+    userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", data);
+export const restaurantEditDish = (data, config) =>
+    userRequest.put("/api/v1/users/restaurant/menu/editDish", data, config);
+export const restaurantDeleteDish = config =>
+    userRequest.delete("/api/v1/users/restaurant/menu/deleteDish", config);
+export const restaurantAddDish = (data, config) =>
+    userRequest.post("/api/v1/users/restaurant/menu/addDish", data, config);
