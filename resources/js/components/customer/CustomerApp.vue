@@ -5,8 +5,8 @@
       v-on:showSnackBar="showSnackBar"
     ></router-view>
 
-    <v-bottom-navigation fixed v-model="value">
-      <v-btn value="home" @click="toHome()">
+    <v-bottom-navigation grow fixed v-model="value">
+      <v-btn value="home" :class='isActive' @click="toHome()">
         <span>首頁</span>
 
         <v-icon>mdi-home</v-icon>
@@ -15,12 +15,6 @@
         <span>搜尋</span>
 
         <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn value="cart" @click="toCart()">
-        <span>購物車</span>
-
-        <v-icon>mdi-cart</v-icon>
       </v-btn>
 
       <v-btn value="info" @click="toInfo()">
@@ -45,9 +39,7 @@ export default {
     toSearch() {
       this.$router.push("/customer/search");
     },
-    toCart() {
-      this.$router.push("/customer/cart");
-    },
+
     toInfo() {
       this.$router.push("/customer/info");
     },
