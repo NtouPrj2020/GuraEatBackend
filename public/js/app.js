@@ -3103,6 +3103,62 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -3117,12 +3173,22 @@ __webpack_require__.r(__webpack_exports__);
       menu: [],
       config: {},
       editDialog: false,
+      deleteDialog: false,
+      addDialog: false,
       editDishName: "",
       editDishImg: "",
       editDishPrice: "",
       editDishTime: "",
-      nowEditing: "",
-      editComfirmLoading: false
+      nowEditingID: "",
+      addDishName: "",
+      addDishImg: "",
+      addDishPrice: "",
+      addDishTime: "",
+      nowDeletingID: "",
+      deleteDishName: "",
+      editComfirmLoading: false,
+      deleteComfirmLoading: false,
+      addComfirmLoading: false
     };
   },
   props: ["id"],
@@ -3147,6 +3213,8 @@ __webpack_require__.r(__webpack_exports__);
 
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByRestaurantID"])(this.config).then(function (resp) {
         if (resp.status === 200) {
+          _this.menu = [];
+
           for (var dishes = 0; dishes < resp.data.data.length; dishes++) {
             _this.menu.push(resp.data.data[dishes]);
           }
@@ -3155,6 +3223,8 @@ __webpack_require__.r(__webpack_exports__);
           console.log("done");
         }
       })["catch"](function (err) {
+        console.log(err);
+
         if (err.response.status === 401) {
           _this.$emit("showSnackBar", "信箱/密碼錯誤");
 
@@ -3179,10 +3249,10 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + this.$store.getters.getAccessToken
         }
       };
-      this.nowEditing = id;
+      this.nowEditingID = id;
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByDishID"])(config).then(function (resp) {
         if (resp.status === 200) {
-          _this2.nowEditing = id;
+          _this2.nowEditingID = id;
           _this2.editDishName = resp.data.data[0].name;
           _this2.editDishImg = resp.data.data[0].img;
           _this2.editDishPrice = resp.data.data[0].price;
@@ -3210,10 +3280,95 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + this.$store.getters.getAccessToken
         }
       };
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditDish"])(config).then(function (resp) {
+      var data = {
+        ID: this.nowEditingID.toString(),
+        making_time: this.editDishTime,
+        name: this.editDishName,
+        img: this.editDishImg,
+        price: this.editDishPrice
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditDish"])(data, config).then(function (resp) {
         if (resp.status === 200) {
-          _this3.editDialog = false;
+          _this3.refreshAllDish();
+
           _this3.editComfirmLoading = false;
+          _this3.editDialog = false;
+          console.log(resp.data);
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          console.log(err);
+        } else if (err.response.status === 404) {
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    },
+    showAddDish: function showAddDish() {
+      this.addDialog = true;
+      this.addDishName = "";
+      this.addDishImg = "";
+      this.addDishPrice = "";
+      this.addDishTime = "";
+    },
+    sendAddDish: function sendAddDish() {
+      var _this4 = this;
+
+      console.log("this.editDishTime" + this.editDishTime);
+      this.addComfirmLoading = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      var data = {
+        ID: this.nowEditingID.toString(),
+        making_time: this.addDishTime,
+        name: this.addDishName,
+        img: this.addDishImg,
+        price: this.addDishPrice
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantAddDish"])(data, config).then(function (resp) {
+        if (resp.status === 200) {
+          _this4.refreshAllDish();
+
+          _this4.addComfirmLoading = false;
+          _this4.addDialog = false;
+          console.log(resp.data);
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          console.log(err);
+        } else if (err.response.status === 404) {
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    },
+    showDeleteDish: function showDeleteDish(id) {
+      var _this5 = this;
+
+      var config = {
+        params: {
+          ID: id
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByDishID"])(config).then(function (resp) {
+        if (resp.status === 200) {
+          _this5.nowDeletingID = id;
+          _this5.deleteDishName = resp.data.data[0].name;
+          _this5.deleteDialog = true;
           console.log(resp.data);
           console.log("done");
         }
@@ -3227,7 +3382,108 @@ __webpack_require__.r(__webpack_exports__);
         console.log(err);
       });
     },
-    deleteDish: function deleteDish(id) {}
+    sendDeleteDish: function sendDeleteDish() {
+      var _this6 = this;
+
+      this.deleteComfirmLoading = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        },
+        data: {
+          ID: this.nowDeletingID.toString()
+        }
+      };
+      var data = {};
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantDeleteDish"])(config).then(function (resp) {
+        if (resp.status === 200) {
+          _this6.refreshAllDish();
+
+          _this6.deleteComfirmLoading = false;
+          _this6.deleteDialog = false;
+          console.log(resp.data);
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          console.log(err);
+        } else if (err.response.status === 404) {
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {},
+  mounted: function mounted() {
+    var config = {
+      params: {
+        page: this.page
+      },
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken()
+      }
+    };
+  },
+  data: function data() {
+    return {
+      info: [],
+      resName: "",
+      resAddress: "",
+      resPhone: "",
+      resMail: ""
+    };
+  },
+  methods: {
+    switch_user: function switch_user() {},
+    history_order: function history_order() {},
+    modify_info: function modify_info() {},
+    signout: function signout() {
+      this.$router.push("/signout");
+    }
   }
 });
 
@@ -23063,7 +23319,7 @@ var render = function() {
                                         attrs: { icon: "" },
                                         on: {
                                           click: function($event) {
-                                            return _vm.deleteDish(dishes.id)
+                                            return _vm.showDeleteDish(dishes.id)
                                           }
                                         }
                                       },
@@ -23094,7 +23350,7 @@ var render = function() {
             "v-dialog",
             {
               staticClass: "py-5",
-              attrs: { id: "editdialog", scrollable: "" },
+              attrs: { scrollable: "" },
               model: {
                 value: _vm.editDialog,
                 callback: function($$v) {
@@ -23108,8 +23364,6 @@ var render = function() {
                 "v-card",
                 [
                   _c("v-card-title", [_vm._v("編輯餐點")]),
-                  _vm._v(" "),
-                  _c("v-card-text", { staticStyle: { height: "300px" } }),
                   _vm._v(" "),
                   _c("v-text-field", {
                     attrs: { label: "餐點名稱", outlined: "" },
@@ -23190,6 +23444,279 @@ var render = function() {
               )
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-dialog",
+            {
+              staticClass: "py-5",
+              attrs: { scrollable: "" },
+              model: {
+                value: _vm.addDialog,
+                callback: function($$v) {
+                  _vm.addDialog = $$v
+                },
+                expression: "addDialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", [_vm._v("新增餐點")]),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: { label: "餐點名稱", outlined: "" },
+                    model: {
+                      value: _vm.addDishName,
+                      callback: function($$v) {
+                        _vm.addDishName = $$v
+                      },
+                      expression: "addDishName"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: { label: "餐點圖片", outlined: "" },
+                    model: {
+                      value: _vm.addDishImg,
+                      callback: function($$v) {
+                        _vm.addDishImg = $$v
+                      },
+                      expression: "addDishImg"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: { label: "餐點價格", outlined: "" },
+                    model: {
+                      value: _vm.addDishPrice,
+                      callback: function($$v) {
+                        _vm.addDishPrice = $$v
+                      },
+                      expression: "addDishPrice"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: { label: "餐點製作時間", outlined: "" },
+                    model: {
+                      value: _vm.addDishTime,
+                      callback: function($$v) {
+                        _vm.addDishTime = $$v
+                      },
+                      expression: "addDishTime"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1" },
+                          on: {
+                            click: function($event) {
+                              _vm.addDialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            取消\n          ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: {
+                            loading: _vm.addComfirmLoading,
+                            color: "blue darken-1"
+                          },
+                          on: { click: _vm.sendAddDish }
+                        },
+                        [_vm._v("\n            儲存\n          ")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-dialog",
+            {
+              staticClass: "py-5",
+              attrs: { scrollable: "" },
+              model: {
+                value: _vm.deleteDialog,
+                callback: function($$v) {
+                  _vm.deleteDialog = $$v
+                },
+                expression: "deleteDialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-text", [
+                    _vm._v("確定要刪除" + _vm._s(_vm.deleteDishName) + "?")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1" },
+                          on: {
+                            click: function($event) {
+                              _vm.deleteDialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            取消\n          ")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: {
+                            loading: _vm.deleteComfirmLoading,
+                            color: "blue darken-1"
+                          },
+                          on: { click: _vm.sendDeleteDish }
+                        },
+                        [_vm._v("\n            儲存\n          ")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            {
+              staticClass: "mb-15",
+              attrs: {
+                "x-large": "",
+                icon: "",
+                fixed: "",
+                right: "",
+                bottom: ""
+              },
+              on: { click: _vm.showAddDish }
+            },
+            [_c("v-icon", [_vm._v("fas fa-plus-circle")])],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "panel-heading text-center" }, [
+        _vm._v("餐廳資訊")
+      ]),
+      _vm._v(" "),
+      _c(
+        "v-card",
+        [
+          _c("v-card-text", [_vm._v("餐廳名稱: " + _vm._s(_vm.resName))]),
+          _vm._v(" "),
+          _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.resAddress))]),
+          _vm._v(" "),
+          _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.resPhone))]),
+          _vm._v(" "),
+          _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.resMail))])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { staticClass: "pa-2", attrs: { justify: "center" } },
+        [
+          _c(
+            "v-btn",
+            { attrs: { "min-width": "200" }, on: { click: _vm.switch_user } },
+            [_vm._v("切換使用者身分")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { staticClass: "pa-2", attrs: { justify: "center" } },
+        [
+          _c(
+            "v-btn",
+            { attrs: { "min-width": "200" }, on: { click: _vm.history_order } },
+            [_vm._v("歷史訂單紀錄")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { staticClass: "pa-2", attrs: { justify: "center" } },
+        [
+          _c(
+            "v-btn",
+            { attrs: { "min-width": "200" }, on: { click: _vm.modify_info } },
+            [_vm._v("更改餐廳資料")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { staticClass: "pa-2", attrs: { justify: "center" } },
+        [
+          _c(
+            "v-btn",
+            { attrs: { "min-width": "200" }, on: { click: _vm.signout } },
+            [_vm._v("登出")]
           )
         ],
         1
@@ -83857,7 +84384,7 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/api.js ***!
   \*****************************/
-/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall, getRestaurantByID, getDishByRestaurantID, getDishByDishID, restaurantEditDish */
+/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall, getRestaurantByID, getDishByRestaurantID, getDishByDishID, restaurantEditDish, restaurantDeleteDish, restaurantAddDish */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83874,6 +84401,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByRestaurantID", function() { return getDishByRestaurantID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByDishID", function() { return getDishByDishID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantEditDish", function() { return restaurantEditDish; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantDeleteDish", function() { return restaurantDeleteDish; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantAddDish", function() { return restaurantAddDish; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
  //初始化
@@ -83965,8 +84494,14 @@ var getDishByRestaurantID = function getDishByRestaurantID(data) {
 var getDishByDishID = function getDishByDishID(data) {
   return userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", data);
 };
-var restaurantEditDish = function restaurantEditDish(data) {
-  return userRequest.put("/api/v1/users/restaurant/menu/editDish", data);
+var restaurantEditDish = function restaurantEditDish(data, config) {
+  return userRequest.put("/api/v1/users/restaurant/menu/editDish", data, config);
+};
+var restaurantDeleteDish = function restaurantDeleteDish(config) {
+  return userRequest["delete"]("/api/v1/users/restaurant/menu/deleteDish", config);
+};
+var restaurantAddDish = function restaurantAddDish(data, config) {
+  return userRequest.post("/api/v1/users/restaurant/menu/addDish", data, config);
 };
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
@@ -85062,6 +85597,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/restaurant/Info.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/restaurant/Info.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Info.vue?vue&type=template&id=545070e5& */ "./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5&");
+/* harmony import */ var _Info_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Info.vue?vue&type=script&lang=js& */ "./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Info_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/restaurant/Info.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Info_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Info.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/restaurant/Info.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Info_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Info.vue?vue&type=template&id=545070e5& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/restaurant/Info.vue?vue&type=template&id=545070e5&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Info_vue_vue_type_template_id_545070e5___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/restaurant/RestaurantApp.vue":
 /*!**************************************************************!*\
   !*** ./resources/js/components/restaurant/RestaurantApp.vue ***!
@@ -85209,6 +85813,11 @@ var routes = [{
     path: "home",
     components: {
       customerView: __webpack_require__(/*! ./components/restaurant/Home.vue */ "./resources/js/components/restaurant/Home.vue")["default"]
+    }
+  }, {
+    path: "info",
+    components: {
+      customerView: __webpack_require__(/*! ./components/restaurant/Info.vue */ "./resources/js/components/restaurant/Info.vue")["default"]
     }
   }]
 }, {

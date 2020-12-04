@@ -67,5 +67,9 @@ export const getDishByRestaurantID = data =>
     userRequest.get("/api/v1/users/restaurant/menu/getAllDish", data);
 export const getDishByDishID = data =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", data);
-export const restaurantEditDish = data =>
-    userRequest.put("/api/v1/users/restaurant/menu/editDish", data);
+export const restaurantEditDish = (data, config) =>
+    userRequest.put("/api/v1/users/restaurant/menu/editDish", data, config);
+export const restaurantDeleteDish = config =>
+    userRequest.delete("/api/v1/users/restaurant/menu/deleteDish", config);
+export const restaurantAddDish = (data, config) =>
+    userRequest.post("/api/v1/users/restaurant/menu/addDish", data, config);

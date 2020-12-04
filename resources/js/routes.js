@@ -90,6 +90,13 @@ let routes = [
                     customerView: require("./components/restaurant/Home.vue")
                         .default
                 }
+            },
+            {
+                path: "info",
+                components: {
+                    customerView: require("./components/restaurant/Info.vue")
+                        .default
+                }
             }
         ]
     },
