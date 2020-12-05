@@ -9,10 +9,10 @@ class RestaurantMenuController extends Controller
 {
     public function getAllDish(Request $request){
         $restaurant = $request->user();
-        $Dish = Dish::paginate(20);
+        $Dish = Dish::where('restaurant_id','=',$restaurant->id)->get();
         $data = [
             "status" => 200,
-            "method" => "getAllRestaurant",
+            "method" => "getAllDish",
             "message" => "success",
             "data"=> $Dish
         ];
