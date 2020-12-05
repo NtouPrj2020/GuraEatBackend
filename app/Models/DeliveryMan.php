@@ -19,7 +19,10 @@ class DeliveryMan extends Authenticatable
         'phone',
         'email',
         'name',
-        'license_id'
+        'license_id',
+        'status',
+        'longitude',
+        'latitude'
     ];
 
     protected $hidden = [

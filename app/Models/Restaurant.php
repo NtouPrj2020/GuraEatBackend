@@ -18,7 +18,9 @@ class Restaurant extends Authenticatable
         'email',
         'name',
         'address',
-        'img'
+        'img',
+        'longitude',
+        'latitude'
     ];
 
     protected $hidden = [

@@ -277,6 +277,7 @@ class AuthController extends Controller
         $user->phone = $request->phone;
         $user->license_id = $request->license_id;
         $user->password = bcrypt($request['password']);
+        $user->status = 0;
         $user->save();
 
         if ($user != null) {
