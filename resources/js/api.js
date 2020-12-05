@@ -64,7 +64,7 @@ export const getRestaurantall = data =>
 export const getRestaurantByID = data =>
     userRequest.get("/api/v1/users/customer/restaurant/searchByID", data);
 export const getDishByRestaurantID = data =>
-    userRequest.get("/api/v1/users/restaurant/menu/getAllDish", data);
+    userRequest.get("/api/v1/users/customer/restaurant/getAllDish", data);
 export const getDishByDishID = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 export const restaurantEditDish = (data, config) =>
