@@ -24,8 +24,8 @@
             :height="windowSize.y"
 
         >
-            <v-container class="my-14"   fluid id="container">
-                <v-card class="mx-auto mt-5" >
+            <v-container class="my-14" fluid id="container">
+                <v-card class="mx-auto mt-5">
                     <v-img
                         :src="list.img"
                         class="white--text align-end"
@@ -45,7 +45,7 @@
                             subheader
                             two-line
                         >
-                            <v-subheader inset>{{ list.tags[0].name }}</v-subheader>
+                            <v-subheader inset>菜單</v-subheader>
 
                             <v-list-item
                                 v-for="(dishes,index) in menu"
@@ -57,19 +57,6 @@
                                         :src="dishes.img"
                                         @click="overlay = !overlay"
                                     ></v-img>
-                                    <span @click="overlay = false" class="justify-center align-center">
-                                        <v-overlay :value="overlay">
-                                        <v-img
-                                            :alt="dishes.name"
-                                            :src="dishes.img"
-                                            :max-width="windowSize.x-50"
-                                            :max-height="windowSize.y-50"
-                                            contain
-                                        >
-                                        </v-img>
-                                    </v-overlay>
-                                    </span>
-
                                 </v-list-item-avatar>
 
                                 <v-list-item-content>
@@ -79,13 +66,25 @@
                                 </v-list-item-content>
 
                                 <v-list-item-action>
+                                    <span @click="overlay = false" class="justify-center align-center">
+                                        <v-overlay :value="overlay">
+                                           <v-img
+                                               :src="menu[index].img"
+                                               :max-width="windowSize.x-50"
+                                               :max-height="windowSize.y-50"
+                                               contain
+                                           ></v-img>
+                                        </v-overlay>
+                                    </span>
                                     <v-row dense>
                                         <v-col>
-                                            <v-btn color="orange darken-5" @click="increaseScore(player_one)" icon>
+                                            <v-btn color="orange darken-5"
+                                                   @click="increaseNumber(index,dishes.id); $forceUpdate();" icon>
                                                 <v-icon>mdi-plus-circle-outline</v-icon>
                                             </v-btn>
-                                            <span>{{ player_one.score }}</span>
-                                            <v-btn color="" @click="decreaseScore(player_two)" icon>
+                                            <span>{{ order.amount[index] }}</span>
+                                            <v-btn color="" @click="decreaseNumber(index,dishes.id); $forceUpdate();"
+                                                   icon>
                                                 <v-icon>mdi-minus-circle-outline</v-icon>
                                             </v-btn>
                                         </v-col>
@@ -97,48 +96,104 @@
                         </v-list>
                     </v-col>
                 </v-row>
+                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" block outlined bottom>
+                    Open Dialog
+                </v-btn>
+                <v-dialog v-model="dialog" :fullscreen="fullScreen" transition="dialog-bottom-transition"
+                          :overlay=false
+                          scrollable>
+                    <v-card>
+                        <v-toolbar style="flex: 0 0 auto;" dark class="primary">
+                            <v-btn icon @click.native="dialog = false" dark>
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>購物清單</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                        <v-card-text>
+                            <div class="mt-2">
+                                <v-simple-table
+                                    fixed-header
+                                    :height="windowSize.y/2"
+                                >
+                                    <template v-slot:default>
+                                        <thead>
+                                        <tr>
+                                            <th class="text-left">
+                                                名稱
+                                            </th>
+                                            <th class="text-left">
+                                                數量
+                                            </th>
+                                            <th class="text-left">
+                                                金額
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr
+                                            v-for="(item,i) in order.amount"
+                                            :key="componentKey"
+                                            v-if="item>0"
+                                        >
+                                            <td>{{ menu[i].name }}</td>
+                                            <td>{{ item }}</td>
+                                            <td>{{ item * menu[i].price }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
+                                <v-divider></v-divider>
+
+                                <v-row>
+                                    <v-col>
+                                        <span class="font-weight-bold">總計：</span>
+                                    </v-col>
+                                    <v-spacer></v-spacer>
+                                    <v-col>
+                                        {{ totalAmount }}
+                                    </v-col>
+                                </v-row>
+                            </div>
+                        </v-card-text>
+                    </v-card>
+
+                </v-dialog>
             </v-container>
         </v-sheet>
     </div>
 </template>
 <script>
 import {getDishByRestaurantID, getRestaurantByID} from "../../api";
+import axios from "axios";
 
 export default {
     data: () => ({
-        windowSize: {
-            x: 0,
-            y: 0,
-        },
-        arr: [],
-        page: 1,
-        overlay: false,
-        menu: [
-            {
-                id:1,
-                amount:0
+            windowSize: {
+                x: 0,
+                y: 0,
             },
-            {
-                id:2,
-                amount:0
-            }
-        ],
-        list: [],
-        order:{
-            id:[],
-            name:[],
-        },
-        player_one: {
-            score: 0
-        },
-        player_two: {
-            score: 0
-        },
-        isActive:"v-btn--active",
-    }),
+            menu: [],
+            overlay: false,
+            order: {
+                id: [],
+                amount: [],
+            },
+            list: [],
+            isActive: "v-btn--active",
+            imgTemp: '',
+            componentKey: 0,
+            totalAmount: 0,
+
+            dialog: false,
+            fullScreen: true,
+
+        }
+    ),
     props: ['id'],
     mounted() {
         this.onResize()
+        console.log("restaurantID:")
         console.log(this.$route.params.id)
         let config = {
             params: {"ID": this.$route.params.id},
@@ -148,18 +203,21 @@ export default {
             config
         ).then((res) => {
             this.list = res.data.data
-            console.log(res.data.data)
-
+            console.log("list")
+            console.log(this.list)
+            this.getDish()
         })
             .catch((error) => {
                 console.error(error)
             })
     },
+    computed: {},
     methods: {
         onResize() {
             this.windowSize = {x: window.innerWidth, y: window.innerHeight}
-        },
-        getDish(page) {
+        }
+        ,
+        getDish() {
             let config = {
                 params: {"ID": this.$route.params.id},
                 headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
@@ -167,43 +225,79 @@ export default {
             getDishByRestaurantID(
                 config
             ).then((res) => {
-                console.log("data")
-                console.log(res.data)
-                this.menu=res.data.data;
+                this.menu = res.data.data;
                 /*for (let dishes = 0; dishes < res.data.data.length; dishes++) {
                     this.menu.push(res.data.data[dishes]);
                 }*/
+                console.log("res.data")
+                console.log(res.data)
+                console.log("res.data.data")
+                console.log(res.data.data)
                 console.log("menu")
                 console.log(this.menu)
-                console.log(res.data.data.length)
-                for(let i =0;i<this.menu;i++){
-                    this.menu[i].amount =0
+
+                for (let i = 0; i < this.menu.length; i++) {
+                    this.order.id.push(this.menu[i].id)
+                    this.order.amount.push(0)
                 }
+                console.log("order")
+                console.log(this.order)
             })
                 .catch((error) => {
                     console.error(error)
                 })
-        },
+        }
+        ,
 
         RollBack() {
             this.$router.push("/customer/home");
+        }
+        ,
+        increaseNumber(index, player) {
+            console.log("id")
+            console.log(player)
+            console.log("index")
+            console.log(index)
+            //this.amountTemp=this.this.order.amount[index]++
+            //this.order.amount.splice(index, 1, this.amountTemp)
+            //this.$set(this.order.amount, index, this.amountTemp)
+            this.order.amount[index]++
+            console.log("amount")
+            console.log(this.order.amount[index])
+        }
+        ,
+        decreaseNumber(index, player) {
+            console.log("id")
+            console.log(player)
+            if (this.order.amount[index] > 0) {
+                //this.amountTemp=this.this.order.amount[index]--
+                //this.order.amount.splice(index, 1, this.amountTemp)
+                //this.$set(this.order.amount, index, this.amountTemp)
+                this.order.amount[index]--
+            }
+            console.log("amount")
+            console.log(this.order.amount[index])
+        }
+        ,
+        forceRerender() {  //透過更新:key強制重新渲染
+            this.componentKey += 1;
+            console.log("componentKey")
+            console.log(this.componentKey)
         },
-        increaseScore(player) {
-            player.score += 1;
-        },
-        decreaseScore(player) {
-            if (player.score > 0) {
-                player.score -= 1;
+        getTotalAmount() {
+            this.totalAmount = 0;
+            for (let i = 0; i < this.order.id.length; i++) {
+                if (this.order.amount[i] > 0) this.totalAmount += this.order.amount[i] * this.menu[i].price;
             }
         },
-
     }
-};
+}
+;
 </script>
 
 <style>
 
-#container{
+#container {
     max-width: 400px;
 }
 

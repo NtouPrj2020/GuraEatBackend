@@ -100,13 +100,6 @@ export default class GuraEatRouter{
                         }
                     },
                     {
-                        path: "cart",
-                        components: {
-                            customerView: require("./components/customer/Cart.vue")
-                                .default
-                        }
-                    },
-                    {
                         path: "info",
                         components: {
                             customerView: require("./components/customer/Info.vue")
