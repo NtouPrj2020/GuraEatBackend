@@ -6,7 +6,7 @@
     ></router-view>
 
     <v-bottom-navigation grow fixed v-model="value">
-      <v-btn value="home" :class='isActive' @click="toHome()">
+      <v-btn value="home" @click="toHome()">
         <span>首頁</span>
 
         <v-icon>mdi-home</v-icon>
@@ -31,7 +31,9 @@ export default {
   props: {},
   mounted() {
   },
-  data: () => ({}),
+  data: () => ({
+      value: 'home',
+  }),
   methods: {
     toHome() {
       this.$router.push("/customer/home");

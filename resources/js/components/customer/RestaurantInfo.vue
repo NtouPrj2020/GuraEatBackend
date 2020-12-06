@@ -21,10 +21,10 @@
         <v-sheet
             id="scrolling-technique"
             class="overflow-y-auto"
-            :height="windowSize.y"
+            :height="windowSize.y-100"
 
         >
-            <v-container class="my-14" fluid id="container">
+            <v-container class="mt-10" fluid id="container">
                 <v-card class="mx-auto mt-5">
                     <v-img
                         :src="list.img"
@@ -96,8 +96,16 @@
                         </v-list>
                     </v-col>
                 </v-row>
-                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" block outlined bottom>
-                    Open Dialog
+
+            </v-container>
+        </v-sheet>
+        <v-footer padless fixed style="bottom:56px" color="white">
+            <v-col
+                class="text-center"
+                cols="12"
+            >
+                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" class="text-sm-button" outlined bottom large block>
+                    查看購物清單
                 </v-btn>
                 <v-dialog v-model="dialog" :fullscreen="fullScreen" transition="dialog-bottom-transition"
                           :overlay=false
@@ -138,29 +146,62 @@
                                         >
                                             <td>{{ menu[i].name }}</td>
                                             <td>{{ item }}</td>
-                                            <td>{{ item * menu[i].price }}</td>
+                                            <td>${{ item * menu[i].price }}</td>
                                         </tr>
                                         </tbody>
                                     </template>
                                 </v-simple-table>
                                 <v-divider></v-divider>
 
-                                <v-row>
+                                <v-row class="rounded" style="background-color:#CCEEFF">
+                                    <v-col>
+                                        <span class="font-weight-bold">餐點費用：</span>
+                                    </v-col>
+                                    <v-spacer></v-spacer>
+                                    <v-col>
+                                        ${{ totalAmount }}
+                                    </v-col>
+                                </v-row>
+                                <v-divider></v-divider>
+                                <v-row class="rounded" style="background-color:#77DDFF">
+                                    <v-col>
+                                    <span class="font-weight-bold">外送費：</span>
+                                </v-col>
+                                    <v-spacer></v-spacer>
+                                    <v-col>
+                                        $25
+                                    </v-col>
+                                </v-row>
+                                <v-divider></v-divider>
+                                <v-row class="rounded" style="background-color:#CCEEFF">
                                     <v-col>
                                         <span class="font-weight-bold">總計：</span>
                                     </v-col>
                                     <v-spacer></v-spacer>
                                     <v-col>
-                                        {{ totalAmount }}
+                                        ${{ totalAmount+25 }}
                                     </v-col>
                                 </v-row>
+                                <v-divider></v-divider>
+                            </div>
+                            <div>
+                                <v-footer padless fixed style="bottom:56px" color="white">
+                                    <v-col
+                                        class="text-center"
+                                        cols="12"
+                                    >
+                                        <v-btn color="indigo" class="text-sm-button" outlined bottom large block>
+                                            送出
+                                        </v-btn>
+                                    </v-col>
+                                </v-footer>
                             </div>
                         </v-card-text>
                     </v-card>
 
                 </v-dialog>
-            </v-container>
-        </v-sheet>
+            </v-col>
+        </v-footer>
     </div>
 </template>
 <script>
@@ -169,6 +210,7 @@ import axios from "axios";
 
 export default {
     data: () => ({
+            sheet: true,
             windowSize: {
                 x: 0,
                 y: 0,
@@ -180,7 +222,6 @@ export default {
                 amount: [],
             },
             list: [],
-            isActive: "v-btn--active",
             imgTemp: '',
             componentKey: 0,
             totalAmount: 0,
