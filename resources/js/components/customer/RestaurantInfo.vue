@@ -142,8 +142,8 @@
                                         <tbody>
                                         <tr
                                             v-for="(item,i) in order.amount"
-                                            :key="componentKey"
-                                            v-if="order.amount[i]>0"
+                                            :key="i"
+                                            v-if="item>0"
                                         >
                                             <td>{{ menu[i].name }}</td>
                                             <td>{{ item }}</td>
@@ -207,7 +207,6 @@
 </template>
 <script>
 import {getDishByRestaurantID, getRestaurantByID} from "../../api";
-import axios from "axios";
 
 export default {
     data: () => ({
@@ -224,7 +223,7 @@ export default {
             },
             list: [],
             imgTemp: '',
-            componentKey: 0,
+            amountTemp: 0,
             totalAmount: 0,
 
             dialog: false,
@@ -300,11 +299,9 @@ export default {
             console.log(player)
             console.log("index")
             console.log(index)
-            //this.amountTemp=this.this.order.amount[index]++
+            this.amountTemp = this.order.amount[index]++
             //this.order.amount.splice(index, 1, this.amountTemp)
-            //this.$set(this.order.amount, index, this.amountTemp)
-            let e = this.order.amount[index];
-            this.$set(this.order.amount,index,e+1)
+            this.$set(this.order.amount, this.index, this.amountTemp)
             //this.order.amount[index]++
             console.log("amount")
             console.log(this.order.amount[index])
@@ -314,21 +311,18 @@ export default {
             console.log("id")
             console.log(player)
             if (this.order.amount[index] > 0) {
-                //this.amountTemp=this.this.order.amount[index]--
+                this.amountTemp = this.order.amount[index]--
                 //this.order.amount.splice(index, 1, this.amountTemp)
-                //this.$set(this.order.amount, index, this.amountTemp)
+                this.$set(this.order.amount, this.index, this.amountTemp)
                 //this.order.amount[index]--
-                let e = this.order.amount[index];
-                this.$set(this.order.amount,index,e-1)
             }
             console.log("amount")
             console.log(this.order.amount[index])
         }
         ,
         forceRerender() {  //透過更新:key強制重新渲染
-            this.componentKey += 1;
-            console.log("componentKey")
-            console.log(this.componentKey)
+            this.amountTemp = this.order.amount[0]
+            this.$set(this.order.amount, 0, this.amountTemp)
         },
         getTotalAmount() {
             this.totalAmount = 0;
