@@ -104,7 +104,8 @@
                 class="text-center"
                 cols="12"
             >
-                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" class="text-sm-button" outlined bottom large block>
+                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" class="text-sm-button"
+                       outlined bottom large block>
                     查看購物清單
                 </v-btn>
                 <v-dialog v-model="dialog" :fullscreen="fullScreen" transition="dialog-bottom-transition"
@@ -142,7 +143,7 @@
                                         <tr
                                             v-for="(item,i) in order.amount"
                                             :key="componentKey"
-                                            v-if="item>0"
+                                            v-if="order.amount[i]>0"
                                         >
                                             <td>{{ menu[i].name }}</td>
                                             <td>{{ item }}</td>
@@ -165,8 +166,8 @@
                                 <v-divider></v-divider>
                                 <v-row class="rounded" style="background-color:#77DDFF">
                                     <v-col>
-                                    <span class="font-weight-bold">外送費：</span>
-                                </v-col>
+                                        <span class="font-weight-bold">外送費：</span>
+                                    </v-col>
                                     <v-spacer></v-spacer>
                                     <v-col>
                                         $25
@@ -179,7 +180,7 @@
                                     </v-col>
                                     <v-spacer></v-spacer>
                                     <v-col>
-                                        ${{ totalAmount+25 }}
+                                        ${{ totalAmount + 25 }}
                                     </v-col>
                                 </v-row>
                                 <v-divider></v-divider>
@@ -302,7 +303,9 @@ export default {
             //this.amountTemp=this.this.order.amount[index]++
             //this.order.amount.splice(index, 1, this.amountTemp)
             //this.$set(this.order.amount, index, this.amountTemp)
-            this.order.amount[index]++
+            let e = this.order.amount[index];
+            this.$set(this.order.amount,index,e+1)
+            //this.order.amount[index]++
             console.log("amount")
             console.log(this.order.amount[index])
         }
@@ -314,7 +317,9 @@ export default {
                 //this.amountTemp=this.this.order.amount[index]--
                 //this.order.amount.splice(index, 1, this.amountTemp)
                 //this.$set(this.order.amount, index, this.amountTemp)
-                this.order.amount[index]--
+                //this.order.amount[index]--
+                let e = this.order.amount[index];
+                this.$set(this.order.amount,index,e-1)
             }
             console.log("amount")
             console.log(this.order.amount[index])
