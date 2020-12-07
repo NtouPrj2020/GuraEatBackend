@@ -3565,7 +3565,14 @@ __webpack_require__.r(__webpack_exports__);
     history_order: function history_order() {},
     modify_info: function modify_info() {},
     signout: function signout() {
-      this.$router.push("/signout");
+      if (this.$store.getters.getAccessToken != "") {
+        this.$store.commit("ACCESS_TOKEN", "");
+        this.$store.commit("USER_NAME", "");
+        this.$store.commit("MODE", 0);
+        this.$router.push("/guest/login");
+      } else {
+        this.$router.push("/guest/login");
+      }
     }
   }
 });
@@ -3669,7 +3676,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#container {\n    max-width: 400px;\n}\n\n", ""]);
+exports.push([module.i, "\n#container {\r\n    max-width: 400px;\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -85101,7 +85108,7 @@ var GuraEatRouter = /*#__PURE__*/function () {
 /*!*****************************!*\
   !*** ./resources/js/api.js ***!
   \*****************************/
-/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantall, getRestaurantByID, getDishByRestaurantID, getDishByDishID, restaurantEditDish, restaurantDeleteDish, restaurantAddDish */
+/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, switchUserModeCustomerAPI, switchUserModeDeliveryManAPI, switchUserModeRestaurantAPI, forgotPasswordAPI, getCustomerInfo, editCustomerInfo, getRestaurantall, getRestaurantByKeyword, getDishByRestaurantID, getDeliveryTimeID, sendOrderAPI, getOrderstatusAPI, giveRateAPI, getOrderHistoryCustomerAPI, getDeliveryManInfoAPI, editDeliveryManInfo, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantByID, getDishByDishID, restaurantEditDish, restaurantDeleteDish, restaurantAddDish */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85111,11 +85118,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLoginAPI", function() { return customerLoginAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLoginAPI", function() { return deliveryManLoginAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantLoginAPI", function() { return restaurantLoginAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeCustomerAPI", function() { return switchUserModeCustomerAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeDeliveryManAPI", function() { return switchUserModeDeliveryManAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeRestaurantAPI", function() { return switchUserModeRestaurantAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forgotPasswordAPI", function() { return forgotPasswordAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCustomerInfo", function() { return getCustomerInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editCustomerInfo", function() { return editCustomerInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantall", function() { return getRestaurantall; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByKeyword", function() { return getRestaurantByKeyword; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByRestaurantID", function() { return getDishByRestaurantID; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDeliveryTimeID", function() { return getDeliveryTimeID; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendOrderAPI", function() { return sendOrderAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderstatusAPI", function() { return getOrderstatusAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "giveRateAPI", function() { return giveRateAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderHistoryCustomerAPI", function() { return getOrderHistoryCustomerAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDeliveryManInfoAPI", function() { return getDeliveryManInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editDeliveryManInfo", function() { return editDeliveryManInfo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLogoutAPI", function() { return customerLogoutAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLogoutAPI", function() { return deliveryManLogoutAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantall", function() { return getRestaurantall; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByID", function() { return getRestaurantByID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByRestaurantID", function() { return getDishByRestaurantID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByDishID", function() { return getDishByDishID; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantEditDish", function() { return restaurantEditDish; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantDeleteDish", function() { return restaurantDeleteDish; });
@@ -85178,48 +85199,111 @@ if (process.env.APP_ENV === "local") {
 //config: 放header資料, 像是authorization
 
 
-var customerSignUpAPI = function customerSignUpAPI(data) {
-  return guestRequest.post("/api/v1/guest/customer/signup", data);
+var customerSignUpAPI = function customerSignUpAPI(config //id 0
+) {
+  return guestRequest.post("/api/v1/guest/customer/signup", config);
 };
-var deliveryManSignUpAPI = function deliveryManSignUpAPI(data) {
-  return guestRequest.post("/api/v1/guest/delivery_man/signup", data);
+var deliveryManSignUpAPI = function deliveryManSignUpAPI(config //id 0
+) {
+  return guestRequest.post("/api/v1/guest/delivery_man/signup", config);
 };
-var customerLoginAPI = function customerLoginAPI(data) {
-  return guestRequest.post("/api/v1/guest/customer/login", data);
+var customerLoginAPI = function customerLoginAPI(config //id 1
+) {
+  return guestRequest.post("/api/v1/guest/customer/login", config);
 };
-var deliveryManLoginAPI = function deliveryManLoginAPI(data) {
-  return guestRequest.post("/api/v1/guest/delivery_man/login", data);
+var deliveryManLoginAPI = function deliveryManLoginAPI(config //id 1
+) {
+  return guestRequest.post("/api/v1/guest/delivery_man/login", config);
 };
-var restaurantLoginAPI = function restaurantLoginAPI(data) {
-  return guestRequest.post("/api/v1/guest/restaurant/login", data);
+var restaurantLoginAPI = function restaurantLoginAPI(config //id 1
+) {
+  return guestRequest.post("/api/v1/guest/restaurant/login", config);
 };
-var customerLogoutAPI = function customerLogoutAPI(data, config) {
-  return userRequest.post("/api/v1/users/customer/logout", data, config);
+var switchUserModeCustomerAPI = function switchUserModeCustomerAPI(config, data //id 2
+) {
+  return guestRequest.post("unknown", config, data);
 };
-var deliveryManLogoutAPI = function deliveryManLogoutAPI(data, config) {
-  return userRequest.post("/api/v1/users/delivery_man/logout", data, config);
+var switchUserModeDeliveryManAPI = function switchUserModeDeliveryManAPI(config, data //id 2
+) {
+  return guestRequest.post("unknown", config, data);
 };
-var getRestaurantall = function getRestaurantall(data) {
-  return userRequest.get("/api/v1/users/customer/restaurant/all", data);
+var switchUserModeRestaurantAPI = function switchUserModeRestaurantAPI(config, data //id 2
+) {
+  return guestRequest.post("unknown", config, data);
 };
-var getRestaurantByID = function getRestaurantByID(data) {
-  return userRequest.get("/api/v1/users/customer/restaurant/searchByID", data);
+var forgotPasswordAPI = function forgotPasswordAPI(config, data //id 3
+) {
+  return guestRequest.post("unknown", config, data);
 };
-var getDishByRestaurantID = function getDishByRestaurantID(data) {
-  return userRequest.get("/api/v1/users/customer/restaurant/getAllDish", data);
+var getCustomerInfo = function getCustomerInfo(config // id 4
+) {
+  return guestRequest.post("unknown", config);
+};
+var editCustomerInfo = function editCustomerInfo(config, data //id 5
+) {
+  return guestRequest.post("unknown", config, data);
+};
+var getRestaurantall = function getRestaurantall(config //id 6
+) {
+  return userRequest.get("/api/v1/users/customer/restaurant/all", config);
+};
+var getRestaurantByKeyword = function getRestaurantByKeyword(config, data //id 7
+) {
+  return userRequest.post("/api/v1/users/customer/restaurant/searchByKeyword", config, data);
+};
+var getDishByRestaurantID = function getDishByRestaurantID(config // id 8
+) {
+  return userRequest.get("/api/v1/users/customer/restaurant/getAllDish", config);
+};
+var getDeliveryTimeID = function getDeliveryTimeID(config // id 9
+) {
+  return userRequest.get("unkown", config);
+};
+var sendOrderAPI = function sendOrderAPI(config, data // id 10
+) {
+  return userRequest.post("unkown", config, data);
+};
+var getOrderstatusAPI = function getOrderstatusAPI(config // id 11
+) {
+  return userRequest.get("unkown", config);
+};
+var giveRateAPI = function giveRateAPI(config, data // id 12
+) {
+  return userRequest.post("unkown", config, data);
+};
+var getOrderHistoryCustomerAPI = function getOrderHistoryCustomerAPI(config // id 13
+) {
+  return userRequest.get("unkown", config);
+};
+var getDeliveryManInfoAPI = function getDeliveryManInfoAPI(config // id 14
+) {
+  return userRequest.get("unkown", config);
+};
+var editDeliveryManInfo = function editDeliveryManInfo(config, data //id 15
+) {
+  return guestRequest.post("unknown", config, data);
+};
+var customerLogoutAPI = function customerLogoutAPI(config, data) {
+  return userRequest.post("/api/v1/users/customer/logout", config, data);
+};
+var deliveryManLogoutAPI = function deliveryManLogoutAPI(config, data) {
+  return userRequest.post("/api/v1/users/delivery_man/logout", config, data);
+};
+var getRestaurantByID = function getRestaurantByID(config) {
+  return userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
 };
 var getDishByDishID = function getDishByDishID(config) {
   return userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 };
-var restaurantEditDish = function restaurantEditDish(data, config) {
-  return userRequest.put("/api/v1/users/restaurant/menu/editDish", data, config);
+var restaurantEditDish = function restaurantEditDish(config, data) {
+  return userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
 };
 var restaurantDeleteDish = function restaurantDeleteDish(config) {
   return userRequest["delete"]("/api/v1/users/restaurant/menu/deleteDish", config);
 };
-var restaurantAddDish = function restaurantAddDish(data, config) {
-  return userRequest.post("/api/v1/users/restaurant/menu/addDish", data, config);
-};
+var restaurantAddDish = function restaurantAddDish(config, data) {
+  return userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
+}; //後面加上API
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
