@@ -24,10 +24,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp');
         Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin');
         Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest');
-
         Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
         Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
-
         Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
         Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin');
     });
@@ -42,12 +40,15 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword');
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
             Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
+            Route::get('/addressToLocation', 'App\Http\Controllers\CheckoutController@addressToLocation');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');
             Route::put('/info', 'App\Http\Controllers\DeliveryManInfoController@editDeliveryMan');
             Route::put('/status', 'App\Http\Controllers\DeliveryManChangeStateController@changeState');
             Route::post('/logout', 'App\Http\Controllers\DeliveryManInfoController@deliveryManLogout');
+            Route::get('/location', 'App\Http\Controllers\GeographyController@getDeliveryManLocation');
+            Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
