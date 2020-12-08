@@ -12,7 +12,6 @@ class GeographyController extends Controller
         $request->validate([
             'longitude' => 'required',
             'latitude' => 'required',
-            'token' => 'required',
         ]);
         $DeliveryManLocation = $request ->user();
 
@@ -23,9 +22,12 @@ class GeographyController extends Controller
             $DeliveryManLocation->save();
             $data = [
                         "status" => 200,
-                        "method" => "getDeliveryManLocation",
+                        "method" => "editDeliveryManLocation",
                         "message" => "sucess",
-                        "data" =>$DeliveryManLocation
+                        "data" =>[
+                            "longitude"=> $request->longitude,
+                            "latitude"=> $request->latitude
+                        ]
                     ];
                     return response()->json($data, 200);
         }
@@ -35,7 +37,6 @@ class GeographyController extends Controller
                         "status" => 403,
                         "method" => "getDeliveryManLocation",
                         "message" => "user not found",
-                        "data" => ""
                     ];
 
                     return response()->json($data,403);
@@ -44,15 +45,17 @@ class GeographyController extends Controller
     public function getDeliveryManLocation(Request $request)
     {
         # code...
-        $DeliveryManLocation = $request ->user();
-        
+        $DeliveryManLocation = $request ->user();   
         if ($DeliveryManLocation != null)
-        {
+        {   
             $data = [
                         "status" => 200,
                         "method" => "getDeliveryManLocation",
                         "message" => "sucess",
-                        "data" =>$DeliveryManLocation
+                        "data" =>[
+                            "longitude"=>127.30389378,
+                            "latitude"=>36.30389378
+                        ]
                     ];
                     return response()->json($data, 200);
         }
