@@ -45,97 +45,132 @@ if (process.env.APP_ENV === "local") {
 //data: 放資料
 //config: 放header資料, 像是authorization
 
-export const customerSignUpAPI = (
-    config //id 0
-) => guestRequest.post("/api/v1/guest/customer/signup", config);
-export const deliveryManSignUpAPI = (
-    config //id 0
-) => guestRequest.post("/api/v1/guest/delivery_man/signup", config);
-export const customerLoginAPI = (
-    config //id 1
-) => guestRequest.post("/api/v1/guest/customer/login", config);
-export const deliveryManLoginAPI = (
-    config //id 1
-) => guestRequest.post("/api/v1/guest/delivery_man/login", config);
-export const restaurantLoginAPI = (
-    config //id 1
-) => guestRequest.post("/api/v1/guest/restaurant/login", config);
-export const switchUserModeCustomerAPI = (
-    config,
-    data //id 2
-) => guestRequest.post("unknown", config, data);
-export const switchUserModeDeliveryManAPI = (
-    config,
-    data //id 2
-) => guestRequest.post("unknown", config, data);
-export const switchUserModeRestaurantAPI = (
-    config,
-    data //id 2
-) => guestRequest.post("unknown", config, data);
-export const forgotPasswordAPI = (
-    config,
-    data //id 3
-) => guestRequest.post("unknown", config, data);
-export const getCustomerInfo = (
-    config // id 4
-) => guestRequest.post("unknown", config);
-export const editCustomerInfo = (
-    config,
-    data //id 5
-) => guestRequest.post("unknown", config, data);
-export const getRestaurantall = (
-    config //id 6
-) => userRequest.get("/api/v1/users/customer/restaurant/all", config);
-export const getRestaurantByKeyword = (
-    config,
-    data //id 7
-) =>
+//id 0
+export const customerSignUpAPI = config =>
+    guestRequest.post("/api/v1/guest/customer/signup", config);
+//id 0
+export const deliveryManSignUpAPI = config =>
+    guestRequest.post("/api/v1/guest/delivery_man/signup", config);
+//id 1
+export const customerLoginAPI = config =>
+    guestRequest.post("/api/v1/guest/customer/login", config);
+//id 1
+export const deliveryManLoginAPI = config =>
+    guestRequest.post("/api/v1/guest/delivery_man/login", config);
+//id 1
+export const restaurantLoginAPI = config =>
+    guestRequest.post("/api/v1/guest/restaurant/login", config);
+//id 2
+export const customerSwitchUserModeAPI = (config, data) =>
+    guestRequest.post("unknown", config, data);
+//id 2
+export const deliveryManSwitchUserModeAPI = (config, data) =>
+    guestRequest.post("unknown", config, data);
+//id 2
+export const restaurantSwitchUserModeAPI = (config, data) =>
+    guestRequest.post("unknown", config, data);
+//id 3
+export const forgotPasswordAPI = (config, data) =>
+    guestRequest.post("unknown", config, data);
+// id 4
+export const customerGetInfoAPI = config =>
+    guestRequest.post("/api/v1/users/customer/info", config);
+//id 5
+export const customerEditInfoAPI = (config, data) =>
+    guestRequest.post("/api/v1/users/customer/info", config, data);
+//id 6
+export const customerGetAllRestaurantAPI = config =>
+    userRequest.get("/api/v1/users/customer/restaurant/all", config);
+//id 7
+export const customerGetRestaurantByKeywordAPI = (config, data) =>
     userRequest.post(
         "/api/v1/users/customer/restaurant/searchByKeyword",
         config,
         data
     );
-export const getDishByRestaurantID = (
-    config // id 8
-) => userRequest.get("/api/v1/users/customer/restaurant/getAllDish", config);
-export const getDeliveryTimeID = (
-    config // id 9
-) => userRequest.get("unkown", config);
-export const sendOrderAPI = (
-    config,
-    data // id 10
-) => userRequest.post("unkown", config, data);
-export const getOrderstatusAPI = (
-    config // id 11
-) => userRequest.get("unkown", config);
-export const giveRateAPI = (
-    config,
-    data // id 12
-) => userRequest.post("unkown", config, data);
-export const getOrderHistoryCustomerAPI = (
-    config // id 13
-) => userRequest.get("unkown", config);
-export const getDeliveryManInfoAPI = (
-    config // id 14
-) => userRequest.get("unkown", config);
-export const editDeliveryManInfo = (
-    config,
-    data //id 15
-) => guestRequest.post("unknown", config, data);
+// id 8
+export const customerGetAllDishByRestaurantIDAPI = config =>
+    userRequest.get("/api/v1/users/customer/restaurant/getAllDish", config);
+// id 9
+export const customerGetDeliveryTimeIDAPI = config =>
+    userRequest.get(
+        "/api/v1/users/customer/getDistanceAndTimeByAddress",
+        config
+    );
+// id 10
+export const customerSendOrderAPI = (config, data) =>
+    userRequest.post("unkown", config, data);
+// id 11
+export const customerGetOrderstatusAPI = config =>
+    userRequest.get("unkown", config);
+// id 12
+export const customerGiveRateAPI = (config, data) =>
+    userRequest.post("unkown", config, data);
+// id 13
+export const customerGetOrderHistoryAPI = config =>
+    userRequest.get("unkown", config);
+// id 14
+export const deliveryManGetInfoAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/info", config);
+//id 15
+export const deliveryManEditInfoAPI = (config, data) =>
+    guestRequest.post("/api/v1/users/delivery_man/info", config, data);
+// id 16
+export const deliveryManChangeStateAPI = (config, data) =>
+    userRequest.post("/api/v1/users/delivery_man/status", config, data);
+// id 17
+export const deliveryManCheckOrderStateAPI = config =>
+    userRequest.get("unknown", config);
+// id 18
+export const deliveryManConfirmOrderAPI = (config, data) =>
+    userRequest.post("unknown", config, data);
+// id 19
+export const deliveryManGetHistoryOrderAPI = config =>
+    userRequest.get("unknown", config);
+// id 20
+export const restaurantAddDishAPI = (config, data) =>
+    userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
+// id 21
+export const restaurantEditDishAPI = (config, data) =>
+    userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
+// id 22
+export const restaurantDeleteDishAPI = config =>
+    userRequest.delete("/api/v1/users/restaurant/menu/deleteDish", config);
+// id 23
+export const restaurantGetAllDishAPI = config =>
+    userRequest.get("/api/v1/users/restaurant/menu/getAllDish", config);
+// id unknown
+export const restaurantGetInfoAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/info", config);
+// id 24
+export const restaurantEditInfoAPI = (config, data) =>
+    guestRequest.post("/api/v1/users/restaurant/info", config, data);
+// id 25
+export const deliveryManSwitchOrderStateAPI = (config, data) =>
+    userRequest.put("unknown", config, data);
+// id 26
+export const customerSendLocationAPI = (config, data) =>
+    userRequest.put("/api/v1/users/customer/location", config, data);
+// id 27
+export const customerGetLocationAPI = config =>
+    userRequest.get("/api/v1/users/customer/location", config);
+// id 28
+export const deliveryManSendLocationAPI = (config, data) =>
+    userRequest.put("/api/v1/users/delivery_man/location", config, data);
+// id 29
+export const deliveryManGetLocationAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/location", config);
 
+//以下為未定義在SDD中的
 export const customerLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/customer/logout", config, data);
+export const customerGetRestaurantByTagAPI = config =>
+    userRequest.get("/api/v1/users/customer/restaurant/searchByTag", config);
+export const customerGetRestaurantByIDAPI = config =>
+    userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
-export const getRestaurantByID = config =>
-    userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
-export const getDishByDishID = config =>
+export const restaurantGetDishByDishIDAPI = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
-export const restaurantEditDish = (config, data) =>
-    userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
-export const restaurantDeleteDish = config =>
-    userRequest.delete("/api/v1/users/restaurant/menu/deleteDish", config);
-export const restaurantAddDish = (config, data) =>
-    userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
-
-//後面加上API
+export const restaurantGetAllTagAPI = config =>
+    userRequest.get("/api/v1/users/restaurant/tags", config);

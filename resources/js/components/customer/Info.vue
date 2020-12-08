@@ -3,10 +3,10 @@
         <div class="panel-heading text-center">個人資訊</div>
         <div class="container mb-12">
         <v-card>
-            <v-card-text>姓名: {{ items[3] }}</v-card-text>
-            <v-card-text>地址: {{ items[4] }}</v-card-text>
-            <v-card-text>電話: {{ items[1] }}</v-card-text>
-            <v-card-text>電子郵件: {{ items[2] }}</v-card-text>
+            <v-card-text>姓名: {{ info.name }}</v-card-text>
+            <v-card-text>地址: {{ info.address }}</v-card-text>
+            <v-card-text>電話: {{ info.phone }}</v-card-text>
+            <v-card-text>電子郵件: {{ info.email }}</v-card-text>
         </v-card>
         <v-row justify="center" class="pa-2">
             <v-select
@@ -22,7 +22,7 @@
             <v-btn min-width="200" @click="history_order">歷史訂單紀錄</v-btn>
         </v-row>
         <v-row justify="center" class="pa-2">
-            <v-btn min-width="200" @click="modify_info">更改個人資料</v-btn>
+            <v-btn min-width="200" @click="show_edit">更改個人資料</v-btn>
         </v-row>
         <v-row justify="center" class="pa-2">
             <v-btn min-width="200" @click="signout">登出</v-btn>
@@ -33,22 +33,22 @@
             <v-text-field
               label="姓名"
               outlined
-              v-model="info[2]"
+              v-model="info.name"
             ></v-text-field>
             <v-text-field
               label="地址"
               outlined
-              v-model="info[3]"
+              v-model="info.address"
             ></v-text-field>
             <v-text-field
               label="電話"
               outlined
-              v-model="info[4]"
+              v-model="info.phone"
             ></v-text-field>
             <v-text-field
               label="電子郵件"
               outlined
-              v-model="info[2]"
+              v-model="info.email"
             ></v-text-field>
             <v-card-actions>
               <v-btn color="blue darken-1" @click="editDialog = false">
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {getCustomerInfoAPI,editCustomerInfoAPI,switchUserModeCustomerAPI} from "../../api";
+import {getCustomerInfo,editCustomerInfo,switchUserModeCustomerAPI} from "../../api";
 
 export default {
     props: {},
@@ -79,10 +79,15 @@ export default {
              params: {"ID": this.$route.params.id},
             headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
         };
-        getCustomerInfoAPI(
+        
+        getCustomerInfo(
           config
-        ).then((res) => {
-            this.info = resp.data.data
+        ).then((resp) => {
+            this.info.id = resp.data.data.id
+            this.info.name = resp.data.data.name
+            this.info.phone = resp.data.data.phone
+            this.info.address = resp.data.data.address
+            this.info.email = resp.data.data.email
             console.log("info")
             console.log(this.info)
         })
@@ -92,16 +97,29 @@ export default {
 
     },
     data: () => ({
-        info: ["id","phone","email","name","address"],
+        info: {"id":"id",
+        "phone":"phone",
+        "email":"email",
+        "name":"name",
+        "address":"address"},
         editDialog : false,
         editComfirmLoading : false,
         wanted_mode:0,
         role_list: ["外送員","餐廳管理員"],
         wanted_role:"",
+        resp:"",
     }),
     methods: {
         switch_user() {
-
+          /*console.log(this.wanted_role);*/
+          if(this.wanted_role === "外送員"){
+            this.wanted_mode = 2;
+          }else{
+            this.wanted_mode = 3;
+          }
+          let config = {
+            headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
+          };
           /* 需要判斷select回傳身分並設定至wanted_mode */
 
           switchUserModeCustomerAPI(
@@ -123,14 +141,20 @@ export default {
           this.$router.push("/customer/history");
         },
         edit_info() {
-          editCustomerInfoAPI(
-            {
-            name: this.info[3],
-            email: this.info[2],
-            address: this.info[4],
-            phone: this.info[1],
-            },
-            config
+          this.editDialog=true
+          let config = {
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.getAccessToken,
+              },
+            };
+            let data = {
+            name: this.info.name,
+            email: this.info.email,
+            address: this.info.address,
+            phone: this.info.phone,
+            };
+          editCustomerInfo(
+            data,config
           ).then((resp) => {
           if (resp.status === 200) {
             this.editComfirmLoading = false;
@@ -147,6 +171,9 @@ export default {
           }
           console.log(err);
         });
+        },
+        show_edit(){
+          this.editDialog= true
         },
         signout() {
             if (this.$store.getters.getAccessToken != "") {

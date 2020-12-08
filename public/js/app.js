@@ -2202,8 +2202,12 @@ __webpack_require__.r(__webpack_exports__);
         Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
-    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfoAPI"])(config).then(function (res) {
-      _this.info = resp.data.data;
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfo"])(config).then(function (resp) {
+      _this.info.id = resp.data.data.id;
+      _this.info.name = resp.data.data.name;
+      _this.info.phone = resp.data.data.phone;
+      _this.info.address = resp.data.data.address;
+      _this.info.email = resp.data.data.email;
       console.log("info");
       console.log(_this.info);
     })["catch"](function (error) {
@@ -2212,19 +2216,39 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      info: ["id", "phone", "email", "name", "address"],
+      info: {
+        "id": "id",
+        "phone": "phone",
+        "email": "email",
+        "name": "name",
+        "address": "address"
+      },
       editDialog: false,
       editComfirmLoading: false,
       wanted_mode: 0,
       role_list: ["外送員", "餐廳管理員"],
-      wanted_role: ""
+      wanted_role: "",
+      resp: ""
     };
   },
   methods: {
     switch_user: function switch_user() {
       var _this2 = this;
 
+      /*console.log(this.wanted_role);*/
+      if (this.wanted_role === "外送員") {
+        this.wanted_mode = 2;
+      } else {
+        this.wanted_mode = 3;
+      }
+
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
       /* 需要判斷select回傳身分並設定至wanted_mode */
+
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["switchUserModeCustomerAPI"])({
         mode: this.wanted_mode
       }, config).then(function (resp) {
@@ -2247,12 +2271,19 @@ __webpack_require__.r(__webpack_exports__);
     edit_info: function edit_info() {
       var _this3 = this;
 
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfoAPI"])({
-        name: this.info[3],
-        email: this.info[2],
-        address: this.info[4],
-        phone: this.info[1]
-      }, config).then(function (resp) {
+      this.editDialog = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      var data = {
+        name: this.info.name,
+        email: this.info.email,
+        address: this.info.address,
+        phone: this.info.phone
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfo"])(data, config).then(function (resp) {
         if (resp.status === 200) {
           _this3.editComfirmLoading = false;
           _this3.editDialog = false;
@@ -2269,6 +2300,9 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log(err);
       });
+    },
+    show_edit: function show_edit() {
+      this.editDialog = true;
     },
     signout: function signout() {
       if (this.$store.getters.getAccessToken != "") {
@@ -2881,6 +2915,8 @@ __webpack_require__.r(__webpack_exports__);
             _this.$store.commit("USER_NAME", resp.data.data.access_token);
 
             _this.$store.commit("MODE", _this.mode);
+
+            _this.$router.push("/delivery_man/home");
           }
 
           console.log(resp.data);
@@ -3404,7 +3440,7 @@ __webpack_require__.r(__webpack_exports__);
     refreshAllDish: function refreshAllDish() {
       var _this = this;
 
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByRestaurantID"])(this.config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantGetAllDishAPI"])(this.config).then(function (resp) {
         if (resp.status === 200) {
           _this.menu = [];
 
@@ -3443,7 +3479,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       this.nowEditingID = id;
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByDishID"])(config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantgetDishByDishIDAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
           _this2.nowEditingID = id;
           _this2.editDishName = resp.data.data[0].name;
@@ -3480,7 +3516,7 @@ __webpack_require__.r(__webpack_exports__);
         img: this.editDishImg,
         price: this.editDishPrice
       };
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditDish"])(data, config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditDishAPI"])(data, config).then(function (resp) {
         if (resp.status === 200) {
           _this3.refreshAllDish();
 
@@ -3525,7 +3561,7 @@ __webpack_require__.r(__webpack_exports__);
         img: this.addDishImg,
         price: this.addDishPrice
       };
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantAddDish"])(data, config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantAddDishAPI"])(data, config).then(function (resp) {
         if (resp.status === 200) {
           _this4.refreshAllDish();
 
@@ -3557,7 +3593,7 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + this.$store.getters.getAccessToken
         }
       };
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["getDishByDishID"])(config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantgetDishByDishIDAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
           _this5.nowDeletingID = id;
           _this5.deleteDishName = resp.data.data[0].name;
@@ -3588,7 +3624,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       var data = {};
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantDeleteDish"])(config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantDeleteDishAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
           _this6.refreshAllDish();
 
@@ -3648,32 +3684,169 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {
+    var _this = this;
+
     var config = {
       params: {
-        page: this.page
+        "ID": this.$route.params.id
       },
       headers: {
-        Authorization: "Bearer " + this.$store.getters.getAccessToken()
+        Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfo"])(config).then(function (resp) {
+      _this.info.id = resp.data.data.id;
+      _this.info.name = resp.data.data.name;
+      _this.info.phone = resp.data.data.phone;
+      _this.info.address = resp.data.data.address;
+      _this.info.email = resp.data.data.email;
+      console.log("info");
+      console.log(_this.info);
+    })["catch"](function (error) {
+      console.error(error);
+    });
   },
   data: function data() {
     return {
-      info: [],
-      resName: "",
-      resAddress: "",
-      resPhone: "",
-      resMail: ""
+      info: {
+        "id": "id",
+        "phone": "phone",
+        "email": "email",
+        "name": "name",
+        "address": "address"
+      },
+      editDialog: false,
+      editComfirmLoading: false,
+      wanted_mode: 0,
+      role_list: ["外送員", "餐廳管理員"],
+      wanted_role: "",
+      resp: ""
     };
   },
   methods: {
-    switch_user: function switch_user() {},
-    history_order: function history_order() {},
-    modify_info: function modify_info() {},
+    switch_user: function switch_user() {
+      var _this2 = this;
+
+      /*console.log(this.wanted_role);*/
+      if (this.wanted_role === "外送員") {
+        this.wanted_mode = 1;
+      } else {
+        this.wanted_mode = 2;
+      }
+
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      /* 需要判斷select回傳身分並設定至wanted_mode */
+
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["switchUserModeCustomerAPI"])({
+        mode: this.wanted_mode
+      }, config).then(function (resp) {
+        if (resp.status === 200) {
+          _this2.$store.commit("MODE", _this2.wanted_mode);
+
+          _this2.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+
+          _this2.$router.push("/guest");
+        } else if (resp.status === 403) {
+          _this2.$emit("showSnackBar", "無其他身分");
+        } else if (resp.status === 404) {
+          _this2.$emit("showSnackBar", "未知的錯誤");
+        }
+      });
+    },
+    history_order: function history_order() {
+      this.$router.push("/customer/history");
+    },
+    edit_info: function edit_info() {
+      var _this3 = this;
+
+      this.editDialog = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      var data = {
+        name: this.info.name,
+        email: this.info.email,
+        address: this.info.address,
+        phone: this.info.phone
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfo"])(data, config).then(function (resp) {
+        if (resp.status === 200) {
+          _this3.editComfirmLoading = false;
+          _this3.editDialog = false;
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          console.log(err);
+        } else if (err.response.status === 404) {
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    },
+    show_edit: function show_edit() {
+      this.editDialog = true;
+    },
     signout: function signout() {
       if (this.$store.getters.getAccessToken != "") {
         this.$store.commit("ACCESS_TOKEN", "");
@@ -22605,13 +22778,13 @@ var render = function() {
         _c(
           "v-card",
           [
-            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.items[3]))]),
+            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.info.name))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.items[4]))]),
+            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.info.address))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.items[1]))]),
+            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.info.phone))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.items[2]))])
+            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.info.email))])
           ],
           1
         ),
@@ -22663,7 +22836,7 @@ var render = function() {
           [
             _c(
               "v-btn",
-              { attrs: { "min-width": "200" }, on: { click: _vm.modify_info } },
+              { attrs: { "min-width": "200" }, on: { click: _vm.show_edit } },
               [_vm._v("更改個人資料")]
             )
           ],
@@ -22705,44 +22878,44 @@ var render = function() {
                 _c("v-text-field", {
                   attrs: { label: "姓名", outlined: "" },
                   model: {
-                    value: _vm.info[2],
+                    value: _vm.info.name,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 2, $$v)
+                      _vm.$set(_vm.info, "name", $$v)
                     },
-                    expression: "info[2]"
+                    expression: "info.name"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "地址", outlined: "" },
                   model: {
-                    value: _vm.info[3],
+                    value: _vm.info.address,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 3, $$v)
+                      _vm.$set(_vm.info, "address", $$v)
                     },
-                    expression: "info[3]"
+                    expression: "info.address"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "電話", outlined: "" },
                   model: {
-                    value: _vm.info[4],
+                    value: _vm.info.phone,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 4, $$v)
+                      _vm.$set(_vm.info, "phone", $$v)
                     },
-                    expression: "info[4]"
+                    expression: "info.phone"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "電子郵件", outlined: "" },
                   model: {
-                    value: _vm.info[2],
+                    value: _vm.info.email,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 2, $$v)
+                      _vm.$set(_vm.info, "email", $$v)
                     },
-                    expression: "info[2]"
+                    expression: "info.email"
                   }
                 }),
                 _vm._v(" "),
@@ -24451,81 +24624,199 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "panel-heading text-center" }, [
-        _vm._v("餐廳資訊")
-      ]),
-      _vm._v(" "),
-      _c(
-        "v-card",
-        [
-          _c("v-card-text", [_vm._v("餐廳名稱: " + _vm._s(_vm.resName))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.resAddress))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.resPhone))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.resMail))])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.switch_user } },
-            [_vm._v("切換使用者身分")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.history_order } },
-            [_vm._v("歷史訂單紀錄")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.modify_info } },
-            [_vm._v("更改餐廳資料")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.signout } },
-            [_vm._v("登出")]
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+  return _c("div", [
+    _c("div", { staticClass: "panel-heading text-center" }, [
+      _vm._v("個人資訊")
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "container mb-12" },
+      [
+        _c(
+          "v-card",
+          [
+            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.info.name))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.info.address))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.info.phone))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.info.email))])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c("v-select", {
+              staticClass: "px-14 pt-5",
+              attrs: { items: _vm.role_list, label: "切換至", outlined: "" },
+              model: {
+                value: _vm.wanted_role,
+                callback: function($$v) {
+                  _vm.wanted_role = $$v
+                },
+                expression: "wanted_role"
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.switch_user } },
+              [_vm._v("切換使用者身分")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              {
+                attrs: { "min-width": "200" },
+                on: { click: _vm.history_order }
+              },
+              [_vm._v("歷史訂單紀錄")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.show_edit } },
+              [_vm._v("更改個人資料")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.signout } },
+              [_vm._v("登出")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-dialog",
+          {
+            staticClass: "py-5",
+            attrs: { scrollable: "" },
+            model: {
+              value: _vm.editDialog,
+              callback: function($$v) {
+                _vm.editDialog = $$v
+              },
+              expression: "editDialog"
+            }
+          },
+          [
+            _c(
+              "v-card",
+              [
+                _c("v-card-title", [_vm._v("編輯個人資料")]),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "姓名", outlined: "" },
+                  model: {
+                    value: _vm.info.name,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "name", $$v)
+                    },
+                    expression: "info.name"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "地址", outlined: "" },
+                  model: {
+                    value: _vm.info.address,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "address", $$v)
+                    },
+                    expression: "info.address"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "電話", outlined: "" },
+                  model: {
+                    value: _vm.info.phone,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "phone", $$v)
+                    },
+                    expression: "info.phone"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "電子郵件", outlined: "" },
+                  model: {
+                    value: _vm.info.email,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "email", $$v)
+                    },
+                    expression: "info.email"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "v-card-actions",
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        attrs: { color: "blue darken-1" },
+                        on: {
+                          click: function($event) {
+                            _vm.editDialog = false
+                          }
+                        }
+                      },
+                      [_vm._v("\n            取消\n          ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        attrs: {
+                          loading: _vm.editComfirmLoading,
+                          color: "blue darken-1"
+                        },
+                        on: { click: _vm.edit_info }
+                      },
+                      [_vm._v("\n            儲存\n          ")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -85221,7 +85512,7 @@ var GuraEatRouter = /*#__PURE__*/function () {
 /*!*****************************!*\
   !*** ./resources/js/api.js ***!
   \*****************************/
-/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, switchUserModeCustomerAPI, switchUserModeDeliveryManAPI, switchUserModeRestaurantAPI, forgotPasswordAPI, getCustomerInfo, editCustomerInfo, getRestaurantall, getRestaurantByKeyword, getDishByRestaurantID, getDeliveryTimeID, sendOrderAPI, getOrderstatusAPI, giveRateAPI, getOrderHistoryCustomerAPI, getDeliveryManInfoAPI, editDeliveryManInfo, customerLogoutAPI, deliveryManLogoutAPI, getRestaurantByID, getDishByDishID, restaurantEditDish, restaurantDeleteDish, restaurantAddDish */
+/*! exports provided: customerSignUpAPI, deliveryManSignUpAPI, customerLoginAPI, deliveryManLoginAPI, restaurantLoginAPI, customerSwitchUserModeAPI, deliveryManSwitchUserModeAPI, restaurantSwitchUserModeAPI, forgotPasswordAPI, customerGetInfoAPI, customerEditInfoAPI, customerGetAllRestaurantAPI, customerGetRestaurantByKeywordAPI, customerGetAllDishByRestaurantIDAPI, customerGetDeliveryTimeIDAPI, customerSendOrderAPI, customerGetOrderstatusAPI, customerGiveRateAPI, customerGetOrderHistoryAPI, deliveryManGetInfoAPI, deliveryManEditInfoAPI, deliveryManChangeStateAPI, deliveryManCheckOrderStateAPI, deliveryManConfirmOrderAPI, deliveryManGetHistoryOrderAPI, restaurantAddDishAPI, restaurantEditDishAPI, restaurantDeleteDishAPI, restaurantGetAllDishAPI, restaurantGetInfoAPI, restaurantEditInfoAPI, deliveryManSwitchOrderStateAPI, customerSendLocationAPI, customerGetLocationAPI, deliveryManSendLocationAPI, deliveryManGetLocationAPI, customerLogoutAPI, customerGetRestaurantByTagAPI, customerGetRestaurantByIDAPI, deliveryManLogoutAPI, restaurantGetDishByDishIDAPI, restaurantGetAllTagAPI */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85231,29 +85522,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLoginAPI", function() { return customerLoginAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLoginAPI", function() { return deliveryManLoginAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantLoginAPI", function() { return restaurantLoginAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeCustomerAPI", function() { return switchUserModeCustomerAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeDeliveryManAPI", function() { return switchUserModeDeliveryManAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchUserModeRestaurantAPI", function() { return switchUserModeRestaurantAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerSwitchUserModeAPI", function() { return customerSwitchUserModeAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManSwitchUserModeAPI", function() { return deliveryManSwitchUserModeAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantSwitchUserModeAPI", function() { return restaurantSwitchUserModeAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forgotPasswordAPI", function() { return forgotPasswordAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCustomerInfo", function() { return getCustomerInfo; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editCustomerInfo", function() { return editCustomerInfo; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantall", function() { return getRestaurantall; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByKeyword", function() { return getRestaurantByKeyword; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByRestaurantID", function() { return getDishByRestaurantID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDeliveryTimeID", function() { return getDeliveryTimeID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendOrderAPI", function() { return sendOrderAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderstatusAPI", function() { return getOrderstatusAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "giveRateAPI", function() { return giveRateAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOrderHistoryCustomerAPI", function() { return getOrderHistoryCustomerAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDeliveryManInfoAPI", function() { return getDeliveryManInfoAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editDeliveryManInfo", function() { return editDeliveryManInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetInfoAPI", function() { return customerGetInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerEditInfoAPI", function() { return customerEditInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetAllRestaurantAPI", function() { return customerGetAllRestaurantAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetRestaurantByKeywordAPI", function() { return customerGetRestaurantByKeywordAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetAllDishByRestaurantIDAPI", function() { return customerGetAllDishByRestaurantIDAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetDeliveryTimeIDAPI", function() { return customerGetDeliveryTimeIDAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerSendOrderAPI", function() { return customerSendOrderAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetOrderstatusAPI", function() { return customerGetOrderstatusAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGiveRateAPI", function() { return customerGiveRateAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetOrderHistoryAPI", function() { return customerGetOrderHistoryAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManGetInfoAPI", function() { return deliveryManGetInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManEditInfoAPI", function() { return deliveryManEditInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManChangeStateAPI", function() { return deliveryManChangeStateAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManCheckOrderStateAPI", function() { return deliveryManCheckOrderStateAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManConfirmOrderAPI", function() { return deliveryManConfirmOrderAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManGetHistoryOrderAPI", function() { return deliveryManGetHistoryOrderAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantAddDishAPI", function() { return restaurantAddDishAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantEditDishAPI", function() { return restaurantEditDishAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantDeleteDishAPI", function() { return restaurantDeleteDishAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantGetAllDishAPI", function() { return restaurantGetAllDishAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantGetInfoAPI", function() { return restaurantGetInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantEditInfoAPI", function() { return restaurantEditInfoAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManSwitchOrderStateAPI", function() { return deliveryManSwitchOrderStateAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerSendLocationAPI", function() { return customerSendLocationAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetLocationAPI", function() { return customerGetLocationAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManSendLocationAPI", function() { return deliveryManSendLocationAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManGetLocationAPI", function() { return deliveryManGetLocationAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerLogoutAPI", function() { return customerLogoutAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetRestaurantByTagAPI", function() { return customerGetRestaurantByTagAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customerGetRestaurantByIDAPI", function() { return customerGetRestaurantByIDAPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deliveryManLogoutAPI", function() { return deliveryManLogoutAPI; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRestaurantByID", function() { return getRestaurantByID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDishByDishID", function() { return getDishByDishID; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantEditDish", function() { return restaurantEditDish; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantDeleteDish", function() { return restaurantDeleteDish; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantAddDish", function() { return restaurantAddDish; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantGetDishByDishIDAPI", function() { return restaurantGetDishByDishIDAPI; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurantGetAllTagAPI", function() { return restaurantGetAllTagAPI; });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
  //初始化
@@ -85310,113 +85615,171 @@ if (process.env.APP_ENV === "local") {
 } //統一管理 API Call
 //data: 放資料
 //config: 放header資料, 像是authorization
+//id 0
 
 
-var customerSignUpAPI = function customerSignUpAPI(config //id 0
-) {
+var customerSignUpAPI = function customerSignUpAPI(config) {
   return guestRequest.post("/api/v1/guest/customer/signup", config);
-};
-var deliveryManSignUpAPI = function deliveryManSignUpAPI(config //id 0
-) {
+}; //id 0
+
+var deliveryManSignUpAPI = function deliveryManSignUpAPI(config) {
   return guestRequest.post("/api/v1/guest/delivery_man/signup", config);
-};
-var customerLoginAPI = function customerLoginAPI(config //id 1
-) {
+}; //id 1
+
+var customerLoginAPI = function customerLoginAPI(config) {
   return guestRequest.post("/api/v1/guest/customer/login", config);
-};
-var deliveryManLoginAPI = function deliveryManLoginAPI(config //id 1
-) {
+}; //id 1
+
+var deliveryManLoginAPI = function deliveryManLoginAPI(config) {
   return guestRequest.post("/api/v1/guest/delivery_man/login", config);
-};
-var restaurantLoginAPI = function restaurantLoginAPI(config //id 1
-) {
+}; //id 1
+
+var restaurantLoginAPI = function restaurantLoginAPI(config) {
   return guestRequest.post("/api/v1/guest/restaurant/login", config);
-};
-var switchUserModeCustomerAPI = function switchUserModeCustomerAPI(config, data //id 2
-) {
+}; //id 2
+
+var customerSwitchUserModeAPI = function customerSwitchUserModeAPI(config, data) {
   return guestRequest.post("unknown", config, data);
-};
-var switchUserModeDeliveryManAPI = function switchUserModeDeliveryManAPI(config, data //id 2
-) {
+}; //id 2
+
+var deliveryManSwitchUserModeAPI = function deliveryManSwitchUserModeAPI(config, data) {
   return guestRequest.post("unknown", config, data);
-};
-var switchUserModeRestaurantAPI = function switchUserModeRestaurantAPI(config, data //id 2
-) {
+}; //id 2
+
+var restaurantSwitchUserModeAPI = function restaurantSwitchUserModeAPI(config, data) {
   return guestRequest.post("unknown", config, data);
-};
-var forgotPasswordAPI = function forgotPasswordAPI(config, data //id 3
-) {
+}; //id 3
+
+var forgotPasswordAPI = function forgotPasswordAPI(config, data) {
   return guestRequest.post("unknown", config, data);
-};
-var getCustomerInfo = function getCustomerInfo(config // id 4
-) {
-  return guestRequest.post("unknown", config);
-};
-var editCustomerInfo = function editCustomerInfo(config, data //id 5
-) {
-  return guestRequest.post("unknown", config, data);
-};
-var getRestaurantall = function getRestaurantall(config //id 6
-) {
+}; // id 4
+
+var customerGetInfoAPI = function customerGetInfoAPI(config) {
+  return guestRequest.post("/api/v1/users/customer/info", config);
+}; //id 5
+
+var customerEditInfoAPI = function customerEditInfoAPI(config, data) {
+  return guestRequest.post("/api/v1/users/customer/info", config, data);
+}; //id 6
+
+var customerGetAllRestaurantAPI = function customerGetAllRestaurantAPI(config) {
   return userRequest.get("/api/v1/users/customer/restaurant/all", config);
-};
-var getRestaurantByKeyword = function getRestaurantByKeyword(config, data //id 7
-) {
+}; //id 7
+
+var customerGetRestaurantByKeywordAPI = function customerGetRestaurantByKeywordAPI(config, data) {
   return userRequest.post("/api/v1/users/customer/restaurant/searchByKeyword", config, data);
-};
-var getDishByRestaurantID = function getDishByRestaurantID(config // id 8
-) {
+}; // id 8
+
+var customerGetAllDishByRestaurantIDAPI = function customerGetAllDishByRestaurantIDAPI(config) {
   return userRequest.get("/api/v1/users/customer/restaurant/getAllDish", config);
-};
-var getDeliveryTimeID = function getDeliveryTimeID(config // id 9
-) {
-  return userRequest.get("unkown", config);
-};
-var sendOrderAPI = function sendOrderAPI(config, data // id 10
-) {
+}; // id 9
+
+var customerGetDeliveryTimeIDAPI = function customerGetDeliveryTimeIDAPI(config) {
+  return userRequest.get("/api/v1/users/customer/getDistanceAndTimeByAddress", config);
+}; // id 10
+
+var customerSendOrderAPI = function customerSendOrderAPI(config, data) {
   return userRequest.post("unkown", config, data);
-};
-var getOrderstatusAPI = function getOrderstatusAPI(config // id 11
-) {
+}; // id 11
+
+var customerGetOrderstatusAPI = function customerGetOrderstatusAPI(config) {
   return userRequest.get("unkown", config);
-};
-var giveRateAPI = function giveRateAPI(config, data // id 12
-) {
+}; // id 12
+
+var customerGiveRateAPI = function customerGiveRateAPI(config, data) {
   return userRequest.post("unkown", config, data);
-};
-var getOrderHistoryCustomerAPI = function getOrderHistoryCustomerAPI(config // id 13
-) {
+}; // id 13
+
+var customerGetOrderHistoryAPI = function customerGetOrderHistoryAPI(config) {
   return userRequest.get("unkown", config);
-};
-var getDeliveryManInfoAPI = function getDeliveryManInfoAPI(config // id 14
-) {
-  return userRequest.get("unkown", config);
-};
-var editDeliveryManInfo = function editDeliveryManInfo(config, data //id 15
-) {
-  return guestRequest.post("unknown", config, data);
-};
+}; // id 14
+
+var deliveryManGetInfoAPI = function deliveryManGetInfoAPI(config) {
+  return userRequest.get("/api/v1/users/delivery_man/info", config);
+}; //id 15
+
+var deliveryManEditInfoAPI = function deliveryManEditInfoAPI(config, data) {
+  return guestRequest.post("/api/v1/users/delivery_man/info", config, data);
+}; // id 16
+
+var deliveryManChangeStateAPI = function deliveryManChangeStateAPI(config, data) {
+  return userRequest.post("/api/v1/users/delivery_man/status", config, data);
+}; // id 17
+
+var deliveryManCheckOrderStateAPI = function deliveryManCheckOrderStateAPI(config) {
+  return userRequest.get("unknown", config);
+}; // id 18
+
+var deliveryManConfirmOrderAPI = function deliveryManConfirmOrderAPI(config, data) {
+  return userRequest.post("unknown", config, data);
+}; // id 19
+
+var deliveryManGetHistoryOrderAPI = function deliveryManGetHistoryOrderAPI(config) {
+  return userRequest.get("unknown", config);
+}; // id 20
+
+var restaurantAddDishAPI = function restaurantAddDishAPI(config, data) {
+  return userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
+}; // id 21
+
+var restaurantEditDishAPI = function restaurantEditDishAPI(config, data) {
+  return userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
+}; // id 22
+
+var restaurantDeleteDishAPI = function restaurantDeleteDishAPI(config) {
+  return userRequest["delete"]("/api/v1/users/restaurant/menu/deleteDish", config);
+}; // id 23
+
+var restaurantGetAllDishAPI = function restaurantGetAllDishAPI(config) {
+  return userRequest.get("/api/v1/users/restaurant/menu/getAllDish", config);
+}; // id unknown
+
+var restaurantGetInfoAPI = function restaurantGetInfoAPI(config) {
+  return userRequest.get("/api/v1/users/delivery_man/info", config);
+}; // id 24
+
+var restaurantEditInfoAPI = function restaurantEditInfoAPI(config, data) {
+  return guestRequest.post("/api/v1/users/restaurant/info", config, data);
+}; // id 25
+
+var deliveryManSwitchOrderStateAPI = function deliveryManSwitchOrderStateAPI(config, data) {
+  return userRequest.put("unknown", config, data);
+}; // id 26
+
+var customerSendLocationAPI = function customerSendLocationAPI(config, data) {
+  return userRequest.put("/api/v1/users/customer/location", config, data);
+}; // id 27
+
+var customerGetLocationAPI = function customerGetLocationAPI(config) {
+  return userRequest.get("/api/v1/users/customer/location", config);
+}; // id 28
+
+var deliveryManSendLocationAPI = function deliveryManSendLocationAPI(config, data) {
+  return userRequest.put("/api/v1/users/delivery_man/location", config, data);
+}; // id 29
+
+var deliveryManGetLocationAPI = function deliveryManGetLocationAPI(config) {
+  return userRequest.get("/api/v1/users/delivery_man/location", config);
+}; //以下為未定義在SDD中的
+
 var customerLogoutAPI = function customerLogoutAPI(config, data) {
   return userRequest.post("/api/v1/users/customer/logout", config, data);
+};
+var customerGetRestaurantByTagAPI = function customerGetRestaurantByTagAPI(config) {
+  return userRequest.get("/api/v1/users/customer/restaurant/searchByTag", config);
+};
+var customerGetRestaurantByIDAPI = function customerGetRestaurantByIDAPI(config) {
+  return userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
 };
 var deliveryManLogoutAPI = function deliveryManLogoutAPI(config, data) {
   return userRequest.post("/api/v1/users/delivery_man/logout", config, data);
 };
-var getRestaurantByID = function getRestaurantByID(config) {
-  return userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
-};
-var getDishByDishID = function getDishByDishID(config) {
+var restaurantGetDishByDishIDAPI = function restaurantGetDishByDishIDAPI(config) {
   return userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 };
-var restaurantEditDish = function restaurantEditDish(config, data) {
-  return userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
+var restaurantGetAllTagAPI = function restaurantGetAllTagAPI(config) {
+  return userRequest.get("/api/v1/users/restaurant/tags", config);
 };
-var restaurantDeleteDish = function restaurantDeleteDish(config) {
-  return userRequest["delete"]("/api/v1/users/restaurant/menu/deleteDish", config);
-};
-var restaurantAddDish = function restaurantAddDish(config, data) {
-  return userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
-}; //後面加上API
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),

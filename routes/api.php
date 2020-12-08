@@ -49,6 +49,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');
             Route::put('/info', 'App\Http\Controllers\DeliveryManInfoController@editDeliveryMan');
             Route::put('/status', 'App\Http\Controllers\DeliveryManChangeStateController@changeState');
+            Route::get('/location', 'App\Http\Controllers\GeographyController@getDeliveryManLocation');
+            Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
             Route::post('/changeRoleDeliveryMan', 'App\Http\Controllers\AuthController@changeRoleDeliveryMan');
         });

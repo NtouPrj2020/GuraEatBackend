@@ -136,6 +136,7 @@ export default {
                             this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
                             this.$store.commit("USER_NAME", resp.data.data.access_token);
                             this.$store.commit("MODE", this.mode);
+                            this.$router.push("/delivery_man/home");
                         }
                         console.log(resp.data);
                     })
