@@ -3351,7 +3351,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       resimg: "https://i.imgur.com/3f98UhC.jpg",
-      resName: "test res",
+      resName: "no name",
       windowSize: {
         x: 0,
         y: 0
@@ -3386,6 +3386,7 @@ __webpack_require__.r(__webpack_exports__);
         Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
+    this.showResInfo();
     this.refreshAllDish();
   },
   methods: {
@@ -3395,17 +3396,12 @@ __webpack_require__.r(__webpack_exports__);
         y: window.innerHeight
       };
     },
-    refreshAllDish: function refreshAllDish() {
+    showResInfo: function showResInfo() {
       var _this = this;
 
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantGetAllDishAPI"])(this.config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantGetInfoAPI"])(this.config).then(function (resp) {
         if (resp.status === 200) {
-          _this.menu = [];
-
-          for (var dishes = 0; dishes < resp.data.data.length; dishes++) {
-            _this.menu.push(resp.data.data[dishes]);
-          }
-
+          _this.resName = resp.data.data.name;
           console.log(resp.data);
           console.log("done");
         }
@@ -3425,8 +3421,38 @@ __webpack_require__.r(__webpack_exports__);
         console.log(err);
       });
     },
-    showEditDish: function showEditDish(id) {
+    refreshAllDish: function refreshAllDish() {
       var _this2 = this;
+
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantGetAllDishAPI"])(this.config).then(function (resp) {
+        if (resp.status === 200) {
+          _this2.menu = [];
+
+          for (var dishes = 0; dishes < resp.data.data.length; dishes++) {
+            _this2.menu.push(resp.data.data[dishes]);
+          }
+
+          console.log(resp.data);
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          _this2.$emit("showSnackBar", "信箱/密碼錯誤");
+
+          console.log(err);
+        } else if (err.response.status === 404) {
+          _this2.$emit("showSnackBar", "未知的錯誤");
+
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    },
+    showEditDish: function showEditDish(id) {
+      var _this3 = this;
 
       var config = {
         params: {
@@ -3439,12 +3465,12 @@ __webpack_require__.r(__webpack_exports__);
       this.nowEditingID = id;
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantgetDishByDishIDAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
-          _this2.nowEditingID = id;
-          _this2.editDishName = resp.data.data[0].name;
-          _this2.editDishImg = resp.data.data[0].img;
-          _this2.editDishPrice = resp.data.data[0].price;
-          _this2.editDishTime = resp.data.data[0].making_time;
-          _this2.editDialog = true;
+          _this3.nowEditingID = id;
+          _this3.editDishName = resp.data.data[0].name;
+          _this3.editDishImg = resp.data.data[0].img;
+          _this3.editDishPrice = resp.data.data[0].price;
+          _this3.editDishTime = resp.data.data[0].making_time;
+          _this3.editDialog = true;
           console.log(resp.data);
           console.log("done");
         }
@@ -3459,7 +3485,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     sendEditDish: function sendEditDish() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.editComfirmLoading = true;
       var config = {
@@ -3476,10 +3502,10 @@ __webpack_require__.r(__webpack_exports__);
       };
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditDishAPI"])(data, config).then(function (resp) {
         if (resp.status === 200) {
-          _this3.refreshAllDish();
+          _this4.refreshAllDish();
 
-          _this3.editComfirmLoading = false;
-          _this3.editDialog = false;
+          _this4.editComfirmLoading = false;
+          _this4.editDialog = false;
           console.log(resp.data);
           console.log("done");
         }
@@ -3503,7 +3529,7 @@ __webpack_require__.r(__webpack_exports__);
       this.addDishTime = "";
     },
     sendAddDish: function sendAddDish() {
-      var _this4 = this;
+      var _this5 = this;
 
       console.log("this.editDishTime" + this.editDishTime);
       this.addComfirmLoading = true;
@@ -3521,10 +3547,10 @@ __webpack_require__.r(__webpack_exports__);
       };
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantAddDishAPI"])(data, config).then(function (resp) {
         if (resp.status === 200) {
-          _this4.refreshAllDish();
+          _this5.refreshAllDish();
 
-          _this4.addComfirmLoading = false;
-          _this4.addDialog = false;
+          _this5.addComfirmLoading = false;
+          _this5.addDialog = false;
           console.log(resp.data);
           console.log("done");
         }
@@ -3541,7 +3567,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     showDeleteDish: function showDeleteDish(id) {
-      var _this5 = this;
+      var _this6 = this;
 
       var config = {
         params: {
@@ -3553,9 +3579,9 @@ __webpack_require__.r(__webpack_exports__);
       };
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantgetDishByDishIDAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
-          _this5.nowDeletingID = id;
-          _this5.deleteDishName = resp.data.data[0].name;
-          _this5.deleteDialog = true;
+          _this6.nowDeletingID = id;
+          _this6.deleteDishName = resp.data.data[0].name;
+          _this6.deleteDialog = true;
           console.log(resp.data);
           console.log("done");
         }
@@ -3570,7 +3596,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     sendDeleteDish: function sendDeleteDish() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.deleteComfirmLoading = true;
       var config = {
@@ -3584,10 +3610,10 @@ __webpack_require__.r(__webpack_exports__);
       var data = {};
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantDeleteDishAPI"])(config).then(function (resp) {
         if (resp.status === 200) {
-          _this6.refreshAllDish();
+          _this7.refreshAllDish();
 
-          _this6.deleteComfirmLoading = false;
-          _this6.deleteDialog = false;
+          _this7.deleteComfirmLoading = false;
+          _this7.deleteDialog = false;
           console.log(resp.data);
           console.log("done");
         }
@@ -23896,14 +23922,9 @@ var render = function() {
                   _c(
                     "v-card-title",
                     [
-                      _c(
-                        "v-chip",
-                        {
-                          staticClass: "text-h4 pa-5",
-                          attrs: { label: _vm.resName }
-                        },
-                        [_vm._v("res name")]
-                      )
+                      _c("v-chip", { staticClass: "text-h4 pa-5" }, [
+                        _vm._v(_vm._s(_vm.resName))
+                      ])
                     ],
                     1
                   )
