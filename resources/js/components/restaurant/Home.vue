@@ -4,7 +4,7 @@
       <v-card>
         <v-img :src="resImg" class="white--text align-end" height="200px">
           <v-card-title>
-            <v-chip class="text-h4 pa-5" :label="resName">res name</v-chip>
+            <v-chip class="text-h4 pa-5">{{ resName }}</v-chip>
           </v-card-title>
         </v-img>
       </v-card>
@@ -163,6 +163,7 @@
 </template>
 <script>
 import {
+  restaurantGetInfoAPI,
   restaurantGetAllDishAPI,
   restaurantgetDishByDishIDAPI,
   restaurantEditDishAPI,
@@ -173,7 +174,7 @@ import {
 export default {
   data: () => ({
     resimg: "https://i.imgur.com/3f98UhC.jpg",
-    resName: "test res",
+    resName: "no name",
     windowSize: {
       x: 0,
       y: 0,
@@ -207,11 +208,33 @@ export default {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
       },
     };
+    this.showResInfo();
     this.refreshAllDish();
   },
   methods: {
     onResize() {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight };
+    },
+    showResInfo() {
+      restaurantGetInfoAPI(this.config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.resName = resp.data.data.name;
+            console.log(resp.data);
+            console.log("done");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            this.$emit("showSnackBar", "信箱/密碼錯誤");
+            console.log(err);
+          } else if (err.response.status === 404) {
+            this.$emit("showSnackBar", "未知的錯誤");
+            console.log(err);
+          }
+          console.log(err);
+        });
     },
     refreshAllDish() {
       restaurantGetAllDishAPI(this.config)
