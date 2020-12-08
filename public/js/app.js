@@ -3750,7 +3750,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
@@ -3759,13 +3758,13 @@ __webpack_require__.r(__webpack_exports__);
 
     var config = {
       params: {
-        "ID": this.$route.params.id
+        ID: this.$route.params.id
       },
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
-    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfo"])(config).then(function (resp) {
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantGetInfoAPI"])(config).then(function (resp) {
       _this.info.id = resp.data.data.id;
       _this.info.name = resp.data.data.name;
       _this.info.phone = resp.data.data.phone;
@@ -3780,11 +3779,11 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       info: {
-        "id": "id",
-        "phone": "phone",
-        "email": "email",
-        "name": "name",
-        "address": "address"
+        id: "id",
+        phone: "phone",
+        email: "email",
+        name: "name",
+        address: "address"
       },
       editDialog: false,
       editComfirmLoading: false,
@@ -3812,7 +3811,7 @@ __webpack_require__.r(__webpack_exports__);
       };
       /* 需要判斷select回傳身分並設定至wanted_mode */
 
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["switchUserModeCustomerAPI"])({
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantSwitchUserModeAPI"])({
         mode: this.wanted_mode
       }, config).then(function (resp) {
         if (resp.status === 200) {
@@ -3829,7 +3828,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     history_order: function history_order() {
-      this.$router.push("/customer/history");
+      this.$router.push("");
     },
     edit_info: function edit_info() {
       var _this3 = this;
@@ -3846,7 +3845,7 @@ __webpack_require__.r(__webpack_exports__);
         address: this.info.address,
         phone: this.info.phone
       };
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfo"])(data, config).then(function (resp) {
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["restaurantEditInfoAPI"])(data, config).then(function (resp) {
         if (resp.status === 200) {
           _this3.editComfirmLoading = false;
           _this3.editDialog = false;
@@ -24571,7 +24570,7 @@ var render = function() {
         _c(
           "v-card",
           [
-            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.info.name))]),
+            _c("v-card-text", [_vm._v("餐廳名稱: " + _vm._s(_vm.info.name))]),
             _vm._v(" "),
             _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.info.address))]),
             _vm._v(" "),
