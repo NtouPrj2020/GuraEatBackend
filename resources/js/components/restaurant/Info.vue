@@ -46,7 +46,14 @@ export default {
     history_order() {},
     modify_info() {},
     signout() {
-      this.$router.push("/signout");
+      if (this.$store.getters.getAccessToken != "") {
+        this.$store.commit("ACCESS_TOKEN", "");
+        this.$store.commit("USER_NAME", "");
+        this.$store.commit("MODE", 0);
+        this.$router.push("/guest/login");
+      } else {
+        this.$router.push("/guest/login");
+      }
     },
   },
 };

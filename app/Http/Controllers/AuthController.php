@@ -123,7 +123,16 @@ class AuthController extends Controller
 
         //查詢是否存在
         $user = Customer::where('email', $request->email)->first();
+        $userPhone = Customer::where('phone', $request->phone)->first();
         if ($user != null) {
+            $data = [
+                "status" => 401,
+                "method" => "customerSignUp",
+                "message" => "already sign",
+            ];
+            return response()->json($data, 401);
+        }
+        if($userPhone!=null){
             $data = [
                 "status" => 401,
                 "method" => "customerSignUp",
@@ -261,7 +270,16 @@ class AuthController extends Controller
 
         //查詢是否存在
         $user = DeliveryMan::where('email', $request->email)->first();
+        $userPhone = DeliveryMan::where('phone', $request->phone)->first();
         if ($user != null) {
+            $data = [
+                "status" => 401,
+                "method" => "deliveryManSignUp",
+                "message" => "already sign",
+            ];
+            return response()->json($data, 401);
+        }
+        if($userPhone!=null){
             $data = [
                 "status" => 401,
                 "method" => "deliveryManSignUp",
