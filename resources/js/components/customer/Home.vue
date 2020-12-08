@@ -1,6 +1,12 @@
 <template>
     <div>
-        <div class="panel-heading text-center">Home</div>
+        <div class="panel-heading mt-3 text-center d-flex justify-start" id="heading-div">
+            <v-img class="mt-1 "
+                   max-height="40" max-width="40"
+                   src="https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000">
+            </v-img>
+            <div class="ml-5 ">Gura eAt</div>
+        </div>
         <div class="container mb-12">
             <v-row dense>
                 <v-col v-for="(item,i) in list" :key="i" :cols="12">
@@ -78,3 +84,10 @@ export default {
 
 };
 </script>
+
+<style>
+#heading-div{
+    max-width: 400px;
+    margin: 0 auto;
+}
+</style>

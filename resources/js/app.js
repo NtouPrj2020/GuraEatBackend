@@ -15,7 +15,9 @@ Vue.use(VueRouter);
 const vuetify = new Vuetify({
     theme: {
         themes: {
-            light: {},
+            light: {
+                primary: '#3e6d97',
+            },
             dark: {}
         }
     },

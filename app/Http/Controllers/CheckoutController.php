@@ -8,7 +8,6 @@ use Exception;
 
 class CheckoutController extends Controller
 {
-
     public function getDistanceAndTimeByAddress(Request $request){
         $request->validate([
             'ori_address' => 'required',
@@ -40,4 +39,7 @@ class CheckoutController extends Controller
             return response()->json($data, 500);
         }
     }
+
+
+
 }

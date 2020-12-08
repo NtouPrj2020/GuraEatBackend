@@ -132,7 +132,7 @@ class AuthController extends Controller
             ];
             return response()->json($data, 401);
         }
-        if($userPhone!=null){
+        if ($userPhone != null) {
             $data = [
                 "status" => 401,
                 "method" => "customerSignUp",
@@ -279,7 +279,7 @@ class AuthController extends Controller
             ];
             return response()->json($data, 401);
         }
-        if($userPhone!=null){
+        if ($userPhone != null) {
             $data = [
                 "status" => 401,
                 "method" => "deliveryManSignUp",
@@ -775,6 +775,29 @@ class AuthController extends Controller
         }
     }
 
+    public function restaurantLogout(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user != null) {
+            $request->user()->tokens()->where('name', $request->device_name)->delete();
+            $data = [
+                "status" => 200,
+                "method" => "restaurantLogout",
+                "message" => "success"
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                "status" => 403,
+                "method" => "restaurantLogout",
+                "message" => "user not found"
+            ];
+            return response()->json($data, 403);
+        }
+    }
+
+
     public function customerCreatePasswordResetRequest(Request $request)
     {
         $request->validate([
@@ -839,20 +862,20 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
         $passwordReset = CustomerPasswordReset::where('token', $request->token)->first();
-        if (!$passwordReset){
+        if (!$passwordReset) {
             return response()->json([
                 'status' => 200,
                 'method' => 'customerCheckPasswordResetRequestToken',
                 'message' => 'This password reset token is invalid'
             ], 404);
-        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+        } else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
             return response()->json([
                 'status' => 403,
                 'method' => 'customerCheckPasswordResetRequestToken',
                 'message' => 'This password reset token is expired'
             ], 403);
-        }else{
+        } else {
             return response()->json([
                 'status' => 200,
                 'method' => 'customerCheckPasswordResetRequestToken',
@@ -867,20 +890,20 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
         $passwordReset = DeliveryManPasswordReset::where('token', $request->token)->first();
-        if (!$passwordReset){
+        if (!$passwordReset) {
             return response()->json([
                 'status' => 200,
                 'method' => 'deliveryManCheckPasswordResetRequestToken',
                 'message' => 'This password reset token is invalid'
             ], 404);
-        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+        } else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
             return response()->json([
                 'status' => 403,
                 'method' => 'deliveryManCheckPasswordResetRequestToken',
                 'message' => 'This password reset token is expired'
             ], 403);
-        }else{
+        } else {
             return response()->json([
                 'status' => 200,
                 'method' => 'deliveryManCheckPasswordResetRequestToken',
@@ -898,20 +921,20 @@ class AuthController extends Controller
 
         $passwordReset = CustomerPasswordReset::where('token', $request->token)->first();
 
-        if (!$passwordReset){
+        if (!$passwordReset) {
             return response()->json([
                 'status' => 200,
                 'method' => 'customerPasswordReset',
                 'message' => 'This password reset token is invalid'
             ], 404);
-        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+        } else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
             return response()->json([
                 'status' => 403,
                 'method' => 'customerPasswordReset',
                 'message' => 'This password reset token is expired'
             ], 403);
-        }else{
+        } else {
             $user = Customer::where('email', $passwordReset->email)->first();
             $user->password = bcrypt($request->password);
             $user->save();
@@ -934,20 +957,20 @@ class AuthController extends Controller
 
         $passwordReset = DeliveryManPasswordReset::where('token', $request->token)->first();
 
-        if (!$passwordReset){
+        if (!$passwordReset) {
             return response()->json([
                 'status' => 200,
                 'method' => 'customerPasswordReset',
                 'message' => 'This password reset token is invalid'
             ], 404);
-        }else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+        } else if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
             return response()->json([
                 'status' => 403,
                 'method' => 'customerPasswordReset',
                 'message' => 'This password reset token is expired'
             ], 403);
-        }else{
+        } else {
             $user = DeliveryMan::where('email', $passwordReset->email)->first();
             $user->password = bcrypt($request->password);
             $user->save();
@@ -1054,4 +1077,273 @@ class AuthController extends Controller
         }
     }
 
+    public function changeRoleCustomer(Request $request)
+    {
+        $request->validate([
+            'role' => 'required',
+            'device_name' => 'required'
+        ]);
+        $user = $request->user();
+
+        if ($user != null) {
+            if ($request->role == "2") {
+
+                $delivery_man = DeliveryMan::where("email", '=', $user->email)->first();
+                if ($delivery_man != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleCustomer",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $delivery_man->createToken($request->device_name)->plainTextToken,
+                            "name" => $delivery_man->name,
+                            "email" => $delivery_man->email,
+                            "phone" => $delivery_man->phone,
+                            "license_id" => $delivery_man->license_id
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                } else {
+                    $data = [
+                        "status" => 401,
+                        "method" => "changeRoleCustomer",
+                        "message" => "failed",
+                        "data" => [
+                            "access_token" => "",
+                            "name" => "",
+                            "email" => "",
+                            "phone" => "",
+                            "address" => ""
+                        ]
+                    ];
+                    return response()->json($data, 401);
+                }
+            } else if ($request->role == "3") {
+                $restaurant = Restaurant::where("email", '=', $user->email)->first();
+                if ($restaurant != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleCustomer",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $restaurant->createToken($request->device_name)->plainTextToken,
+                            "name" => $restaurant->name,
+                            "email" => $restaurant->email,
+                            "phone" => $restaurant->phone,
+                            "address" => $restaurant->address
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                } else {
+                    $data = [
+                        "status" => 401,
+                        "method" => "changeRoleCustomer",
+                        "message" => "failed",
+                        "data" => [
+                            "access_token" => "",
+                            "name" => "",
+                            "email" => "",
+                            "phone" => "",
+                            "address" => ""
+                        ]
+                    ];
+                    return response()->json($data, 401);
+                }
+            } else {
+                $data = [
+                    "status" => 401,
+                    "method" => "changeRoleCustomer",
+                    "message" => "failed",
+                    "data" => [
+                        "access_token" => "",
+                        "name" => "",
+                        "email" => "",
+                        "phone" => "",
+                        "address" => ""
+                    ]
+                ];
+                return response()->json($data, 401);
+            }
+        }
+
+
+    }
+
+    public function changeRoleDeliveryMan(Request $request)
+    {
+        $request->validate([
+            'role' => 'required',
+            'device_name' => 'required'
+        ]);
+        $user = $request->user();
+        if ($user != null) {
+            if ($request->role == "1") {
+                $customer = Customer::where("email", '=', $user->email)->first();
+                if ($customer != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleDeliveryMan",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $customer->createToken($request->device_name)->plainTextToken,
+                            "name" => $customer->name,
+                            "email" => $customer->email,
+                            "phone" => $customer->phone,
+                            "address" => $customer->address
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                } else {
+                    $data = [
+                        "status" => 401,
+                        "method" => "changeRoleDeliveryMan",
+                        "message" => "failed",
+                        "data" => [
+                            "access_token" => "",
+                            "name" => "",
+                            "email" => "",
+                            "phone" => "",
+                            "address" => ""
+                        ]
+                    ];
+                    return response()->json($data, 401);
+                }
+            } else if ($request->role == "3") {
+                $restaurant = Restaurant::where("email", '=', $user->email)->first();
+                if ($restaurant != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleDeliveryMan",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $restaurant->createToken($request->device_name)->plainTextToken,
+                            "name" => $restaurant->name,
+                            "email" => $restaurant->email,
+                            "phone" => $restaurant->phone,
+                            "address" => $restaurant->address
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                } else {
+                    $data = [
+                        "status" => 401,
+                        "method" => "changeRoleDeliveryMan",
+                        "message" => "failed",
+                        "data" => [
+                            "access_token" => "",
+                            "name" => "",
+                            "email" => "",
+                            "phone" => "",
+                            "address" => ""
+                        ]
+                    ];
+                    return response()->json($data, 401);
+                }
+            } else {
+                $data = [
+                    "status" => 401,
+                    "method" => "changeRoleDeliveryMan",
+                    "message" => "failed",
+                    "data" => [
+                        "access_token" => "",
+                        "name" => "",
+                        "email" => "",
+                        "phone" => "",
+                        "address" => ""
+                    ]
+                ];
+                return response()->json($data, 401);
+            }
+        }
+    }
+
+    public
+    function changeRoleRestaurant(Request $request)
+    {
+        $request->validate([
+            'role' => 'required',
+            'device_name' => 'required'
+        ]);
+        $user = $request->user();
+        if ($user != null) {
+            if ($request->role == "1") {
+                $customer = Customer::where("email", '=', $user->email)->first();
+                if ($customer != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleRestaurant",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $customer->createToken($request->device_name)->plainTextToken,
+                            "name" => $customer->name,
+                            "email" => $customer->email,
+                            "phone" => $customer->phone,
+                            "address" => $customer->address
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                }
+            } else {
+                $data = [
+                    "status" => 401,
+                    "method" => "changeRoleRestaurant",
+                    "message" => "failed",
+                    "data" => [
+                        "access_token" => "",
+                        "name" => "",
+                        "email" => "",
+                        "phone" => "",
+                        "address" => ""
+                    ]
+                ];
+                return response()->json($data, 401);
+            }
+            if ($request->role == "2") {
+                $delivery_man = DeliveryMan::where("email", '=', $user->email)->first();
+                if ($delivery_man != null) {
+                    $data = [
+                        "status" => 200,
+                        "method" => "changeRoleRestaurant",
+                        "message" => "success",
+                        "data" => [
+                            "access_token" => $delivery_man->createToken($request->device_name)->plainTextToken,
+                            "name" => $delivery_man->name,
+                            "email" => $delivery_man->email,
+                            "phone" => $delivery_man->phone,
+                            "license_id" => $delivery_man->license_id
+                        ]
+                    ];
+                    return response()->json($data, 200);
+                } else {
+                    $data = [
+                        "status" => 401,
+                        "method" => "changeRoleRestaurant",
+                        "message" => "failed",
+                        "data" => [
+                            "access_token" => "",
+                            "name" => "",
+                            "email" => "",
+                            "phone" => "",
+                            "address" => ""
+                        ]
+                    ];
+                    return response()->json($data, 401);
+                }
+            } else {
+                $data = [
+                    "status" => 401,
+                    "method" => "changeRoleRestaurant",
+                    "message" => "failed",
+                    "data" => [
+                        "access_token" => "",
+                        "name" => "",
+                        "email" => "",
+                        "phone" => "",
+                        "address" => ""
+                    ]
+                ];
+                return response()->json($data, 401);
+            }
+        }
+    }
 }

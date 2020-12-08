@@ -103,7 +103,7 @@ export default {
         switch_user() {
 
           /* 需要判斷select回傳身分並設定至wanted_mode */
-          
+
           switchUserModeCustomerAPI(
             {mode:this.wanted_mode},
             config,
