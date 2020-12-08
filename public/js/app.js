@@ -2196,8 +2196,12 @@ __webpack_require__.r(__webpack_exports__);
         Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
-    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfoAPI"])(config).then(function (res) {
-      _this.info = resp.data.data;
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfo"])(config).then(function (resp) {
+      _this.info.id = resp.data.data.id;
+      _this.info.name = resp.data.data.name;
+      _this.info.phone = resp.data.data.phone;
+      _this.info.address = resp.data.data.address;
+      _this.info.email = resp.data.data.email;
       console.log("info");
       console.log(_this.info);
     })["catch"](function (error) {
@@ -2206,19 +2210,39 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      info: ["id", "phone", "email", "name", "address"],
+      info: {
+        "id": "id",
+        "phone": "phone",
+        "email": "email",
+        "name": "name",
+        "address": "address"
+      },
       editDialog: false,
       editComfirmLoading: false,
       wanted_mode: 0,
       role_list: ["外送員", "餐廳管理員"],
-      wanted_role: ""
+      wanted_role: "",
+      resp: ""
     };
   },
   methods: {
     switch_user: function switch_user() {
       var _this2 = this;
 
+      /*console.log(this.wanted_role);*/
+      if (this.wanted_role === "外送員") {
+        this.wanted_mode = 2;
+      } else {
+        this.wanted_mode = 3;
+      }
+
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
       /* 需要判斷select回傳身分並設定至wanted_mode */
+
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["switchUserModeCustomerAPI"])({
         mode: this.wanted_mode
       }, config).then(function (resp) {
@@ -2241,12 +2265,19 @@ __webpack_require__.r(__webpack_exports__);
     edit_info: function edit_info() {
       var _this3 = this;
 
-      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfoAPI"])({
-        name: this.info[3],
-        email: this.info[2],
-        address: this.info[4],
-        phone: this.info[1]
-      }, config).then(function (resp) {
+      this.editDialog = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      var data = {
+        name: this.info.name,
+        email: this.info.email,
+        address: this.info.address,
+        phone: this.info.phone
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfo"])(data, config).then(function (resp) {
         if (resp.status === 200) {
           _this3.editComfirmLoading = false;
           _this3.editDialog = false;
@@ -2263,6 +2294,9 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log(err);
       });
+    },
+    show_edit: function show_edit() {
+      this.editDialog = true;
     },
     signout: function signout() {
       if (this.$store.getters.getAccessToken != "") {
@@ -2875,6 +2909,8 @@ __webpack_require__.r(__webpack_exports__);
             _this.$store.commit("USER_NAME", resp.data.data.access_token);
 
             _this.$store.commit("MODE", _this.mode);
+
+            _this.$router.push("/delivery_man/home");
           }
 
           console.log(resp.data);
@@ -3642,32 +3678,169 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {
+    var _this = this;
+
     var config = {
       params: {
-        page: this.page
+        "ID": this.$route.params.id
       },
       headers: {
-        Authorization: "Bearer " + this.$store.getters.getAccessToken()
+        Authorization: "Bearer " + this.$store.getters.getAccessToken
       }
     };
+    Object(_api__WEBPACK_IMPORTED_MODULE_0__["getCustomerInfo"])(config).then(function (resp) {
+      _this.info.id = resp.data.data.id;
+      _this.info.name = resp.data.data.name;
+      _this.info.phone = resp.data.data.phone;
+      _this.info.address = resp.data.data.address;
+      _this.info.email = resp.data.data.email;
+      console.log("info");
+      console.log(_this.info);
+    })["catch"](function (error) {
+      console.error(error);
+    });
   },
   data: function data() {
     return {
-      info: [],
-      resName: "",
-      resAddress: "",
-      resPhone: "",
-      resMail: ""
+      info: {
+        "id": "id",
+        "phone": "phone",
+        "email": "email",
+        "name": "name",
+        "address": "address"
+      },
+      editDialog: false,
+      editComfirmLoading: false,
+      wanted_mode: 0,
+      role_list: ["外送員", "餐廳管理員"],
+      wanted_role: "",
+      resp: ""
     };
   },
   methods: {
-    switch_user: function switch_user() {},
-    history_order: function history_order() {},
-    modify_info: function modify_info() {},
+    switch_user: function switch_user() {
+      var _this2 = this;
+
+      /*console.log(this.wanted_role);*/
+      if (this.wanted_role === "外送員") {
+        this.wanted_mode = 1;
+      } else {
+        this.wanted_mode = 2;
+      }
+
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      /* 需要判斷select回傳身分並設定至wanted_mode */
+
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["switchUserModeCustomerAPI"])({
+        mode: this.wanted_mode
+      }, config).then(function (resp) {
+        if (resp.status === 200) {
+          _this2.$store.commit("MODE", _this2.wanted_mode);
+
+          _this2.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+
+          _this2.$router.push("/guest");
+        } else if (resp.status === 403) {
+          _this2.$emit("showSnackBar", "無其他身分");
+        } else if (resp.status === 404) {
+          _this2.$emit("showSnackBar", "未知的錯誤");
+        }
+      });
+    },
+    history_order: function history_order() {
+      this.$router.push("/customer/history");
+    },
+    edit_info: function edit_info() {
+      var _this3 = this;
+
+      this.editDialog = true;
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      var data = {
+        name: this.info.name,
+        email: this.info.email,
+        address: this.info.address,
+        phone: this.info.phone
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["editCustomerInfo"])(data, config).then(function (resp) {
+        if (resp.status === 200) {
+          _this3.editComfirmLoading = false;
+          _this3.editDialog = false;
+          console.log("done");
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          console.log(err);
+        } else if (err.response.status === 404) {
+          console.log(err);
+        }
+
+        console.log(err);
+      });
+    },
+    show_edit: function show_edit() {
+      this.editDialog = true;
+    },
     signout: function signout() {
       if (this.$store.getters.getAccessToken != "") {
         this.$store.commit("ACCESS_TOKEN", "");
@@ -22530,13 +22703,13 @@ var render = function() {
         _c(
           "v-card",
           [
-            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.items[3]))]),
+            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.info.name))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.items[4]))]),
+            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.info.address))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.items[1]))]),
+            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.info.phone))]),
             _vm._v(" "),
-            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.items[2]))])
+            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.info.email))])
           ],
           1
         ),
@@ -22588,7 +22761,7 @@ var render = function() {
           [
             _c(
               "v-btn",
-              { attrs: { "min-width": "200" }, on: { click: _vm.modify_info } },
+              { attrs: { "min-width": "200" }, on: { click: _vm.show_edit } },
               [_vm._v("更改個人資料")]
             )
           ],
@@ -22630,44 +22803,44 @@ var render = function() {
                 _c("v-text-field", {
                   attrs: { label: "姓名", outlined: "" },
                   model: {
-                    value: _vm.info[2],
+                    value: _vm.info.name,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 2, $$v)
+                      _vm.$set(_vm.info, "name", $$v)
                     },
-                    expression: "info[2]"
+                    expression: "info.name"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "地址", outlined: "" },
                   model: {
-                    value: _vm.info[3],
+                    value: _vm.info.address,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 3, $$v)
+                      _vm.$set(_vm.info, "address", $$v)
                     },
-                    expression: "info[3]"
+                    expression: "info.address"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "電話", outlined: "" },
                   model: {
-                    value: _vm.info[4],
+                    value: _vm.info.phone,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 4, $$v)
+                      _vm.$set(_vm.info, "phone", $$v)
                     },
-                    expression: "info[4]"
+                    expression: "info.phone"
                   }
                 }),
                 _vm._v(" "),
                 _c("v-text-field", {
                   attrs: { label: "電子郵件", outlined: "" },
                   model: {
-                    value: _vm.info[2],
+                    value: _vm.info.email,
                     callback: function($$v) {
-                      _vm.$set(_vm.info, 2, $$v)
+                      _vm.$set(_vm.info, "email", $$v)
                     },
-                    expression: "info[2]"
+                    expression: "info.email"
                   }
                 }),
                 _vm._v(" "),
@@ -24365,81 +24538,199 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "panel-heading text-center" }, [
-        _vm._v("餐廳資訊")
-      ]),
-      _vm._v(" "),
-      _c(
-        "v-card",
-        [
-          _c("v-card-text", [_vm._v("餐廳名稱: " + _vm._s(_vm.resName))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.resAddress))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.resPhone))]),
-          _vm._v(" "),
-          _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.resMail))])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.switch_user } },
-            [_vm._v("切換使用者身分")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.history_order } },
-            [_vm._v("歷史訂單紀錄")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.modify_info } },
-            [_vm._v("更改餐廳資料")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { staticClass: "pa-2", attrs: { justify: "center" } },
-        [
-          _c(
-            "v-btn",
-            { attrs: { "min-width": "200" }, on: { click: _vm.signout } },
-            [_vm._v("登出")]
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+  return _c("div", [
+    _c("div", { staticClass: "panel-heading text-center" }, [
+      _vm._v("個人資訊")
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "container mb-12" },
+      [
+        _c(
+          "v-card",
+          [
+            _c("v-card-text", [_vm._v("姓名: " + _vm._s(_vm.info.name))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("地址: " + _vm._s(_vm.info.address))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("電話: " + _vm._s(_vm.info.phone))]),
+            _vm._v(" "),
+            _c("v-card-text", [_vm._v("電子郵件: " + _vm._s(_vm.info.email))])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c("v-select", {
+              staticClass: "px-14 pt-5",
+              attrs: { items: _vm.role_list, label: "切換至", outlined: "" },
+              model: {
+                value: _vm.wanted_role,
+                callback: function($$v) {
+                  _vm.wanted_role = $$v
+                },
+                expression: "wanted_role"
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.switch_user } },
+              [_vm._v("切換使用者身分")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              {
+                attrs: { "min-width": "200" },
+                on: { click: _vm.history_order }
+              },
+              [_vm._v("歷史訂單紀錄")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.show_edit } },
+              [_vm._v("更改個人資料")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-row",
+          { staticClass: "pa-2", attrs: { justify: "center" } },
+          [
+            _c(
+              "v-btn",
+              { attrs: { "min-width": "200" }, on: { click: _vm.signout } },
+              [_vm._v("登出")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "v-dialog",
+          {
+            staticClass: "py-5",
+            attrs: { scrollable: "" },
+            model: {
+              value: _vm.editDialog,
+              callback: function($$v) {
+                _vm.editDialog = $$v
+              },
+              expression: "editDialog"
+            }
+          },
+          [
+            _c(
+              "v-card",
+              [
+                _c("v-card-title", [_vm._v("編輯個人資料")]),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "姓名", outlined: "" },
+                  model: {
+                    value: _vm.info.name,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "name", $$v)
+                    },
+                    expression: "info.name"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "地址", outlined: "" },
+                  model: {
+                    value: _vm.info.address,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "address", $$v)
+                    },
+                    expression: "info.address"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "電話", outlined: "" },
+                  model: {
+                    value: _vm.info.phone,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "phone", $$v)
+                    },
+                    expression: "info.phone"
+                  }
+                }),
+                _vm._v(" "),
+                _c("v-text-field", {
+                  attrs: { label: "電子郵件", outlined: "" },
+                  model: {
+                    value: _vm.info.email,
+                    callback: function($$v) {
+                      _vm.$set(_vm.info, "email", $$v)
+                    },
+                    expression: "info.email"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "v-card-actions",
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        attrs: { color: "blue darken-1" },
+                        on: {
+                          click: function($event) {
+                            _vm.editDialog = false
+                          }
+                        }
+                      },
+                      [_vm._v("\n            取消\n          ")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        attrs: {
+                          loading: _vm.editComfirmLoading,
+                          color: "blue darken-1"
+                        },
+                        on: { click: _vm.edit_info }
+                      },
+                      [_vm._v("\n            儲存\n          ")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
