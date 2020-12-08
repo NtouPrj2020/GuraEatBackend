@@ -163,11 +163,11 @@
 </template>
 <script>
 import {
-  getDishByRestaurantID,
-  getDishByDishID,
-  restaurantEditDish,
-  restaurantDeleteDish,
-  restaurantAddDish,
+  restaurantGetAllDishAPI,
+  restaurantgetDishByDishIDAPI,
+  restaurantEditDishAPI,
+  restaurantDeleteDishAPI,
+  restaurantAddDishAPI,
 } from "../../api";
 
 export default {
@@ -214,7 +214,7 @@ export default {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight };
     },
     refreshAllDish() {
-      getDishByRestaurantID(this.config)
+      restaurantGetAllDishAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
             this.menu = [];
@@ -245,7 +245,7 @@ export default {
         },
       };
       this.nowEditingID = id;
-      getDishByDishID(config)
+      restaurantgetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowEditingID = id;
@@ -281,7 +281,7 @@ export default {
         img: this.editDishImg,
         price: this.editDishPrice,
       };
-      restaurantEditDish(data, config)
+      restaurantEditDishAPI(data, config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();
@@ -323,7 +323,7 @@ export default {
         img: this.addDishImg,
         price: this.addDishPrice,
       };
-      restaurantAddDish(data, config)
+      restaurantAddDishAPI(data, config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();
@@ -350,7 +350,7 @@ export default {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
         },
       };
-      getDishByDishID(config)
+      restaurantgetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowDeletingID = id;
@@ -380,7 +380,7 @@ export default {
         },
       };
       let data = {};
-      restaurantDeleteDish(config)
+      restaurantDeleteDishAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();
