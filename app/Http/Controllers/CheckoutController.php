@@ -12,12 +12,20 @@ class CheckoutController extends Controller
         $request->validate([
             'address' => 'required|string',
         ]);
-        $client = new Client(['base_uri' => 'https://maps.googleapis.com/maps/api/','timeout'  => 2.0,]);
-        $response = $client->post('https://maps.googleapis.com/maps/api/post',[
-            'address' => $request->address,
-            'key'=>GOOGLE_MAP_API
+        $client = new Client(['base_uri' => 'https://maps.googleapis.com','timeout'  => 2.0,]);
+        $response = $client->get('/maps/api/geocode/json',[
+            'query'=>[
+                'address' => $request->address,
+                'key'=>$_ENV['GOOGLE_MAP_API']
+            ]
         ]);
-        $data = $response->getBody();
+        $object = json_decode($response->getBody());
+        $data = [
+            "status" => 200,
+            "method" => "addressToLocation",
+            "message" => "success",
+            "data"=> $object
+        ];
         return response()->json($data, 200);
     }
 }
