@@ -44,10 +44,10 @@ export default {
       this.snackbarText = text;
     },
     toHome() {
-      this.$router.push("/customer/home");
+      this.$router.push("/delivery_Man/home");
     },
     toInfo() {
-      this.$router.push("/customer/info");
+      this.$router.push("/delivery_Man/info");
     },
   },
 };

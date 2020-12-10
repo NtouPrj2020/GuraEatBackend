@@ -135,14 +135,14 @@ export default class GuraEatRouter{
                     {
                         path: "home",
                         components: {
-                            customerView: require("./components/deliveryMan/DeliveryManApp.vue")
+                            customerView: require("./components/deliveryMan/Home.vue")
                                 .default
                         }
                     },
                     {
                         path: "info",
                         components: {
-                            customerView: require("./components/deliveryMan/DeliveryManApp.vue")
+                            customerView: require("./components/deliveryMan/info.vue")
                                 .default
                         }
                     }

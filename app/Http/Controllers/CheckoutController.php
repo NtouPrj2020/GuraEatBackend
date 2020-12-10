@@ -116,8 +116,7 @@ class CheckoutController extends Controller
 
         if (count($onlineDeliveryMans) > 0) {
             $restaurant = Restaurant::find($request->restaurant_id)->first();
-            $res = $this->addtolo($restaurant->address);
-            $obj = json_decode($res->getBody());
+            $obj = $this->addtolo($restaurant->address);
             $rest_lat = $obj->results[0]->geometry->location->lat;
             $rest_lng = $obj->results[0]->geometry->location->lng;
             $distanceList = [];
@@ -127,6 +126,7 @@ class CheckoutController extends Controller
                     $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng)
                 );
             }
+            dd($distanceList);
             $closes = 0;
             for ($i = 0; $i < count($distanceList); $i++) {
                 if($distanceList[$i]>$distanceList[$closes]){

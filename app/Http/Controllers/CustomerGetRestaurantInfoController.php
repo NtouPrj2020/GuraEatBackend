@@ -14,6 +14,16 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = Restaurant::paginate(20);
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
+            $restaurants[$i]['rate'] = $restaurants[$i]->Rates()->get();
+            $star5 = $restaurants[$i]['rate'][0]->star5;
+            $star4 = $restaurants[$i]['rate'][0]->star4;
+            $star3 = $restaurants[$i]['rate'][0]->star3;
+            $star2 = $restaurants[$i]['rate'][0]->star2;
+            $star1 = $restaurants[$i]['rate'][0]->star1;
+            $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
+            $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
+            $avg = round($avg,2);
+            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
@@ -29,7 +39,16 @@ class CustomerGetRestaurantInfoController extends Controller
         ]);
         $restaurants = Restaurant::where('id','=',$request->ID)->first();
         $restaurants['tags'] = $restaurants->tags()->get();
-
+        $restaurants['rate'] = $restaurants->Rates()->get();
+            $star5 = $restaurants['rate'][0]->star5;
+            $star4 = $restaurants['rate'][0]->star4;
+            $star3 = $restaurants['rate'][0]->star3;
+            $star2 = $restaurants['rate'][0]->star2;
+            $star1 = $restaurants['rate'][0]->star1;
+            $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
+            $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
+            $avg = round($avg,2);
+            $restaurants['rate'][0] = ['restaurant_id'=>$restaurants->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
         $data = [
             "status" => 200,
             "method" => "getRestaurantByID",
@@ -45,6 +64,16 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = Restaurant::where('name','like','%'.$request->Keyword.'%')->get();
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
+            $restaurants[$i]['rate'] = $restaurants[$i]->Rates()->get();
+            $star5 = $restaurants[$i]['rate'][0]->star5;
+            $star4 = $restaurants[$i]['rate'][0]->star4;
+            $star3 = $restaurants[$i]['rate'][0]->star3;
+            $star2 = $restaurants[$i]['rate'][0]->star2;
+            $star1 = $restaurants[$i]['rate'][0]->star1;
+            $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
+            $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
+            $avg = round($avg,2);
+            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
@@ -62,6 +91,16 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = $tag->restaurants()->get();
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
+            $restaurants[$i]['rate'] = $restaurants[$i]->Rates()->get();
+            $star5 = $restaurants[$i]['rate'][0]->star5;
+            $star4 = $restaurants[$i]['rate'][0]->star4;
+            $star3 = $restaurants[$i]['rate'][0]->star3;
+            $star2 = $restaurants[$i]['rate'][0]->star2;
+            $star1 = $restaurants[$i]['rate'][0]->star1;
+            $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
+            $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
+            $avg = round($avg,2);
+            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
