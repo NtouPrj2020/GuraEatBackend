@@ -11,6 +11,7 @@ class RestaurantInfoController extends Controller
     public function getRestaurant(Request $request){
         $restaurant = $request->user();
         $restaurant['tags'] = $restaurant->tags()->get();
+        $restaurant['rate'] = $restaurant->Rates()->get();
         if($restaurant != null){
             $data = [
                 "status" => 200,
