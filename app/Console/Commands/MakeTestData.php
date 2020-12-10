@@ -151,6 +151,26 @@ class MakeTestData extends Command
                 $rate->star2 = 2;
                 $rate->star1 = 2;
             }
+            if($i == 0){
+                $deli->longitude = 121.763876;
+                $deli->latitude = 25.160108;
+            }
+            if($i == 1){
+                $deli->longitude = 121.780445;
+                $deli->latitude = 25.150695;
+            }
+            if($i == 2){
+                $deli->longitude = 121.745111;
+                $deli->latitude = 25.127879;
+            }
+            if($i == 3){
+                $deli->longitude = 121.746692;
+                $deli->latitude = 25.134583;
+            }
+            if($i == 4){
+                $deli->longitude = 121.765721;
+                $deli->latitude = 25.143374;
+            }
             $rate->save();
         }
     }
