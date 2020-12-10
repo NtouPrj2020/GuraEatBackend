@@ -74,19 +74,18 @@ export const forgotPasswordAPI = (config, data) =>
     guestRequest.post("unknown", config, data);
 // id 4
 export const customerGetInfoAPI = config =>
-    guestRequest.post("/api/v1/users/customer/info", config);
+    guestRequest.get("/api/v1/users/customer/info", config);
 //id 5
 export const customerEditInfoAPI = (config, data) =>
-    guestRequest.post("/api/v1/users/customer/info", config, data);
+    guestRequest.put("/api/v1/users/customer/info", config, data);
 //id 6
 export const customerGetAllRestaurantAPI = config =>
     userRequest.get("/api/v1/users/customer/restaurant/all", config);
 //id 7
-export const customerGetRestaurantByKeywordAPI = (config, data) =>
-    userRequest.post(
+export const customerGetRestaurantByKeywordAPI = config =>
+    userRequest.get(
         "/api/v1/users/customer/restaurant/searchByKeyword",
-        config,
-        data
+        config
     );
 // id 8
 export const customerGetAllDishByRestaurantIDAPI = config =>
@@ -114,10 +113,10 @@ export const deliveryManGetInfoAPI = config =>
     userRequest.get("/api/v1/users/delivery_man/info", config);
 //id 15
 export const deliveryManEditInfoAPI = (config, data) =>
-    guestRequest.post("/api/v1/users/delivery_man/info", config, data);
+    guestRequest.put("/api/v1/users/delivery_man/info", config, data);
 // id 16
 export const deliveryManChangeStateAPI = (config, data) =>
-    userRequest.post("/api/v1/users/delivery_man/status", config, data);
+    userRequest.put("/api/v1/users/delivery_man/status", config, data);
 // id 17
 export const deliveryManCheckOrderStateAPI = config =>
     userRequest.get("unknown", config);
@@ -144,19 +143,19 @@ export const restaurantGetInfoAPI = config =>
     userRequest.get("/api/v1/users/delivery_man/info", config);
 // id 24
 export const restaurantEditInfoAPI = (config, data) =>
-    guestRequest.post("/api/v1/users/restaurant/info", config, data);
+    guestRequest.put("/api/v1/users/restaurant/info", config, data);
 // id 25
 export const deliveryManSwitchOrderStateAPI = (config, data) =>
     userRequest.put("unknown", config, data);
 // id 26
 export const customerSendLocationAPI = (config, data) =>
-    userRequest.put("/api/v1/users/customer/location", config, data);
+    userRequest.post("/api/v1/users/customer/location", config, data);
 // id 27
 export const customerGetLocationAPI = config =>
     userRequest.get("/api/v1/users/customer/location", config);
 // id 28
 export const deliveryManSendLocationAPI = (config, data) =>
-    userRequest.put("/api/v1/users/delivery_man/location", config, data);
+    userRequest.post("/api/v1/users/delivery_man/location", config, data);
 // id 29
 export const deliveryManGetLocationAPI = config =>
     userRequest.get("/api/v1/users/delivery_man/location", config);
