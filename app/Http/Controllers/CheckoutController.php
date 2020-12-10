@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeliveryMan;
+use App\Models\Order;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -21,13 +22,14 @@ class CheckoutController extends Controller
         return response()->json($data, 200);
     }
 
-    public function locationToAddress(Request $request){
+    public function locationToAddress(Request $request)
+    {
         $request->validate([
             'long' => 'required',
             'lat' => 'required',
         ]);
-        $res = $this->loToAdd($request->long,$request->lat);
-        if($res->getStatusCode() == 400){
+        $res = $this->loToAdd($request->long, $request->lat);
+        if ($res->getStatusCode() == 400) {
             $output = [
                 "method" => "locationToAddress",
                 "message" => "long and lat is invalid",
@@ -35,7 +37,7 @@ class CheckoutController extends Controller
                 "data" => []
             ];
             return response()->json($output, 400);
-        }else{
+        } else {
             $data = json_decode($res->getBody());
             $output = [
                 "method" => "locationToAddress",
@@ -59,14 +61,14 @@ class CheckoutController extends Controller
         return $data;
     }
 
-    public function loToAdd($long,$lat)
+    public function loToAdd($long, $lat)
     {
         $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 2.0,]);
         $res = $client->get('/maps/api/geocode/json', ['query' => [
-            'latlng' => $lat.','.$long,
+            'latlng' => $lat . ',' . $long,
             'key' => $_ENV['GOOGLE_MAP_API'],
             'language' => 'zh-TW'
-            ]
+        ]
         ]);
         return $res;
     }
@@ -109,17 +111,40 @@ class CheckoutController extends Controller
         /*$request->validate([
             'restaurant_id' => 'required',
             'menu' => 'required',]);*/
-        $user = $request->user();
-        $deliveryMans = DeliveryMan::where('status', '=', '1')->get();
+        $customer = $request->user();
+        $onlineDeliveryMans = DeliveryMan::where('status', '=', '1')->get();
 
-        if (count($deliveryMans) > 0) {
+        if (count($onlineDeliveryMans) > 0) {
             $restaurant = Restaurant::find($request->restaurant_id)->first();
             $res = $this->addtolo($restaurant->address);
             $obj = json_decode($res->getBody());
-            $lat = $obj->results[0]->geometry->location->lat;
-            $lng = $obj->results[0]->geometry->location->lng;
-            dd($this->getDistance($restaurant->latitude,$restaurant->longitude,$lat,$lng));
-
+            $rest_lat = $obj->results[0]->geometry->location->lat;
+            $rest_lng = $obj->results[0]->geometry->location->lng;
+            $distanceList = [];
+            for ($i = 0; $i < count($onlineDeliveryMans); $i++) {
+                array_push(
+                    $distanceList,
+                    $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng)
+                );
+            }
+            $closes = 0;
+            for ($i = 0; $i < count($distanceList); $i++) {
+                if($distanceList[$i]>$distanceList[$closes]){
+                    $closes = $i;
+                }
+            }
+            $chooseMan = $onlineDeliveryMans[$closes];
+            $order = new Order();
+            $order->delivery_man_id = $chooseMan->id;
+            $order->customer_id = $customer->id;
+            if($request->type == 0 ){
+                $order->status = 1;
+            }else{
+                $order->status = 0;
+            }
+            $order->type = $request->type;
+            $distance = $distanceList[$closes];
+            $send_time = $request->send_time;
         } else {
 
         }
