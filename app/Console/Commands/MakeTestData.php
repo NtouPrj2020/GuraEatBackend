@@ -135,22 +135,6 @@ class MakeTestData extends Command
             }else{
                 $deli->status = 1;
             }
-            $deli->save();
-            $rate = new DeliveryManRate();
-            $rate->delivery_man_id =$deli->id;
-            if($i == 0 || $i == 1){
-                $rate->star5 = 5;
-                $rate->star4 = 2;
-                $rate->star3 = 3;
-                $rate->star2 = 1;
-                $rate->star1 = 2;
-            }else{
-                $rate->star5 = 0;
-                $rate->star4 = 0;
-                $rate->star3 = 3;
-                $rate->star2 = 2;
-                $rate->star1 = 2;
-            }
             if($i == 0){
                 $deli->longitude = 121.763876;
                 $deli->latitude = 25.160108;
@@ -166,6 +150,26 @@ class MakeTestData extends Command
             if($i == 3){
                 $deli->longitude = 121.746692;
                 $deli->latitude = 25.134583;
+            }
+            if($i == 4){
+                $deli->longitude = 121.741855;
+                $deli->latitude = 25.129875;
+            }
+            $deli->save();
+            $rate = new DeliveryManRate();
+            $rate->delivery_man_id =$deli->id;
+            if($i == 0 || $i == 1){
+                $rate->star5 = 5;
+                $rate->star4 = 2;
+                $rate->star3 = 3;
+                $rate->star2 = 1;
+                $rate->star1 = 2;
+            }else{
+                $rate->star5 = 0;
+                $rate->star4 = 0;
+                $rate->star3 = 3;
+                $rate->star2 = 2;
+                $rate->star1 = 2;
             }
             if($i == 4){
                 $deli->longitude = 121.765721;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\DeliveryMan;
 use App\Models\Order;
 use App\Models\Restaurant;
@@ -108,14 +109,26 @@ class CheckoutController extends Controller
 
     public function checkoutAuto(Request $request)
     {
-        /*$request->validate([
-            'restaurant_id' => 'required',
-            'menu' => 'required',]);*/
+        $req = json_decode($request->getContent());
         $customer = $request->user();
         $onlineDeliveryMans = DeliveryMan::where('status', '=', '1')->get();
-
+        $orderlist = $customer->orders()->get();
+        for($i=0;$i<count($orderlist);$i++){
+            if( $orderlist[$i]->status == 0 | $orderlist[$i]->status == 1 || $orderlist[$i]->status == 2){
+                $data = [
+                    "method" => "checkoutAuto",
+                    "message" => "already have order",
+                    "status" => 5001,
+                    "data" => [
+                        'order'=>$orderlist[$i],
+                        'items'=>$orderlist[$i]->items()
+                    ]
+                ];
+                return response()->json($data, 500);
+            }
+        }
         if (count($onlineDeliveryMans) > 0) {
-            $restaurant = Restaurant::find($request->restaurant_id)->first();
+            $restaurant = Restaurant::find($req->restaurant_id)->first();
             $obj = $this->addtolo($restaurant->address);
             $rest_lat = $obj->results[0]->geometry->location->lat;
             $rest_lng = $obj->results[0]->geometry->location->lng;
@@ -126,7 +139,7 @@ class CheckoutController extends Controller
                     $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng)
                 );
             }
-            dd($distanceList);
+
             $closes = 0;
             for ($i = 0; $i < count($distanceList); $i++) {
                 if($distanceList[$i]>$distanceList[$closes]){
@@ -137,16 +150,41 @@ class CheckoutController extends Controller
             $order = new Order();
             $order->delivery_man_id = $chooseMan->id;
             $order->customer_id = $customer->id;
-            if($request->type == 0 ){
+            $order->type = $req->type;
+            $order->distance = $distanceList[$closes];
+            if($req->type == 0 ){
                 $order->status = 1;
-            }else{
+            }else if($req->type == 1){
                 $order->status = 0;
+                $order->send_time = $req->send_time;
             }
-            $order->type = $request->type;
-            $distance = $distanceList[$closes];
-            $send_time = $request->send_time;
+            $order->save();
+            for($i=0;$i<count($req->menu);$i++){
+                $cart = new Cart();
+                $cart->dish_id = $req->menu[$i]->id;
+                $cart->customer_id = $customer->id;
+                $cart->order_id = $order->id;
+                $cart->amount = $req->menu[$i]->amount;
+                $cart->save();
+            }
+            $data = [
+                "method" => "checkoutAuto",
+                "message" => "ok",
+                "status" => 201,
+                "data" => [
+                    'order'=>$order,
+                    'items'=>$order->items()
+                ]
+            ];
+            return $data;
         } else {
-
+            $data = [
+                "method" => "checkoutAuto",
+                "message" => "no delivery man is online",
+                "status" => 5002,
+                "data" => []
+            ];
+            return response()->json($data, 500);
         }
     }
 

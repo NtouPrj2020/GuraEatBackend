@@ -31,4 +31,9 @@ class Order extends Model
         return $this->belongsTo('App\Models\DeliveryMan','delivery_man_id');
     }
 
+    public function items()
+    {
+        return Cart::where('dish_id','=',$this->id)->get();
+    }
+
 }
