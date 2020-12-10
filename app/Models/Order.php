@@ -10,12 +10,13 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'Orders';
-    
+
     protected $fillable = [
         'status',
-        'type',    
+        'type',
         'distance',
-        'send_time'
+        'send_time',
+        'note'
     ];
 
     protected $guarded = ['status'];

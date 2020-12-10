@@ -9,10 +9,11 @@ class RestaurantRate extends Model
 {
     use HasFactory;
     protected $table = 'RestaurantRates';
+    public  $timestamps =false;
 
     protected $fillable = [
         'star5',
-        'star4',    
+        'star4',
         'star3',
         'star2',
         'star1'
