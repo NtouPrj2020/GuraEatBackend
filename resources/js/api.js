@@ -167,6 +167,8 @@ export const customerGetRestaurantByTagAPI = config =>
     userRequest.get("/api/v1/users/customer/restaurant/searchByTag", config);
 export const customerGetRestaurantByIDAPI = config =>
     userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
+export const customerlocationToAddressAPI = config =>
+    userRequest.get("/api/v1/users/customer/locationToAddress", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
 export const restaurantGetDishByDishIDAPI = config =>

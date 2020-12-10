@@ -51,7 +51,7 @@ class CheckoutController extends Controller
 
     public function addtolo(string $address)
     {
-        $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 2.0,]);
+        $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 20.0,]);
         $res = $client->post('/maps/api/geocode/json', ['query' => [
             'address' => $address,
             'key' => $_ENV['GOOGLE_MAP_API']
@@ -63,7 +63,7 @@ class CheckoutController extends Controller
 
     public function loToAdd($long, $lat)
     {
-        $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 2.0,]);
+        $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 20.0,]);
         $res = $client->get('/maps/api/geocode/json', ['query' => [
             'latlng' => $lat . ',' . $long,
             'key' => $_ENV['GOOGLE_MAP_API'],

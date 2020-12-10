@@ -165,7 +165,7 @@
 import {
   restaurantGetInfoAPI,
   restaurantGetAllDishAPI,
-  restaurantgetDishByDishIDAPI,
+    restaurantGetDishByDishIDAPI,
   restaurantEditDishAPI,
   restaurantDeleteDishAPI,
   restaurantAddDishAPI,
@@ -268,7 +268,7 @@ export default {
         },
       };
       this.nowEditingID = id;
-      restaurantgetDishByDishIDAPI(config)
+        restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowEditingID = id;
@@ -373,7 +373,7 @@ export default {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
         },
       };
-      restaurantgetDishByDishIDAPI(config)
+        restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowDeletingID = id;
