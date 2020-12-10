@@ -70,13 +70,12 @@ class MakeTestData extends Command
             'https://lh5.googleusercontent.com/p/AF1QipPJ1WUnatQmE1JGkSQ6k7DfKQqQZY6P1HqGkg3K=w408-h306-k-no'
         ];
         $email = [
-            'test1@test.com',
-            'test2@test.com',
-            'test3@test.com',
-            'test4@test.com',
-            'test5@test.com',
+            'testrest1@test.com',
+            'testrest2@test.com',
+            'testrest3@test.com',
+            'testrest4@test.com',
+            'testrest5@test.com',
         ];
-
         for($i = 0;$i<5;$i++){
             $res = new Restaurant();
             $res->name = $name[$i];
@@ -187,7 +186,6 @@ class MakeTestData extends Command
                 }
             }
         }
-
         $this->line("建立完成!");
         return 0;
     }

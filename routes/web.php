@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\URL;
 
 Route::get('/{any}', function () {
     return view('index');
-})->where('any', '.*');
+})->where('any', '.*')->name('login');
 
 
 

@@ -43,7 +43,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
             Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
             Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
+            Route::get('/locationToAddress', 'App\Http\Controllers\CheckoutController@locationToAddress');
             Route::post('/changeRoleCustomer', 'App\Http\Controllers\AuthController@changeRoleCustomer');
+            Route::post('/send_order', 'App\Http\Controllers\CheckoutController@checkoutAuto');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');

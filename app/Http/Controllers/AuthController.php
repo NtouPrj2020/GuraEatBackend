@@ -797,7 +797,6 @@ class AuthController extends Controller
         }
     }
 
-
     public function customerCreatePasswordResetRequest(Request $request)
     {
         $request->validate([
@@ -1257,8 +1256,7 @@ class AuthController extends Controller
         }
     }
 
-    public
-    function changeRoleRestaurant(Request $request)
+    public function changeRoleRestaurant(Request $request)
     {
         $request->validate([
             'role' => 'required',
