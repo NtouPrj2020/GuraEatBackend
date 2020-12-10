@@ -1,40 +1,26 @@
+
 <template>
     <div>
-        <div class="panel-heading text-center">Home</div>
         <div class="container mb-12">
-            <div class="map-container border rounded">
-            <ul class="nav justify-content-center border-bottom">
-                <!--營運地區 nav-->
-            </ul>
-            <!--地圖呈現在此-->
-
-            <div class="google-map" id="map"></div>
-            </div> 
+                <v-card>AAA</v-card>
         </div>
-    </div>
+    </div> 
+
 </template>
 
 
-<script async defer
-    src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBDZY9NYVWhECAAg2Xge62uNSEqE3Qv3MQ">
-
-import axios from "axios";
-
+<script>
 export default {
     data: () => ({
         map_data:{
             map:null,
             lat: 25.0325917,
             lng: 121.5624999,
-        }
+        },
     }),
-    created(){
-        
-    },
     mounted() {
+        console.log("process.env.GOOGLE_API_KEY");
         this.initMap();
-        console.log(this.map_data);
-
     },
     methods: {
         initMap(){
