@@ -42,7 +42,7 @@ export default {
 
 #app {
     font-family: "Noto Sans TC", serif;
-    background: #30d6f5;
+    background: #3e6d97;
     color: #fff;
 }
 </style>

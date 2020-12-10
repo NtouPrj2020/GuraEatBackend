@@ -9,7 +9,7 @@ class DeliveryManInfoController extends Controller
     public function getDeliveryMan(Request $request)
     {
         $delivery_man = $request->user();
-
+        $delivery_man['rate'] = $delivery_man->rate()->get();
         if ($delivery_man != null)
         {
             $data = [

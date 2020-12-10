@@ -120,8 +120,6 @@ export default {
           let config = {
             headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
           };
-          /* 需要判斷select回傳身分並設定至wanted_mode */
-          
           customerSwitchUserModeAPI(
             config,
             {mode:this.wanted_mode},
