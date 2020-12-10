@@ -104,7 +104,8 @@
                 class="text-center"
                 cols="12"
             >
-                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();" class="text-sm-button"
+                <v-btn color="indigo" @click="dialog = true;forceRerender();getTotalAmount();cDeliveryTime();"
+                       class="text-sm-button"
                        outlined bottom large block>
                     查看購物清單
                 </v-btn>
@@ -198,7 +199,7 @@
                                             small
                                             @click="EditInfo"
                                         >
-                                            <v-icon v-if="isEditing">
+                                            <v-icon v-if="isEditing" @click="cDeliveryTime();">
                                                 mdi-close
                                             </v-icon>
                                             <v-icon v-else>
@@ -224,8 +225,8 @@
                                             v-model="CustomerInfo.address"
                                             hint="例如: 基隆市中正區北寧路2號"
                                             :rules="[rules.required]"
-                                            counter="20"
-                                            maxlength="20"
+                                            counter="40"
+                                            maxlength="40"
                                             outlined
                                             persistent-hint
                                             append-icon="mdi-target"
@@ -236,8 +237,8 @@
                                             label="備註"
                                             v-model="CustomerInfo.note"
                                             hint="有什麼事想要告訴外送員嗎? A"
-                                            counter="20"
-                                            maxlength="20"
+                                            counter="40"
+                                            maxlength="40"
                                             outlined
                                             persistent-hint
                                         ></v-text-field>
@@ -289,31 +290,43 @@
                                                 </v-menu>
                                             </v-col>
                                             <v-col cols="6">
-                                                <v-text-field
-                                                    :disabled="isSelectingTime"
-                                                    v-model="time"
-                                                    label="時間"
-                                                    prepend-icon="mdi-clock-time-four-outline"
-                                                ></v-text-field>
+                                                <v-menu
+                                                    v-model="menu1"
+                                                    :close-on-content-click="false"
+                                                    :nudge-right="40"
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    min-width="290px"
+                                                >
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-text-field
+                                                            :disabled="isSelectingTime"
+                                                            v-model="time"
+                                                            label="時間"
+                                                            prepend-icon="mdi-clock-time-four-outline"
+                                                            readonly
+                                                            v-bind="attrs"
+                                                            v-on="on"
+                                                        ></v-text-field>
+                                                    </template>
+                                                    <v-time-picker
+                                                        v-model="time"
+                                                        @input="menu1 = false"
+                                                        format="24hr"
+                                                        :min="(date===dayNow)?timeConstrain:''"
+                                                    ></v-time-picker>
+                                                </v-menu>
                                             </v-col>
-                                            <v-col cols="9">
+                                            <v-col cols="6">
                                                 預計最快送達時間：
                                             </v-col>
-                                            <v-col cols="3">
-
+                                            <v-col cols="5" class="rounded text-center"
+                                                   style="background-color: #ccf2ff">
+                                                {{ maxMakingTime }} 分鐘
                                             </v-col>
                                         </v-row>
 
                                     </v-card-actions>
-                                    <v-snackbar
-                                        v-model="snackbar"
-                                        :timeout="2000"
-                                        color="error"
-                                        text
-                                        rounded
-                                    >
-                                        姓名或地址不可為空
-                                    </v-snackbar>
                                 </v-card>
                             </div>
                             <div>
@@ -334,10 +347,53 @@
                 </v-dialog>
             </v-col>
         </v-footer>
+        <div class="text-center">
+            <v-dialog
+                v-model="isCorrectDialog"
+                width="500"
+            >
+
+                <v-card>
+                    <v-card-title class="headline grey lighten-2">
+                        地址確認
+                    </v-card-title>
+
+                    <v-card-text>
+                        請問"{{ this.tempAddress }}"是您希望送達的地址嗎?
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="CustomerInfo.address=tempAddress;isCorrectDialog = false;"
+                        >
+                            是
+                        </v-btn>
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="isCorrectDialog = false"
+                        >
+                            否
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
     </div>
+
 </template>
 <script>
-import {customerGetAllDishByRestaurantIDAPI, customerGetRestaurantByIDAPI,customerGetDeliveryTimeIDAPI} from "../../api";
+import {
+    customerGetAllDishByRestaurantIDAPI,
+    customerGetRestaurantByIDAPI,
+    customerGetDeliveryTimeIDAPI,
+    customerlocationToAddressAPI
+} from "../../api";
 
 export default {
     data: () => ({
@@ -347,6 +403,7 @@ export default {
                 y: 0,
             },
             menu: [],
+            menu1: false,
             menu2: false,
             overlay: false,
             order: {
@@ -356,7 +413,12 @@ export default {
             },
             totalAmount: 0,
             deliveryFee: 25,
-            maxMakingTime:0,
+            MakingTime: 0,
+            durationTime: {
+                text: 0,
+                value: 0,
+            },
+            maxMakingTime: 0,
             list: [],
             imgTemp: '',
             amountTemp: 0,
@@ -371,13 +433,15 @@ export default {
                 address: '基隆市中正區北寧路2號',
                 note: '',
             },
+            tempAddress: '',
             isEditing: null,
-            snackbar: false,
             Type: 0,
             isSelectingTime: true,
+            isCorrectDialog: false,
             date: '',
             time: '',
-            dayConstrain:'',
+            dayConstrain: '',
+            timeConstrain: '',
             dayNow: '',
             CurPos: {
                 latitude: '',
@@ -501,9 +565,10 @@ export default {
             for (let i = 0; i < this.order.id.length; i++) {
                 if (this.order.amount[i] > 0) {
                     this.order.totalAmount += this.order.amount[i] * this.menu[i].price;
-                    if(this.menu[i].making_time>this.maxMakingTime)this.maxMakingTime=this.menu[i].making_time
+                    if (this.menu[i].making_time > this.MakingTime) this.MakingTime = this.menu[i].making_time
                 }
             }
+            this.TotalDeliveryTime()
             this.totalAmount = this.order.totalAmount
             this.order.totalAmount += this.deliveryFee;
         },
@@ -512,8 +577,8 @@ export default {
             this.overlay = true
         },
         EditInfo() {
-            if (this.CustomerInfo.address.length == 0) {
-                this.snackbar = true
+            if (this.CustomerInfo.address.length <= 0) {
+                this.$emit("showSnackBar", "姓名或地址不可為空");
             } else {
                 this.isEditing = !this.isEditing
                 console.log("收貨地址")
@@ -522,17 +587,17 @@ export default {
         },
         getCurrentTime() {
             this.dayNow = this.date = new Date().toISOString().substr(0, 10)
-            this.time = new Date().toISOString().substr(11, 5)
+            //this.time = new Date().toISOString().substr(11, 5)
             let date = new Date()
             date.setDate(date.getDate() + 3)
             this.dayConstrain = date.toISOString().substr(0, 10)
-            console.log("dayConstrain")
-            console.log(this.dayConstrain)
+            let time = new Date()
+            time.setMinutes(time.getMinutes() + this.maxMakingTime)
+            this.time = this.timeConstrain = time.toISOString().substr(11, 5)
+            console.log("timeConstrain")
+            console.log(this.timeConstrain)
         },
         geoFindMe() {
-            let latitude;
-            let longitude;
-
             if (!navigator.geolocation) {
                 alert("Geolocation is not supported by your browser");
                 return;
@@ -542,18 +607,29 @@ export default {
                 timeout: 5000,
                 maximumAge: 0
             };
-
-
             navigator.geolocation.getCurrentPosition(this.success, this.error, options);
         },
         success(position) {
             this.CurPos.latitude = position.coords.latitude;
             this.CurPos.longitude = position.coords.longitude;
-
             console.log("Latitude is " + this.CurPos.latitude + " Longitude is " + this.CurPos.longitude);
             console.log("CurPos")
             console.log(this.CurPos.latitude + "," + this.CurPos.longitude);
-            this.posToad()
+            let config = {
+                params: {'long': this.CurPos.longitude, 'lat': this.CurPos.latitude},
+                headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
+            };
+            customerlocationToAddressAPI(
+                config
+            ).then((res) => {
+                this.tempAddress = res.data.data
+                this.isCorrectDialog = true
+                console.log("lotoadd")
+                console.log(res.data.data)
+            })
+                .catch((error) => {
+                    console.error(error)
+                })
         },
         error(err) {
             alert('ERROR(' + err.code + '): ' + err.message);
@@ -564,44 +640,34 @@ export default {
             //   2: position unavailable (error response from location provider)
             //   3: timed out
         },
-        posToad() {
-            let geocoder = new google.maps.Geocoder();
-            process.env.MIX_GOOGLE_MAP_API
-            // google.maps.LatLng 物件
-            let coord = new google.maps.LatLng(25.0439892, 121.5212213);
-
-            // 傳入 latLng 資訊至 geocoder.geocode
-            geocoder.geocode({'latLng': coord}, function (results, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    // 如果有資料就會回傳
-                    if (results) {
-                        console.log(results[0]);
-                        console.log(results[0].formatted_address)
-                        this.CustomerInfo.address = results[0].formatted_address
-                    }
-                }
-                // 經緯度資訊錯誤
-                else {
-                    alert("Reverse Geocoding failed because: " + status);
-                }
-            });
-        },
-        cDeliveryTime(){
+        cDeliveryTime() {
             let config = {
-                params: {'ori_address': this.$route.params.id,'des_address': this.$route.params.id},
+                params: {'ori_address': this.list.address, 'des_address': this.CustomerInfo.address},
                 headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
             };
             customerGetDeliveryTimeIDAPI(
                 config
             ).then((res) => {
-                this.list = res.data.data
-                console.log("list")
-                console.log(this.list)
-                this.getDish()
+                console.log(res.data)
+                console.log(res.data["rows"])
+                this.durationTime.text = res.data.data.rows[0].elements[0].duration.text
+                this.durationTime.text = this.durationTime.text.substring(0, this.durationTime.text.length - 5)
+                this.durationTime.value = res.data.data.rows[0].elements[0].duration.value
+                console.log("durationTime")
+                console.log(this.durationTime)
+                this.TotalDeliveryTime()
             })
                 .catch((error) => {
                     console.error(error)
                 })
+
+        },
+        TotalDeliveryTime() {
+            let temp
+            if (this.durationTime.value + this.MakingTime > this.durationTime.text * 60) temp = parseInt(this.durationTime.text, 10) + 1
+            this.maxMakingTime = temp
+            console.log("maxMakingTime,durationTime.value,MakingTime")
+            console.log(this.maxMakingTime + ',' + this.durationTime.value + ',' + this.MakingTime)
         }
     }
 }

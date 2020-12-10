@@ -2342,7 +2342,58 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2691,6 +2742,7 @@ __webpack_require__.r(__webpack_exports__);
         y: 0
       },
       menu: [],
+      menu1: false,
       menu2: false,
       overlay: false,
       order: {
@@ -2700,6 +2752,11 @@ __webpack_require__.r(__webpack_exports__);
       },
       totalAmount: 0,
       deliveryFee: 25,
+      MakingTime: 0,
+      durationTime: {
+        text: 0,
+        value: 0
+      },
       maxMakingTime: 0,
       list: [],
       imgTemp: '',
@@ -2715,13 +2772,15 @@ __webpack_require__.r(__webpack_exports__);
         address: '基隆市中正區北寧路2號',
         note: ''
       },
+      tempAddress: '',
       isEditing: null,
-      snackbar: false,
       Type: 0,
       isSelectingTime: true,
+      isCorrectDialog: false,
       date: '',
       time: '',
       dayConstrain: '',
+      timeConstrain: '',
       dayNow: '',
       CurPos: {
         latitude: '',
@@ -2851,10 +2910,11 @@ __webpack_require__.r(__webpack_exports__);
       for (var i = 0; i < this.order.id.length; i++) {
         if (this.order.amount[i] > 0) {
           this.order.totalAmount += this.order.amount[i] * this.menu[i].price;
-          if (this.menu[i].making_time > this.maxMakingTime) this.maxMakingTime = this.menu[i].making_time;
+          if (this.menu[i].making_time > this.MakingTime) this.MakingTime = this.menu[i].making_time;
         }
       }
 
+      this.TotalDeliveryTime();
       this.totalAmount = this.order.totalAmount;
       this.order.totalAmount += this.deliveryFee;
     },
@@ -2863,8 +2923,8 @@ __webpack_require__.r(__webpack_exports__);
       this.overlay = true;
     },
     EditInfo: function EditInfo() {
-      if (this.CustomerInfo.address.length == 0) {
-        this.snackbar = true;
+      if (this.CustomerInfo.address.length <= 0) {
+        this.$emit("showSnackBar", "姓名或地址不可為空");
       } else {
         this.isEditing = !this.isEditing;
         console.log("收貨地址");
@@ -2872,18 +2932,18 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     getCurrentTime: function getCurrentTime() {
-      this.dayNow = this.date = new Date().toISOString().substr(0, 10);
-      this.time = new Date().toISOString().substr(11, 5);
+      this.dayNow = this.date = new Date().toISOString().substr(0, 10); //this.time = new Date().toISOString().substr(11, 5)
+
       var date = new Date();
       date.setDate(date.getDate() + 3);
       this.dayConstrain = date.toISOString().substr(0, 10);
-      console.log("dayConstrain");
-      console.log(this.dayConstrain);
+      var time = new Date();
+      time.setMinutes(time.getMinutes() + this.maxMakingTime);
+      this.time = this.timeConstrain = time.toISOString().substr(11, 5);
+      console.log("timeConstrain");
+      console.log(this.timeConstrain);
     },
     geoFindMe: function geoFindMe() {
-      var latitude;
-      var longitude;
-
       if (!navigator.geolocation) {
         alert("Geolocation is not supported by your browser");
         return;
@@ -2897,12 +2957,30 @@ __webpack_require__.r(__webpack_exports__);
       navigator.geolocation.getCurrentPosition(this.success, this.error, options);
     },
     success: function success(position) {
+      var _this3 = this;
+
       this.CurPos.latitude = position.coords.latitude;
       this.CurPos.longitude = position.coords.longitude;
       console.log("Latitude is " + this.CurPos.latitude + " Longitude is " + this.CurPos.longitude);
       console.log("CurPos");
       console.log(this.CurPos.latitude + "," + this.CurPos.longitude);
-      this.posToad();
+      var config = {
+        params: {
+          'long': this.CurPos.longitude,
+          'lat': this.CurPos.latitude
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+      Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerlocationToAddressAPI"])(config).then(function (res) {
+        _this3.tempAddress = res.data.data;
+        _this3.isCorrectDialog = true;
+        console.log("lotoadd");
+        console.log(res.data.data);
+      })["catch"](function (error) {
+        console.error(error);
+      });
     },
     error: function error(err) {
       alert('ERROR(' + err.code + '): ' + err.message);
@@ -2912,53 +2990,41 @@ __webpack_require__.r(__webpack_exports__);
       //   2: position unavailable (error response from location provider)
       //   3: timed out
     },
-    posToad: function posToad() {
-      var geocoder = new google.maps.Geocoder();
-      process.env.MIX_GOOGLE_MAP_API; // google.maps.LatLng 物件
-
-      var coord = new google.maps.LatLng(25.0439892, 121.5212213); // 傳入 latLng 資訊至 geocoder.geocode
-
-      geocoder.geocode({
-        'latLng': coord
-      }, function (results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-          // 如果有資料就會回傳
-          if (results) {
-            console.log(results[0]);
-            console.log(results[0].formatted_address);
-            this.CustomerInfo.address = results[0].formatted_address;
-          }
-        } // 經緯度資訊錯誤
-        else {
-            alert("Reverse Geocoding failed because: " + status);
-          }
-      });
-    },
     cDeliveryTime: function cDeliveryTime() {
-      var _this3 = this;
+      var _this4 = this;
 
       var config = {
         params: {
-          'ori_address': this.$route.params.id,
-          'des_address': this.$route.params.id
+          'ori_address': this.list.address,
+          'des_address': this.CustomerInfo.address
         },
         headers: {
           Authorization: "Bearer " + this.$store.getters.getAccessToken
         }
       };
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerGetDeliveryTimeIDAPI"])(config).then(function (res) {
-        _this3.list = res.data.data;
-        console.log("list");
-        console.log(_this3.list);
+        console.log(res.data);
+        console.log(res.data["rows"]);
+        _this4.durationTime.text = res.data.data.rows[0].elements[0].duration.text;
+        _this4.durationTime.text = _this4.durationTime.text.substring(0, _this4.durationTime.text.length - 5);
+        _this4.durationTime.value = res.data.data.rows[0].elements[0].duration.value;
+        console.log("durationTime");
+        console.log(_this4.durationTime);
 
-        _this3.getDish();
+        _this4.TotalDeliveryTime();
       })["catch"](function (error) {
         console.error(error);
       });
+    },
+    TotalDeliveryTime: function TotalDeliveryTime() {
+      var temp;
+      if (this.durationTime.value + this.MakingTime > this.durationTime.text * 60) temp = parseInt(this.durationTime.text, 10) + 1;
+      this.maxMakingTime = temp;
+      console.log("maxMakingTime,durationTime.value,MakingTime");
+      console.log(this.maxMakingTime + ',' + this.durationTime.value + ',' + this.MakingTime);
     }
   }
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -23787,6 +23853,7 @@ var render = function() {
                       _vm.dialog = true
                       _vm.forceRerender()
                       _vm.getTotalAmount()
+                      _vm.cDeliveryTime()
                     }
                   }
                 },
@@ -24049,11 +24116,21 @@ var render = function() {
                                       },
                                       [
                                         _vm.isEditing
-                                          ? _c("v-icon", [
-                                              _vm._v(
-                                                "\n                                            mdi-close\n                                        "
-                                              )
-                                            ])
+                                          ? _c(
+                                              "v-icon",
+                                              {
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.cDeliveryTime()
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            mdi-close\n                                        "
+                                                )
+                                              ]
+                                            )
                                           : _c("v-icon", [
                                               _vm._v(
                                                 "\n                                            mdi-account-edit-outline\n                                        "
@@ -24075,8 +24152,8 @@ var render = function() {
                                         label: "取餐地址",
                                         hint: "例如: 基隆市中正區北寧路2號",
                                         rules: [_vm.rules.required],
-                                        counter: "20",
-                                        maxlength: "20",
+                                        counter: "40",
+                                        maxlength: "40",
                                         outlined: "",
                                         "persistent-hint": "",
                                         "append-icon": "mdi-target"
@@ -24100,8 +24177,8 @@ var render = function() {
                                         disabled: !_vm.isEditing,
                                         label: "備註",
                                         hint: "有什麼事想要告訴外送員嗎? A",
-                                        counter: "20",
-                                        maxlength: "20",
+                                        counter: "40",
+                                        maxlength: "40",
                                         outlined: "",
                                         "persistent-hint": ""
                                       },
@@ -24281,61 +24358,126 @@ var render = function() {
                                           "v-col",
                                           { attrs: { cols: "6" } },
                                           [
-                                            _c("v-text-field", {
-                                              attrs: {
-                                                disabled: _vm.isSelectingTime,
-                                                label: "時間",
-                                                "prepend-icon":
-                                                  "mdi-clock-time-four-outline"
-                                              },
-                                              model: {
-                                                value: _vm.time,
-                                                callback: function($$v) {
-                                                  _vm.time = $$v
+                                            _c(
+                                              "v-menu",
+                                              {
+                                                attrs: {
+                                                  "close-on-content-click": false,
+                                                  "nudge-right": 40,
+                                                  transition:
+                                                    "scale-transition",
+                                                  "offset-y": "",
+                                                  "min-width": "290px"
                                                 },
-                                                expression: "time"
-                                              }
-                                            })
+                                                scopedSlots: _vm._u([
+                                                  {
+                                                    key: "activator",
+                                                    fn: function(ref) {
+                                                      var on = ref.on
+                                                      var attrs = ref.attrs
+                                                      return [
+                                                        _c(
+                                                          "v-text-field",
+                                                          _vm._g(
+                                                            _vm._b(
+                                                              {
+                                                                attrs: {
+                                                                  disabled:
+                                                                    _vm.isSelectingTime,
+                                                                  label: "時間",
+                                                                  "prepend-icon":
+                                                                    "mdi-clock-time-four-outline",
+                                                                  readonly: ""
+                                                                },
+                                                                model: {
+                                                                  value:
+                                                                    _vm.time,
+                                                                  callback: function(
+                                                                    $$v
+                                                                  ) {
+                                                                    _vm.time = $$v
+                                                                  },
+                                                                  expression:
+                                                                    "time"
+                                                                }
+                                                              },
+                                                              "v-text-field",
+                                                              attrs,
+                                                              false
+                                                            ),
+                                                            on
+                                                          )
+                                                        )
+                                                      ]
+                                                    }
+                                                  }
+                                                ]),
+                                                model: {
+                                                  value: _vm.menu1,
+                                                  callback: function($$v) {
+                                                    _vm.menu1 = $$v
+                                                  },
+                                                  expression: "menu1"
+                                                }
+                                              },
+                                              [
+                                                _vm._v(" "),
+                                                _c("v-time-picker", {
+                                                  attrs: {
+                                                    format: "24hr",
+                                                    min:
+                                                      _vm.date === _vm.dayNow
+                                                        ? _vm.timeConstrain
+                                                        : ""
+                                                  },
+                                                  on: {
+                                                    input: function($event) {
+                                                      _vm.menu1 = false
+                                                    }
+                                                  },
+                                                  model: {
+                                                    value: _vm.time,
+                                                    callback: function($$v) {
+                                                      _vm.time = $$v
+                                                    },
+                                                    expression: "time"
+                                                  }
+                                                })
+                                              ],
+                                              1
+                                            )
                                           ],
                                           1
                                         ),
                                         _vm._v(" "),
-                                        _c("v-col", { attrs: { cols: "9" } }, [
+                                        _c("v-col", { attrs: { cols: "6" } }, [
                                           _vm._v(
                                             "\n                                            預計最快送達時間：\n                                        "
                                           )
                                         ]),
                                         _vm._v(" "),
-                                        _c("v-col", { attrs: { cols: "3" } })
+                                        _c(
+                                          "v-col",
+                                          {
+                                            staticClass: "rounded text-center",
+                                            staticStyle: {
+                                              "background-color": "#ccf2ff"
+                                            },
+                                            attrs: { cols: "5" }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(_vm.maxMakingTime) +
+                                                " 分鐘\n                                        "
+                                            )
+                                          ]
+                                        )
                                       ],
                                       1
                                     )
                                   ],
                                   1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-snackbar",
-                                  {
-                                    attrs: {
-                                      timeout: 2000,
-                                      color: "error",
-                                      text: "",
-                                      rounded: ""
-                                    },
-                                    model: {
-                                      value: _vm.snackbar,
-                                      callback: function($$v) {
-                                        _vm.snackbar = $$v
-                                      },
-                                      expression: "snackbar"
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                    姓名或地址不可為空\n                                "
-                                    )
-                                  ]
                                 )
                               ],
                               1
@@ -24392,6 +24534,94 @@ var render = function() {
                           1
                         )
                       ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "text-center" },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { width: "500" },
+              model: {
+                value: _vm.isCorrectDialog,
+                callback: function($$v) {
+                  _vm.isCorrectDialog = $$v
+                },
+                expression: "isCorrectDialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c(
+                    "v-card-title",
+                    { staticClass: "headline grey lighten-2" },
+                    [_vm._v("\n                    地址確認\n                ")]
+                  ),
+                  _vm._v(" "),
+                  _c("v-card-text", [
+                    _vm._v(
+                      '\n                    請問"' +
+                        _vm._s(this.tempAddress) +
+                        '"是您希望送達的地址嗎?\n                '
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("v-divider"),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "primary", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.CustomerInfo.address = _vm.tempAddress
+                              _vm.isCorrectDialog = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        是\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "primary", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.isCorrectDialog = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        否\n                    "
+                          )
+                        ]
+                      )
                     ],
                     1
                   )
