@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {customerGetInfoAPI,customerSwitchUserModeAPI,customerEditInfoAPI} from "../../api";
+import {customerGetInfoAPI,customerEditInfoAPI,customerSwitchUserModeAPI} from "../../api";
 
 export default {
     props: {},
@@ -79,7 +79,7 @@ export default {
              params: {"ID": this.$route.params.id},
             headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
         };
-        
+
         customerGetInfoAPI(
           config
         ).then((resp) => {
@@ -120,9 +120,11 @@ export default {
           let config = {
             headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
           };
-          customerSwitchUserModeAPI(
-            config,
+          /* 需要判斷select回傳身分並設定至wanted_mode */
+
+            customerSwitchUserModeAPI(
             {mode:this.wanted_mode},
+            config,
           ).then((resp)=>{
             if (resp.status === 200) {
               this.$store.commit("MODE", this.wanted_mode);
@@ -151,8 +153,8 @@ export default {
             address: this.info.address,
             phone: this.info.phone,
             };
-          customerEditInfoAPI(
-            config,data
+            customerEditInfoAPI(
+            data,config
           ).then((resp) => {
           if (resp.status === 200) {
             this.editComfirmLoading = false;

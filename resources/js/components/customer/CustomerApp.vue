@@ -1,9 +1,17 @@
 <template>
   <div>
     <router-view
-      name="customerView"
       v-on:showSnackBar="showSnackBar"
+      name="customerView"
     ></router-view>
+    <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"
+          >Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
     <v-bottom-navigation grow fixed v-model="value">
       <v-btn value="home" @click="toHome()">
@@ -29,12 +37,18 @@
 <script>
 export default {
   props: {},
-  mounted() {
-  },
+  mounted() {},
   data: () => ({
-      value: 'home',
+    value: "home",
+    snackbar: false,
+    snackbarText: "Hello, I'm a snackbar",
+    snackBarTimeout: 3000,
   }),
   methods: {
+    showSnackBar(text) {
+      this.snackbar = true;
+      this.snackbarText = text;
+    },
     toHome() {
       this.$router.push("/customer/home");
     },

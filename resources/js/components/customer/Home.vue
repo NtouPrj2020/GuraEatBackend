@@ -36,7 +36,7 @@
     </div>
 </template>
 <script>
-import {getRestaurantall} from "../../api";
+import {customerGetAllRestaurantAPI} from "../../api";
 import axios from "axios";
 
 export default {
@@ -57,7 +57,7 @@ export default {
                 params: {"page": page,},
                 headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
             };
-            getRestaurantall(
+            customerGetAllRestaurantAPI(
                 config
             ).then((res) => {
                 if(page === 1){

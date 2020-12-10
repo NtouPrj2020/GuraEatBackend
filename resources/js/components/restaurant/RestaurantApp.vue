@@ -1,37 +1,54 @@
 <template>
-    <div class="container">
-        <router-view name="customerView"></router-view>
+  <div class="container">
+    <router-view
+      v-on:showSnackBar="showSnackBar"
+      name="customerView"
+    ></router-view>
+    <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"
+          >Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
-        <v-bottom-navigation grow fixed v-model="value">
-            <v-btn value="home" @click="toHome()">
-                <span>首頁</span>
+    <v-bottom-navigation grow fixed v-model="value">
+      <v-btn value="home" @click="toHome()">
+        <span>首頁</span>
 
-                <v-icon>mdi-home</v-icon>
-            </v-btn>
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
 
-            <v-btn value="info" @click="toInfo()">
-                <span>資訊</span>
+      <v-btn value="info" @click="toInfo()">
+        <span>資訊</span>
 
-                <v-icon>mdi-account-circle-outline</v-icon>
-            </v-btn>
-        </v-bottom-navigation>
-    </div>
+        <v-icon>mdi-account-circle-outline</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+  </div>
 </template>
 
 <script>
 export default {
-    props: {},
-    mounted() {
-
+  props: {},
+  mounted() {},
+  data: () => ({
+    snackbar: false,
+    snackbarText: "Hello, I'm a snackbar",
+    snackBarTimeout: 3000,
+  }),
+  methods: {
+    showSnackBar(text) {
+      this.snackbar = true;
+      this.snackbarText = text;
     },
-    data: () => ({}),
-    methods: {
-        toHome() {
-            this.$router.push("/restaurant/home");
-        },
-        toInfo() {
-            this.$router.push("/restaurant/info");
-        },
+    toHome() {
+      this.$router.push("/restaurant/home");
     },
+    toInfo() {
+      this.$router.push("/restaurant/info");
+    },
+  },
 };
 </script>

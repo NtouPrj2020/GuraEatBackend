@@ -25,9 +25,9 @@ class CustomerGetRestaurantInfoController extends Controller
     }
     public function getRestaurantByID(Request $request){
         $request->validate([
-            'id' => 'required|string',
+            'ID' => 'required|string',
         ]);
-        $restaurants = Restaurant::where('id','=',$request->id)->first();
+        $restaurants = Restaurant::where('id','=',$request->ID)->first();
         $restaurants['tags'] = $restaurants->tags()->get();
 
         $data = [
