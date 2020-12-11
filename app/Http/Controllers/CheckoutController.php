@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DeliveryManGetOrderEvent;
 use App\Models\Cart;
 use App\Models\DeliveryMan;
 use App\Models\Order;
@@ -9,6 +10,7 @@ use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Exception;
+use Illuminate\Support\Carbon;
 
 class CheckoutController extends Controller
 {
@@ -112,6 +114,8 @@ class CheckoutController extends Controller
         $req = json_decode($request->getContent());
         $customer = $request->user();
         $onlineDeliveryMans = DeliveryMan::where('status', '=', '1')->get();
+
+        //檢查是否使用者已經有進行中的訂單
         $orderlist = $customer->orders()->get();
         for($i=0;$i<count($orderlist);$i++){
             if( $orderlist[$i]->status == 0 | $orderlist[$i]->status == 1 || $orderlist[$i]->status == 2){
@@ -127,7 +131,10 @@ class CheckoutController extends Controller
                 return response()->json($data, 500);
             }
         }
+
+        //檢查是否有外送員上線中
         if (count($onlineDeliveryMans) > 0) {
+            //計算離餐廳最近的上線中外送員
             $restaurant = Restaurant::find($req->restaurant_id)->first();
             $obj = $this->addtolo($restaurant->address);
             $rest_lat = $obj->results[0]->geometry->location->lat;
@@ -139,7 +146,6 @@ class CheckoutController extends Controller
                     $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng)
                 );
             }
-
             $closes = 0;
             for ($i = 0; $i < count($distanceList); $i++) {
                 if($distanceList[$i]>$distanceList[$closes]){
@@ -147,18 +153,22 @@ class CheckoutController extends Controller
                 }
             }
             $chooseMan = $onlineDeliveryMans[$closes];
+
+            //建立訂單
             $order = new Order();
             $order->delivery_man_id = $chooseMan->id;
             $order->customer_id = $customer->id;
             $order->type = $req->type;
+            $order->note = $req->note;
             $order->distance = $distanceList[$closes];
             if($req->type == 0 ){
                 $order->status = 1;
             }else if($req->type == 1){
                 $order->status = 0;
-                $order->send_time = $req->send_time;
+                $order->send_time = Carbon::parse($req->send_time)->format('Y-m-d H:i');
             }
             $order->save();
+            //商品和訂單連結
             for($i=0;$i<count($req->menu);$i++){
                 $cart = new Cart();
                 $cart->dish_id = $req->menu[$i]->id;
@@ -176,6 +186,7 @@ class CheckoutController extends Controller
                     'items'=>$order->items()
                 ]
             ];
+            event(new DeliveryManGetOrderEvent($chooseMan,$data));
             return $data;
         } else {
             $data = [
