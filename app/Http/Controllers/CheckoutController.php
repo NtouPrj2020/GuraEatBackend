@@ -160,6 +160,7 @@ class CheckoutController extends Controller
             $order->customer_id = $customer->id;
             $order->type = $req->type;
             $order->note = $req->note;
+            $order->customer_address = $req->customer_address;
             $order->distance = $distanceList[$closes];
             if($req->type == 0 ){
                 $order->status = 1;
