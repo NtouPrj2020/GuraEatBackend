@@ -26,6 +26,6 @@ class DeliveryManGetOrderEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'deliveryman.getorder';
+        return '.deliveryman.getorder';
     }
 }
