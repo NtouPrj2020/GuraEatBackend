@@ -21,6 +21,8 @@
         "sass-loader": "^10.1.0",
         "vue": "^2.6.12",
         "vue-router": "^3.4.9",
+        "vue-static-map": "^3.0.2",
+        "vue2-google-maps": "^0.10.7",
         "vuetify": "^2.3.18",
         "vuex": "^3.5.1",
         "vuex-persistedstate": "^4.0.0-beta.1"
