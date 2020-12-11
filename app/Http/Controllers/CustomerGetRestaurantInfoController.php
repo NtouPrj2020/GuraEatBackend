@@ -23,7 +23,7 @@ class CustomerGetRestaurantInfoController extends Controller
             $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
             $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
             $avg = round($avg,2);
-            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
+            $restaurants[$i]['rate'][0] = ['avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
@@ -48,7 +48,7 @@ class CustomerGetRestaurantInfoController extends Controller
             $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
             $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
             $avg = round($avg,2);
-            $restaurants['rate'][0] = ['restaurant_id'=>$restaurants->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
+            $restaurants['rate'][0] = ['avg_rate' => $avg,'sum_people' =>$sum_people];
         $data = [
             "status" => 200,
             "method" => "getRestaurantByID",
@@ -73,7 +73,7 @@ class CustomerGetRestaurantInfoController extends Controller
             $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
             $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
             $avg = round($avg,2);
-            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
+            $restaurants[$i]['rate'][0] = ['avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
@@ -100,7 +100,7 @@ class CustomerGetRestaurantInfoController extends Controller
             $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
             $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$sum_people;    
             $avg = round($avg,2);
-            $restaurants[$i]['rate'][0] = ['restaurant_id'=>$restaurants[$i]->id,'avg_rate' => $avg,'sum_people' =>$sum_people];
+            $restaurants[$i]['rate'][0] = ['avg_rate' => $avg,'sum_people' =>$sum_people];
         }
         $data = [
             "status" => 200,
