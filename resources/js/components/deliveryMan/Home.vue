@@ -21,6 +21,7 @@ export default {
     created() {
     },
     mounted() {
+        let that = this
         var pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
             cluster: "ap3",
         });
@@ -33,10 +34,10 @@ export default {
                 if (resp.status === 200) {
                     Pusher.logToConsole = true;
                     var channel = pusher.subscribe("deliveryman-channel"+resp.data.data.id);
-                    channel.bind("deliveryman.getorder", function (data) {
+                    channel.bind(".deliveryman.getorder", function (data) {
                         console.log(JSON.stringify(data));
                         console.log("訂單收到")
-                        this.$emit("showSnackBar", "收到訂單!!");
+                        that.$emit("showSnackBar", "收到訂單!!");
                     });
                 }
             })

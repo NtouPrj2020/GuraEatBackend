@@ -3366,6 +3366,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {},
   mounted: function mounted() {
+    var that = this;
     var pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_2___default.a("b2cb2f5ab88eebd4b64d", {
       cluster: "ap3"
     });
@@ -3377,10 +3378,10 @@ __webpack_require__.r(__webpack_exports__);
       if (resp.status === 200) {
         pusher_js__WEBPACK_IMPORTED_MODULE_2___default.a.logToConsole = true;
         var channel = pusher.subscribe("deliveryman-channel" + resp.data.data.id);
-        channel.bind("deliveryman.getorder", function (data) {
+        channel.bind(".deliveryman.getorder", function (data) {
           console.log(JSON.stringify(data));
           console.log("訂單收到");
-          this.$emit("showSnackBar", "收到訂單!!");
+          that.$emit("showSnackBar", "收到訂單!!");
         });
       }
     })["catch"](function (err) {
