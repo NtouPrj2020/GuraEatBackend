@@ -4,19 +4,25 @@ import Vuetify from "vuetify";
 import Vuex from "vuex";
 import VueRouter from "vue-router";
 
-import GuraEatRouter from "./GuraEatRouter"
+import GuraEatRouter from "./GuraEatRouter";
 import App from "./components/App.vue";
 import "vuetify/dist/vuetify.min.css";
 import createPersistedState from "vuex-persistedstate";
+import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(VueRouter);
+Vue.use(VueGoogleMaps, {
+    load: {
+        key: process.env.MIX_GOOGLE_API_KEY
+    }
+});
 const vuetify = new Vuetify({
     theme: {
         themes: {
             light: {
-                primary: '#3e6d97',
+                primary: "#3e6d97"
             },
             dark: {}
         }
@@ -78,15 +84,14 @@ const store = new Vuex.Store({
     }
 });
 
-let route = new GuraEatRouter(store)
+let route = new GuraEatRouter(store);
 
 let router = new VueRouter({
     mode: "history", //因為Vue router 會自動產生hashtag(#)，俗果你覺得礙事可以加入這行。
     linkActiveClass: "active",
     base: "/",
-    routes:route.builds() //ES6語法，當key和value一樣時可省略key
+    routes: route.builds() //ES6語法，當key和value一樣時可省略key
 });
-
 
 router.mode = "html5";
 

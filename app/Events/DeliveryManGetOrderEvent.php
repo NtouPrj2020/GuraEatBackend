@@ -21,7 +21,7 @@ class DeliveryManGetOrderEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return ['deliveryman.getorder.'.$this->deliveryMan->id];
+        return ['deliveryman-channel'.$this->deliveryMan->id];
     }
 
     public function broadcastAs()

@@ -4,6 +4,7 @@
       v-on:showSnackBar="showSnackBar"
       name="deliveryManView"
     ></router-view>
+
     <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
@@ -12,8 +13,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <v-bottom-navigation fixed v-model="value">
+    <v-bottom-navigation fixed grow v-model="value">
       <v-btn value="home" @click="toHome()">
         <span>首頁</span>
 
@@ -29,11 +29,23 @@
   </div>
 </template>
 
+
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
+Pusher.logToConsole = true;
+
+var pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+  cluster: "ap3",
+});
+
+var channel = pusher.subscribe("deliveryman-channel");
+
 export default {
   props: {},
   mounted() {},
   data: () => ({
+    value: "home",
     snackbar: false,
     snackbarText: "Hello, I'm a snackbar",
     snackBarTimeout: 3000,
@@ -44,10 +56,17 @@ export default {
       this.snackbarText = text;
     },
     toHome() {
+<<<<<<< HEAD
+      this.$router.push("/delivery_man/home");
+    },
+    toInfo() {
+      this.$router.push("/delivery_man/info");
+=======
       this.$router.push("/delivery_Man/home");
     },
     toInfo() {
       this.$router.push("/delivery_Man/info");
+>>>>>>> 55582f69574225918cd1e8f725fa2911cab2b3d4
     },
   },
 };
