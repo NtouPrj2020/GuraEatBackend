@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 class CustomerGetRestaurantInfoController extends Controller
 {
-    public function sum_people($restaurant){
-        $rate = $restaurant->Rates()->first();
+    public static function sum_people($restaurant){
+        $rate = $restaurant->rates()->first();
         $star5 = $rate->star5;
         $star4 = $rate->star4;
         $star3 = $rate->star3;
@@ -20,14 +20,14 @@ class CustomerGetRestaurantInfoController extends Controller
         return ($star5 + $star4 + $star3 + $star2 + $star1);
     }
 
-    public function count_avg($restaurant){
-        $rate = $restaurant->Rates()->first();
+    public static function count_avg($restaurant){
+        $rate = $restaurant->rates()->first();
         $star5 = $rate->star5;
         $star4 = $rate->star4;
         $star3 = $rate->star3;
         $star2 = $rate->star2;
         $star1 = $rate->star1;
-        $total=($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/$this->sum_people($restaurant);  
+        $total=($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/CustomerGetRestaurantInfoController::sum_people($restaurant);
         return  round($total,2);
     }
 
@@ -35,7 +35,7 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = Restaurant::paginate(20);
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
-            $rate = $restaurants[$i]->Rates()->first();
+            $rate = $restaurants[$i]->rates()->first();
             if ($rate!=null) {
                 $restaurants[$i]['avg_rate'] = $this->count_avg($restaurants[$i]);
                 $restaurants[$i]['sum_people'] =$this->sum_people($restaurants[$i]);
@@ -55,12 +55,12 @@ class CustomerGetRestaurantInfoController extends Controller
         ]);
         $restaurants = Restaurant::where('id','=',$request->ID)->first();
         $restaurants['tags'] = $restaurants->tags()->get();
-        $rate = $restaurants->Rates()->first();
+        $rate = $restaurants->rates()->first();
             if ($rate!=null) {
                 $restaurants['avg_rate'] = $this->count_avg($restaurants);
                 $restaurants['sum_people'] =$this->sum_people($restaurants);
             }
-            
+
         $data = [
             "status" => 200,
             "method" => "getRestaurantByID",
@@ -76,7 +76,7 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = Restaurant::where('name','like','%'.$request->Keyword.'%')->get();
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
-            $rate = $restaurants[$i]->Rates()->first();
+            $rate = $restaurants[$i]->rates()->first();
             if ($rate!=null) {
                 $restaurants[$i]['avg_rate'] = $this->count_avg($restaurants[$i]);
                 $restaurants[$i]['sum_people'] =$this->sum_people($restaurants[$i]);
@@ -98,7 +98,7 @@ class CustomerGetRestaurantInfoController extends Controller
         $restaurants = $tag->restaurants()->get();
         for($i = 0;$i<count($restaurants);$i++){
             $restaurants[$i]['tags'] = $restaurants[$i]->tags()->get();
-            $rate = $restaurants[$i]->Rates()->first();
+            $rate = $restaurants[$i]->rates()->first();
             if ($rate!=null) {
                 $restaurants[$i]['avg_rate'] = $this->count_avg($restaurants[$i]);
                 $restaurants[$i]['sum_people'] =$this->sum_people($restaurants[$i]);

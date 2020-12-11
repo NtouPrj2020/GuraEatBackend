@@ -140,7 +140,7 @@ export const restaurantGetAllDishAPI = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getAllDish", config);
 // id unknown
 export const restaurantGetInfoAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/info", config);
+    userRequest.get("/api/v1/users/restaurant/info", config);
 // id 24
 export const restaurantEditInfoAPI = (config, data) =>
     guestRequest.put("/api/v1/users/restaurant/info", config, data);

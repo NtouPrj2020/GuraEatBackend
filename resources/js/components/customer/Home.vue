@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="panel-heading mt-3 text-center d-flex justify-start" id="heading-div">
+        <div class="panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8" id="heading-div">
             <v-img class="mt-1 "
                    max-height="40" max-width="40"
                    src="https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000">
@@ -10,7 +10,7 @@
         <div class="container mb-12">
             <v-row dense>
                 <v-col v-for="(item,i) in list" :key="i" :cols="12">
-                    <v-card class="mx-auto" max-width="400" @click="selectRest(item.id)">
+                    <v-card class="mx-auto ml-3 mr-3"  @click="selectRest(item.id)">
                         <v-img
                             class="white--text align-end"
                             height="120px"
@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         selectRest(RID) {
-            this.$emit("showSnackBar","test")
+            //this.$emit("showSnackBar","test")
             this.$router.push("/customer/restaurant/" + RID);
         },
         getRestaurant(page){
@@ -86,8 +86,4 @@ export default {
 </script>
 
 <style>
-#heading-div{
-    max-width: 400px;
-    margin: 0 auto;
-}
 </style>

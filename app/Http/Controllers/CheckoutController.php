@@ -108,7 +108,7 @@ class CheckoutController extends Controller
             return response()->json($data, 500);
         }
     }
-
+    
     public function checkoutAuto(Request $request)
     {
         $req = json_decode($request->getContent());
