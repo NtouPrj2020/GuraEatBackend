@@ -12,7 +12,7 @@
 import axios from "axios";
 import GoogleMap from "./GoogleMap";
 import Pusher from "pusher-js";
-import { deliveryManChangeStateAPI } from "../../api";
+import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
 
 export default {
   components: {
@@ -26,11 +26,26 @@ export default {
     });
 
     Pusher.logToConsole = true;
-    var channel = pusher.subscribe("deliveryman-channel");
-    channel.bind("deliveryman.getorder", function (data) {
-      console.log(JSON.stringify(data));
-      this.$emit("showSnackBar", "收到訂單!!");
-    });
+    deliveryManGetInfoAPI({
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken,
+      },
+    })
+      .then((resp) => {
+        if (resp.status === 200) {
+          var channel = pusher.subscribe(
+            "deliveryman-channel" + resp.data.data.id
+          );
+          channel.bind("deliveryman.getorder", function (data) {
+            console.log(JSON.stringify(data));
+            console.log("訂單收到");
+            this.$emit("showSnackBar", "收到訂單!!");
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   methods: {
     online() {
