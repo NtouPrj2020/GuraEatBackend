@@ -30,17 +30,8 @@
 </template>
 
 
-<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
 <script>
-Pusher.logToConsole = true;
-
-var pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-  cluster: "ap3",
-});
-
-var channel = pusher.subscribe("deliveryman-channel");
-
 export default {
   props: {},
   mounted() {},
@@ -56,17 +47,10 @@ export default {
       this.snackbarText = text;
     },
     toHome() {
-<<<<<<< HEAD
       this.$router.push("/delivery_man/home");
     },
     toInfo() {
       this.$router.push("/delivery_man/info");
-=======
-      this.$router.push("/delivery_Man/home");
-    },
-    toInfo() {
-      this.$router.push("/delivery_Man/info");
->>>>>>> 55582f69574225918cd1e8f725fa2911cab2b3d4
     },
   },
 };

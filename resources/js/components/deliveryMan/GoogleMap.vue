@@ -27,7 +27,7 @@ export default {
     },
     center: { lat: 45.508, lng: -73.587 },
     position: { lat: 45.508, lng: -73.587 },
-    options: { disableDefaultUI: true },
+    options: { disableDefaultUI: true, clickableIcons: false },
   }),
   mounted() {
     this.geolocate();
@@ -40,7 +40,7 @@ export default {
         "width:" +
         window.innerWidth +
         "px;  height: " +
-        window.innerHeight +
+        (window.innerHeight - 200) +
         "px;";
     },
     geolocate: function () {

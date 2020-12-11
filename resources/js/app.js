@@ -15,9 +15,10 @@ Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(VueGoogleMaps, {
     load: {
-        key: process.env.MIX_GOOGLE_API_KEY
+        key: process.env.MIX_GOOGLE_MAP_API
     }
 });
+
 const vuetify = new Vuetify({
     theme: {
         themes: {
