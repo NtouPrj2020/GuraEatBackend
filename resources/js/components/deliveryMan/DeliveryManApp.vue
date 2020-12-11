@@ -56,10 +56,17 @@ export default {
       this.snackbarText = text;
     },
     toHome() {
+<<<<<<< HEAD
       this.$router.push("/delivery_man/home");
     },
     toInfo() {
       this.$router.push("/delivery_man/info");
+=======
+      this.$router.push("/delivery_Man/home");
+    },
+    toInfo() {
+      this.$router.push("/delivery_Man/info");
+>>>>>>> 55582f69574225918cd1e8f725fa2911cab2b3d4
     },
   },
 };

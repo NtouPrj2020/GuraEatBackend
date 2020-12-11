@@ -10,12 +10,13 @@ class Order extends Model
     use HasFactory;
 
     protected $table = 'Orders';
-    
+
     protected $fillable = [
         'status',
-        'type',    
+        'type',
         'distance',
-        'send_time'
+        'send_time',
+        'note'
     ];
 
     protected $guarded = ['status'];
@@ -28,6 +29,11 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo('App\Models\DeliveryMan','delivery_man_id');
+    }
+
+    public function items()
+    {
+        return Cart::where('dish_id','=',$this->id)->get();
     }
 
 }

@@ -6,7 +6,9 @@ use App\Models\Customer;
 use App\Models\CustomerPasswordReset;
 use App\Models\DeliveryMan;
 use App\Models\DeliveryManPasswordReset;
+use App\Models\DeliveryManRate;
 use App\Models\Restaurant;
+use App\Models\RestaurantRate;
 use App\Notifications\CustomerPasswordResetRequest;
 use App\Notifications\DeliveryManPasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
@@ -297,6 +299,14 @@ class AuthController extends Controller
         $user->password = bcrypt($request['password']);
         $user->status = 0;
         $user->save();
+        $rate = new DeliveryManRate();
+        $rate->delivery_man_id = $user->id;
+        $rate->star5 = 0;
+        $rate->star4 = 0;
+        $rate->star3 = 0;
+        $rate->star2 = 0;
+        $rate->star1 = 0;
+        $rate->save();
 
         if ($user != null) {
             $data = [
@@ -1015,6 +1025,15 @@ class AuthController extends Controller
         $user->address = $request->address;
         $user->password = bcrypt($request['password']);
         $user->save();
+
+        $rate = new RestaurantRate();
+        $rate->restaurant_id = $user->id;
+        $rate->star5 = 0;
+        $rate->star4 = 0;
+        $rate->star3 = 0;
+        $rate->star2 = 0;
+        $rate->star1 = 0;
+        $rate->save();
 
         if ($user != null) {
             $data = [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RestaurantTag;
+use App\Models\RestaurantRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,6 +13,15 @@ class RestaurantInfoController extends Controller
         $restaurant = $request->user();
         $restaurant['tags'] = $restaurant->tags()->get();
         $restaurant['rate'] = $restaurant->Rates()->get();
+
+        $star5 = $restaurant['rate'][0]->star5;
+        $star4 = $restaurant['rate'][0]->star4;
+        $star3 = $restaurant['rate'][0]->star3;
+        $star2 = $restaurant['rate'][0]->star2;
+        $star1 = $restaurant['rate'][0]->star1;
+        $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/($star5 + $star4 + $star3 + $star2 + $star1);    
+        $avg = round($avg,2);
+        $restaurant['rate'][0]['avg_rate'] = $avg;
         if($restaurant != null){
             $data = [
                 "status" => 200,
