@@ -105,7 +105,7 @@ export default {
                         if (resp.status === 200) {
                             this.loading = false;
                             this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-                            this.$store.commit("USER_NAME", resp.data.data.access_token);
+                            this.$store.commit("USER_NAME", resp.data.data.name);
                             this.$store.commit("MODE", this.mode);
                             this.$router.push("/customer/home");
                         }
@@ -134,7 +134,7 @@ export default {
                         if (resp.status === 200) {
                             this.loading = false;
                             this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-                            this.$store.commit("USER_NAME", resp.data.data.access_token);
+                            this.$store.commit("USER_NAME", resp.data.data.name);
                             this.$store.commit("MODE", this.mode);
                             this.$router.push("/delivery_man/home");
                         }
@@ -166,7 +166,7 @@ export default {
                         if (resp.status === 200) {
                             this.loading = false;
                             this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-                            this.$store.commit("USER_NAME", resp.data.data.access_token);
+                            this.$store.commit("USER_NAME", resp.data.data.name);
                             this.$store.commit("MODE", this.mode);
                             this.$router.push("/");
                         }

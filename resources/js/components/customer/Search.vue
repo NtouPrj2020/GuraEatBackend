@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="panel-heading mt-3 text-center d-flex justify-start" id="heading-div">
+        <div class="panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8" id="heading-div">
             <v-img class="mt-1 "
                    max-height="40" max-width="40"
                    src="https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000">
@@ -8,7 +8,7 @@
             <div class="ml-5 ">搜尋</div>
         </div>
         <div class="container mb-12">
-        <v-text-field 
+        <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             background-color="white"
@@ -83,7 +83,7 @@ export default {
                 Headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
             }
             restaurantGetAllTagAPI(config).then((resp)=>{
-                
+
 
 
 
@@ -95,9 +95,9 @@ export default {
                 Params: {"Keyword": this.search},
                 Headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
             }
-            customerGetRestaurantByKeywordAPI(config).then((resp) => 
+            customerGetRestaurantByKeywordAPI(config).then((resp) =>
             {
-               
+
 
 
             }).catch((error)=>{
@@ -111,7 +111,7 @@ export default {
                 Headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
             }
             customerGetRestaurantByTagAPI(config).then((resp)=>{
-                
+
 
 
             }).catch((error)=>{
@@ -125,7 +125,7 @@ export default {
         selectRest(RID) {
             this.$router.push("/customer/restaurant/" + RID);
         },
-        
+
     },
 };
 </script>

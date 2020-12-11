@@ -3,6 +3,7 @@
     <router-view
       v-on:showSnackBar="showSnackBar"
       name="deliveryManView"
+      id="deliView"
     ></router-view>
 
     <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
@@ -55,3 +56,8 @@ export default {
   },
 };
 </script>
+
+<style>
+#deliView{
+}
+</style>

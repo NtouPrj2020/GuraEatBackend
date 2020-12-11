@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="my-14" fluid>
+    <v-container  fluid>
       <v-card>
         <v-img :src="resImg" class="white--text align-end" height="200px">
           <v-card-title>
@@ -173,7 +173,7 @@ import {
 
 export default {
   data: () => ({
-    resimg: "https://i.imgur.com/3f98UhC.jpg",
+    resImg: "https://i.imgur.com/3f98UhC.jpg",
     resName: "no name",
     windowSize: {
       x: 0,
@@ -220,6 +220,7 @@ export default {
         .then((resp) => {
           if (resp.status === 200) {
             this.resName = resp.data.data.name;
+            this.Img = resp.data.data.resimg;
             console.log(resp.data);
             console.log("done");
           }

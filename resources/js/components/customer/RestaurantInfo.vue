@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div >
         <v-app-bar
-            absolute
             color="white"
             hide-on-scroll
+
             scroll-target="#scrolling-technique"
         >
             <v-btn icon @click="RollBack">
@@ -19,13 +19,14 @@
             </v-btn>
         </v-app-bar>
         <v-sheet
+            color="transparent"
             id="scrolling-technique"
             class="overflow-y-auto"
             :height="windowSize.y-100"
 
         >
-            <v-container class="mt-10" fluid id="container">
-                <v-card class="mx-auto mt-5">
+            <v-container class="mt-1" fluid >
+                <v-card class="mx-auto mt-10" >
                     <v-img
                         :src="list.img"
                         class="white--text align-end"
@@ -99,7 +100,7 @@
 
             </v-container>
         </v-sheet>
-        <v-footer padless fixed style="bottom:56px" color="white">
+        <v-footer padless fixed style="bottom:56px; max-width:500px; margin: 0 auto;"  color="white">
             <v-col
                 class="text-center"
                 cols="12"
@@ -347,7 +348,7 @@
                 </v-dialog>
             </v-col>
         </v-footer>
-        <div class="text-center">
+        <div class="text-center" >
             <v-dialog
                 v-model="isCorrectDialog"
                 width="500"

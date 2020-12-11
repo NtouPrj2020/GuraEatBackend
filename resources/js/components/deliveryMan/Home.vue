@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <google-map />
@@ -24,8 +23,6 @@ export default {
     var pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
       cluster: "ap3",
     });
-
-    Pusher.logToConsole = true;
     deliveryManGetInfoAPI({
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
@@ -33,6 +30,7 @@ export default {
     })
       .then((resp) => {
         if (resp.status === 200) {
+          Pusher.logToConsole = true;
           var channel = pusher.subscribe(
             "deliveryman-channel" + resp.data.data.id
           );

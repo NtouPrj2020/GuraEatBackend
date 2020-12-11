@@ -37,7 +37,7 @@ class Restaurant extends Authenticatable
         return $this->hasMany('App\Models\Dishes','restaurant_id');
     }
 
-    public function Rates()
+    public function rates()
     {
         return $this->hasOne('App\Models\RestaurantRate','restaurant_id');
     }
