@@ -71,7 +71,7 @@ export default {
 #cusView {
     background-color: #477EAE;
     max-width: 500px;
-    height: 100%;
+    height: 100vh;
     margin: 0 auto;
 }
 </style>

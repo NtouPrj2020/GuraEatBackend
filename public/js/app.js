@@ -4395,16 +4395,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -4774,12 +4764,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
@@ -5068,7 +5052,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#cusView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100%;\r\n    margin: 0 auto;\n}\r\n", ""]);
+exports.push([module.i, "\n#cusView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100vh;\r\n    margin: 0 auto;\n}\r\n", ""]);
 
 // exports
 
@@ -5182,7 +5166,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#resView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100%;\r\n    margin: 0 auto;\n}\r\n", ""]);
+exports.push([module.i, "\n#resView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100vh;\r\n    margin: 0 auto;\n}\r\n", ""]);
 
 // exports
 
@@ -31333,29 +31317,6 @@ var render = function() {
     "div",
     [
       _c(
-        "div",
-        {
-          staticClass:
-            "panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8",
-          attrs: { id: "heading-div" }
-        },
-        [
-          _c("v-img", {
-            staticClass: "mt-1 ",
-            attrs: {
-              "max-height": "40",
-              "max-width": "40",
-              src:
-                "https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000"
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "ml-5 " }, [_vm._v("Gura eAt 餐廳端")])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
         "v-container",
         { attrs: { fluid: "" } },
         [
@@ -31460,11 +31421,7 @@ var render = function() {
                                 }),
                                 _vm._v(" "),
                                 _c("v-list-item-subtitle", [
-                                  _vm._v(
-                                    "價格：" +
-                                      _vm._s(dishes.price) +
-                                      "\n                            "
-                                  )
+                                  _vm._v("價格：" + _vm._s(dishes.price))
                                 ])
                               ],
                               1
@@ -31613,11 +31570,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31629,11 +31582,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendEditDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31721,11 +31670,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31737,11 +31682,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendAddDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31787,11 +31728,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31803,11 +31740,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendDeleteDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31865,28 +31798,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      {
-        staticClass:
-          "panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8",
-        attrs: { id: "heading-div" }
-      },
-      [
-        _c("v-img", {
-          staticClass: "mt-1 ",
-          attrs: {
-            "max-height": "40",
-            "max-width": "40",
-            src:
-              "https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "ml-5 " }, [_vm._v("餐廳資訊")])
-      ],
-      1
-    ),
+    _c("div", { staticClass: "panel-heading text-center" }, [
+      _vm._v("個人資訊")
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -32101,6 +32015,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "container" },
     [
       _c(
         "div",
