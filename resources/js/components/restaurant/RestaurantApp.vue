@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div>
         <div id="resView">
             <router-view
                 v-on:showSnackBar="showSnackBar"
@@ -61,7 +61,7 @@ export default {
 #resView {
     background-color: #477EAE;
     max-width: 500px;
-    height: 100vh;
+    height: 100%;
     margin: 0 auto;
 }
 </style>

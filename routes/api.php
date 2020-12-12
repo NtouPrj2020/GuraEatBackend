@@ -57,6 +57,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
             Route::post('/changeRoleDeliveryMan', 'App\Http\Controllers\AuthController@changeRoleDeliveryMan');
+            Route::get('/order/getAllOrders', 'App\Http\Controllers\DeliveryController@getAllOrders');
+            Route::get('/order/getOrderByID', 'App\Http\Controllers\DeliveryController@getOrderByID');
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
