@@ -108,7 +108,7 @@ class CheckoutController extends Controller
             return response()->json($data, 500);
         }
     }
-
+    
     public function checkoutAuto(Request $request)
     {
         $req = json_decode($request->getContent());
@@ -158,7 +158,6 @@ class CheckoutController extends Controller
             $order = new Order();
             $order->delivery_man_id = $chooseMan->id;
             $order->customer_id = $customer->id;
-            $order->restaurant_id = $req->restaurant_id;
             $order->delivery_fee = $req->delivery_fee;
             $order->food_price = $req->food_price;
             $order->type = $req->type;

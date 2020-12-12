@@ -3,7 +3,7 @@
         <v-app-bar
             color="white"
             hide-on-scroll
-            fixed
+
             scroll-target="#scrolling-technique"
         >
             <v-btn icon @click="RollBack">
@@ -25,7 +25,7 @@
             :height="windowSize.y-100"
 
         >
-            <v-container class="mt-8" fluid style="background-color: white; height: 100vh">
+            <v-container class="mt-1" fluid >
                 <v-card class="mx-auto mt-10" >
                     <v-img
                         :src="list.img"
@@ -110,9 +110,8 @@
                        outlined bottom large block>
                     查看購物清單
                 </v-btn>
-                <v-dialog v-model="dialog" :fullscreen="true" transition="dialog-bottom-transition"
+                <v-dialog v-model="dialog" :fullscreen="fullScreen" transition="dialog-bottom-transition"
                           :overlay=false
-                          style="max-width: 500px"
                           scrollable>
                     <v-card>
                         <v-toolbar style="flex: 0 0 auto;" dark class="primary elevation-0">

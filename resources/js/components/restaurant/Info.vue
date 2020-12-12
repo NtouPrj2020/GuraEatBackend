@@ -1,12 +1,6 @@
 <template>
   <div>
-      <div class="panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8" id="heading-div">
-          <v-img class="mt-1 "
-                 max-height="40" max-width="40"
-                 src="https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000">
-          </v-img>
-          <div class="ml-5 ">餐廳資訊</div>
-      </div>
+    <div class="panel-heading text-center">個人資訊</div>
     <div class="container mb-12">
       <v-card>
         <v-card-text>餐廳名稱: {{ info.name }}</v-card-text>
