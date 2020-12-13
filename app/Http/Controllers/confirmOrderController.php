@@ -60,7 +60,7 @@ class confirmOrderController extends Controller
             $RestaurantRate = RestaurantRate::findorfail($RestaurantRate->id);        
             $Rate = $DeliveryManRate;
             $star = $request->delivery_man_star;
-            $AfterDeliveryManRate = $this->addStar($Rate,$star);$change_delivery = $AfterDeliveryManRate->getChanges();dd($change_delivery);
+            $AfterDeliveryManRate = $this->addStar($Rate,$star);
             $Rate = $RestaurantRate;
             $star = $request->restaurant_star;
             $AfterRestaurantRate = $this->addStar($Rate,$star);
