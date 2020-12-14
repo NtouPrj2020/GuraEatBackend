@@ -62,13 +62,25 @@ export const restaurantLoginAPI = config =>
     guestRequest.post("/api/v1/guest/restaurant/login", config);
 //id 2
 export const customerSwitchUserModeAPI = (config, data) =>
-    guestRequest.post("unknown", config, data);
+    guestRequest.post(
+        "/api/v1/users/customer/changeRoleCustomer",
+        config,
+        data
+    );
 //id 2
 export const deliveryManSwitchUserModeAPI = (config, data) =>
-    guestRequest.post("unknown", config, data);
+    guestRequest.post(
+        "/api/v1/users/delivery_man/changeRoleDeliveryMan",
+        config,
+        data
+    );
 //id 2
 export const restaurantSwitchUserModeAPI = (config, data) =>
-    guestRequest.post("unknown", config, data);
+    guestRequest.post(
+        "/api/v1/users/restaurant/changeRoleRestaurant",
+        config,
+        data
+    );
 //id 3
 export const forgotPasswordAPI = (config, data) =>
     guestRequest.post("unknown", config, data);
@@ -175,4 +187,3 @@ export const restaurantGetDishByDishIDAPI = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 export const restaurantGetAllTagAPI = config =>
     userRequest.get("/api/v1/users/restaurant/tags", config);
-

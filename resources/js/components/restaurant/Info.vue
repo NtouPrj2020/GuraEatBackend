@@ -78,6 +78,7 @@ import {
 export default {
   props: {},
   mounted() {
+    this.$emit("changefocus", "info");
     let config = {
       params: { ID: this.$route.params.id },
       headers: {
@@ -110,14 +111,14 @@ export default {
     editDialog: false,
     editComfirmLoading: false,
     wanted_mode: 0,
-    role_list: ["外送員", "餐廳管理員"],
+    role_list: ["顧客", "外送員"],
     wanted_role: "",
     resp: "",
   }),
   methods: {
     switch_user() {
       /*console.log(this.wanted_role);*/
-      if (this.wanted_role === "外送員") {
+      if (this.wanted_role === "顧客") {
         this.wanted_mode = 1;
       } else {
         this.wanted_mode = 2;
@@ -129,19 +130,24 @@ export default {
       };
       /* 需要判斷select回傳身分並設定至wanted_mode */
 
-      restaurantSwitchUserModeAPI({ mode: this.wanted_mode }, config).then(
-        (resp) => {
-          if (resp.status === 200) {
-            this.$store.commit("MODE", this.wanted_mode);
-            this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
-            this.$router.push("/guest");
-          } else if (resp.status === 403) {
-            this.$emit("showSnackBar", "無其他身分");
-          } else if (resp.status === 404) {
-            this.$emit("showSnackBar", "未知的錯誤");
-          }
+      restaurantSwitchUserModeAPI(
+        {
+          role: this.wanted_mode,
+          device_name: this.$store.getters.getDeviceName,
+        },
+        config
+      ).then((resp) => {
+        if (resp.status === 200) {
+          this.$store.commit("MODE", this.wanted_mode);
+          this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
+          this.$store.commit("USER_NAME", resp.data.data.name);
+          this.$router.push("/guest");
+        } else if (resp.status === 403) {
+          this.$emit("showSnackBar", "無其他身分");
+        } else if (resp.status === 404) {
+          this.$emit("showSnackBar", "未知的錯誤");
         }
-      );
+      });
     },
     history_order() {
       this.$router.push("");
