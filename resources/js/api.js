@@ -113,7 +113,7 @@ export const customerSendOrderAPI = (config, data) =>
     userRequest.post("/api/v1/users/customer/order/send", config, data);
 // id 11
 export const customerGetOrderstatusAPI = config =>
-    userRequest.get("unkown", config);
+    userRequest.get("/api/v1/users/customer/order/now", config);
 // id 12
 export const customerGiveRateAPI = (config, data) =>
     userRequest.post("unkown", config, data);
@@ -181,6 +181,8 @@ export const customerGetRestaurantByIDAPI = config =>
     userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
 export const customerlocationToAddressAPI = config =>
     userRequest.get("/api/v1/users/customer/locationToAddress", config);
+export const customerGetAllOrdersAPI = config =>
+    userRequest.get("/api/v1/users/customer/order/getAllOrders", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
 export const restaurantGetDishByDishIDAPI = config =>

@@ -1,11 +1,20 @@
 <template>
   <div>
-    <google-map
-      :mapStyle="mapStyle"
-      :mapOptions="mapOptions"
+    <gmap-map
       :center="center"
-      :markers="markers"
-    />
+      :zoom="14"
+      :options="mapOptions"
+      :style="mapStyle"
+    >
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="center = m.position"
+      />
+    </gmap-map>
     <v-btn
       fab
       dark
@@ -26,14 +35,10 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 import axios from "axios";
-import GoogleMap from "./GoogleMap";
 import Pusher from "pusher-js";
 import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
 
 export default {
-  components: {
-    GoogleMap: GoogleMap,
-  },
   data: () => ({
     mapStyle:
       "width: " +

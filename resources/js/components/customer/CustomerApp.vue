@@ -67,7 +67,7 @@ export default {
       this.$router.push("/customer/search");
     },
     toOrder() {
-      this.$router.push("/customer/orderstatus");
+      this.$router.push("/customer/order");
     },
     toInfo() {
       this.$router.push("/customer/info");
