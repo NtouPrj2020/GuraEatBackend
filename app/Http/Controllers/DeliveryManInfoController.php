@@ -16,10 +16,14 @@ class DeliveryManInfoController extends Controller
         $star3 = $delivery_man['rate'][0]->star3;
         $star2 = $delivery_man['rate'][0]->star2;
         $star1 = $delivery_man['rate'][0]->star1;
-        $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/($star5 + $star4 + $star3 + $star2 + $star1);
-        $avg = round($avg,2);
-        $delivery_man['rate'][0]['avg_rate'] = $avg;
-
+        $sum_people = ($star5 + $star4 + $star3 + $star2 + $star1);
+        if($sum_people > 0)
+        {
+            $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/($star5 + $star4 + $star3 + $star2 + $star1);
+            $avg = round($avg,2);$delivery_man['avg_rate'] = $avg;
+        }
+        else
+            $delivery_man['avg_rate'] = 0;
         if ($delivery_man != null)
         {
             $data = [
