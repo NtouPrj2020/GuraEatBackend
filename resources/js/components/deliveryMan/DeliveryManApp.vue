@@ -21,7 +21,11 @@
 
         <v-icon>mdi-home</v-icon>
       </v-btn>
+      <v-btn value="order" @click="toOrder()">
+        <span>訂單</span>
 
+        <v-icon>mdi-format-list-bulleted-square</v-icon>
+      </v-btn>
       <v-btn value="info" @click="toInfo()">
         <span>資訊</span>
 
@@ -54,6 +58,9 @@ export default {
     toHome() {
       this.$router.push("/delivery_man/home");
     },
+    toOrder() {
+      this.$router.push("/delivery_man/order");
+    },
     toInfo() {
       this.$router.push("/delivery_man/info");
     },
@@ -62,6 +69,4 @@ export default {
 </script>
 
 <style>
-#deliView {
-}
 </style>

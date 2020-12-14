@@ -28,7 +28,11 @@
 
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
+      <v-btn value="order" @click="toOrder()">
+        <span>訂單</span>
 
+        <v-icon>mdi-format-list-bulleted-square</v-icon>
+      </v-btn>
       <v-btn value="info" @click="toInfo()">
         <span>資訊</span>
 
@@ -62,7 +66,9 @@ export default {
     toSearch() {
       this.$router.push("/customer/search");
     },
-
+    toOrder() {
+      this.$router.push("/customer/orderstatus");
+    },
     toInfo() {
       this.$router.push("/customer/info");
     },

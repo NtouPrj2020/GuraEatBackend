@@ -120,6 +120,20 @@ export default class GuraEatRouter {
                         props: {
                             id: 1
                         }
+                    },
+                    {
+                        path: "order",
+                        components: {
+                            customerView: require("./components/customer/Order.vue")
+                                .default
+                        }
+                    },
+                    {
+                        path: "currentorder",
+                        components: {
+                            customerView: require("./components/customer/CurrentOrder.vue")
+                                .default
+                        }
                     }
                 ]
             },
@@ -155,6 +169,20 @@ export default class GuraEatRouter {
                         path: "deliver",
                         components: {
                             deliveryManView: require("./components/deliveryMan/Deliver.vue")
+                                .default
+                        }
+                    },
+                    {
+                        path: "order",
+                        components: {
+                            deliveryManView: require("./components/deliveryMan/Order.vue")
+                                .default
+                        }
+                    },
+                    {
+                        path: "currentorder",
+                        components: {
+                            deliveryManView: require("./components/deliveryMan/CurrentOrder.vue")
                                 .default
                         }
                     }
