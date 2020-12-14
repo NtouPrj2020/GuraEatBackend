@@ -98,7 +98,7 @@ export const customerGetDeliveryTimeIDAPI = config =>
     );
 // id 10
 export const customerSendOrderAPI = (config, data) =>
-    userRequest.post("unkown", config, data);
+    userRequest.post("/api/v1/users/customer/order/send", config, data);
 // id 11
 export const customerGetOrderstatusAPI = config =>
     userRequest.get("unkown", config);
@@ -175,3 +175,4 @@ export const restaurantGetDishByDishIDAPI = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 export const restaurantGetAllTagAPI = config =>
     userRequest.get("/api/v1/users/restaurant/tags", config);
+
