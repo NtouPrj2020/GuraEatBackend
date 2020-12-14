@@ -2071,6 +2071,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2750,6 +2754,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2768,10 +2775,14 @@ __webpack_require__.r(__webpack_exports__);
         amount: [],
         totalAmount: 0
       },
-      totalAmount: 0,
-      deliveryFee: 25,
+      od: [],
+      deliveryFee: 20,
       MakingTime: 0,
       durationTime: {
+        text: 0,
+        value: 0
+      },
+      orderDistance: {
         text: 0,
         value: 0
       },
@@ -2791,7 +2802,7 @@ __webpack_require__.r(__webpack_exports__);
         note: ''
       },
       tempAddress: '',
-      isEditing: null,
+      isEditing: false,
       Type: 0,
       isSelectingTime: true,
       isCorrectDialog: false,
@@ -2923,18 +2934,25 @@ __webpack_require__.r(__webpack_exports__);
       this.$set(this.order.amount, 0, this.amountTemp);
     },
     getTotalAmount: function getTotalAmount() {
-      this.totalAmount = this.order.totalAmount = 0;
+      var tempOrder = [];
+      this.order.totalAmount = 0;
 
       for (var i = 0; i < this.order.id.length; i++) {
         if (this.order.amount[i] > 0) {
           this.order.totalAmount += this.order.amount[i] * this.menu[i].price;
+          tempOrder.push({
+            id: this.order.id[i],
+            amount: this.order.amount[i]
+          });
           if (this.menu[i].making_time > this.MakingTime) this.MakingTime = this.menu[i].making_time;
         }
       }
 
       this.TotalDeliveryTime();
-      this.totalAmount = this.order.totalAmount;
-      this.order.totalAmount += this.deliveryFee;
+      this.od = tempOrder;
+      console.log("this.od");
+      console.log(this.od); //this.totalAmount = this.order.totalAmount
+      //this.order.totalAmount += this.deliveryFee;
     },
     storeImg: function storeImg(img) {
       this.imgTemp = img;
@@ -3021,25 +3039,88 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerGetDeliveryTimeIDAPI"])(config).then(function (res) {
+        console.log("addressToaddress");
         console.log(res.data);
-        console.log(res.data["rows"]);
         _this4.durationTime.text = res.data.data.rows[0].elements[0].duration.text;
         _this4.durationTime.text = _this4.durationTime.text.substring(0, _this4.durationTime.text.length - 5);
         _this4.durationTime.value = res.data.data.rows[0].elements[0].duration.value;
+        _this4.orderDistance.text = res.data.data.rows[0].elements[0].distance.text;
+        _this4.orderDistance.text = _this4.orderDistance.text.substring(0, _this4.orderDistance.text.length - 3);
+        _this4.orderDistance.value = res.data.data.rows[0].elements[0].distance.value;
         console.log("durationTime");
         console.log(_this4.durationTime);
+        console.log("orderDistance");
+        console.log(_this4.orderDistance);
+        _this4.orderDistance.text = Math.round(_this4.orderDistance.text);
+        console.log(_this4.orderDistance);
 
         _this4.TotalDeliveryTime();
+
+        _this4.DeliveryFee();
       })["catch"](function (error) {
         console.error(error);
       });
     },
     TotalDeliveryTime: function TotalDeliveryTime() {
       var temp;
-      if (this.durationTime.value + this.MakingTime > this.durationTime.text * 60) temp = parseInt(this.durationTime.text, 10) + 1;
+      if (this.durationTime.value + this.MakingTime > this.durationTime.text * 60) temp = parseInt(this.durationTime.text, 10) + 1;else temp = parseInt(this.durationTime.text, 10);
       this.maxMakingTime = temp;
       console.log("maxMakingTime,durationTime.value,MakingTime");
       console.log(this.maxMakingTime + ',' + this.durationTime.value + ',' + this.MakingTime);
+    },
+    DeliveryFee: function DeliveryFee() {
+      this.deliveryFee = 20;
+      this.deliveryFee += this.orderDistance.text * 5;
+    },
+    sendOut: function sendOut() {
+      var context = this;
+      var dataa = {
+        restaurant_id: this.list.id,
+        // This is the body part
+        type: this.Type,
+        note: this.CustomerInfo.note,
+        customer_address: this.CustomerInfo.address,
+        delivery_fee: this.deliveryFee,
+        food_price: this.order.totalAmount,
+        menu: this.od
+      };
+      var datab = {
+        restaurant_id: this.list.id,
+        // This is the body part
+        type: this.Type,
+        note: this.CustomerInfo.note,
+        send_time: this.date + " " + this.time,
+        customer_address: this.CustomerInfo.address,
+        delivery_fee: this.deliveryFee,
+        food_price: this.order.totalAmount,
+        menu: this.od
+      };
+      var config = {
+        headers: {
+          Authorization: "Bearer " + this.$store.getters.getAccessToken
+        }
+      };
+
+      if (this.Type === 0) {
+        //立即送達
+        Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerSendOrderAPI"])(dataa, config).then(function (response) {
+          console.log(response);
+        })["catch"](function (error) {
+          context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+          console.error(error);
+        });
+      } else if (this.Type === 1) {
+        //指定時間送達
+        Object(_api__WEBPACK_IMPORTED_MODULE_0__["customerSendOrderAPI"])(datab, config).then(function (response) {
+          console.log(response);
+        })["catch"](function (error) {
+          context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+          console.error(error);
+        });
+      }
+    },
+    sendRule: function sendRule() {
+      if (this.isEditing === false) this.sendOut();else this.$emit("showSnackBar", "請儲存送餐資訊");
     }
   }
 });
@@ -3342,8 +3423,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _GoogleMap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GoogleMap */ "./resources/js/components/deliveryMan/GoogleMap.vue");
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
 //
 //
@@ -3368,7 +3449,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {},
   mounted: function mounted() {
     var that = this;
-    var pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_2___default.a("b2cb2f5ab88eebd4b64d", {
+    var pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_4___default.a("", {
       cluster: "ap3"
     });
     Object(_api__WEBPACK_IMPORTED_MODULE_3__["deliveryManGetInfoAPI"])({
@@ -3377,7 +3458,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     }).then(function (resp) {
       if (resp.status === 200) {
-        pusher_js__WEBPACK_IMPORTED_MODULE_2___default.a.logToConsole = true;
+        pusher_js__WEBPACK_IMPORTED_MODULE_4___default.a.logToConsole = true;
         var channel = pusher.subscribe("deliveryman-channel" + resp.data.data.id);
         channel.bind(".deliveryman.getorder", function (data) {
           console.log(JSON.stringify(data));
@@ -4314,16 +4395,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -4693,12 +4764,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
@@ -4968,7 +5033,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.panel-heading {\n  font-size: 30px;\n  font-weight: bold;\n}\n#app {\n  font-family: \"Noto Sans TC\", serif;\n    background: #3e6d97;\n    color: #fff;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.panel-heading {\r\n  font-size: 30px;\r\n  font-weight: bold;\n}\n#app {\r\n  font-family: \"Noto Sans TC\", serif;\r\n    background: #3e6d97;\r\n    color: #fff;\n}\r\n\r\n\r\n", ""]);
 
 // exports
 
@@ -4987,7 +5052,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#cusView {\n    background-color: #477EAE;\n    max-width: 500px;\n    height: 100%;\n    margin: 0 auto;\n}\n", ""]);
+exports.push([module.i, "\n#cusView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100vh;\r\n    margin: 0 auto;\n}\r\n", ""]);
 
 // exports
 
@@ -5025,7 +5090,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#deliView{\n}\n", ""]);
+exports.push([module.i, "\n#deliView{\n}\r\n", ""]);
 
 // exports
 
@@ -5063,7 +5128,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#title {\n    font-size: 30px;\n}\n#login-card {\n    top: 30%;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n", ""]);
+exports.push([module.i, "\n#title {\r\n    font-size: 30px;\n}\n#login-card {\r\n    top: 30%;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\n}\r\n", ""]);
 
 // exports
 
@@ -5082,7 +5147,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#title {\n    font-size: 30px;\n}\n#reg-card {\n    top: 15%;\n    display: block;\n    margin-left: auto;\n    margin-right: auto;\n}\n", ""]);
+exports.push([module.i, "\n#title {\r\n    font-size: 30px;\n}\n#reg-card {\r\n    top: 15%;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\n}\r\n", ""]);
 
 // exports
 
@@ -5101,7 +5166,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n#resView {\n    background-color: #477EAE;\n    max-width: 500px;\n    height: 100%;\n    margin: 0 auto;\n}\n", ""]);
+exports.push([module.i, "\n#resView {\r\n    background-color: #477EAE;\r\n    max-width: 500px;\r\n    height: 100vh;\r\n    margin: 0 auto;\n}\r\n", ""]);
 
 // exports
 
@@ -28786,7 +28851,45 @@ var render = function() {
                       attrs: { height: "120px", src: item.img }
                     }),
                     _vm._v(" "),
-                    _c("v-card-title", [_vm._v(_vm._s(item.name))])
+                    _c(
+                      "v-card-title",
+                      [
+                        _vm._v(_vm._s(item.name) + "\n                    "),
+                        _c("v-spacer"),
+                        _vm._v(
+                          "\n                        " + _vm._s(item.avg_rate)
+                        ),
+                        _c("v-icon", { attrs: { large: "" } }, [
+                          _vm._v("mdi-star")
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("v-divider"),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "ms-2 mt-2" },
+                      _vm._l(item.tags, function(tag, i) {
+                        return _c(
+                          "v-chip",
+                          {
+                            key: i,
+                            staticClass: "me-2 mb-2",
+                            attrs: { label: "" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            #" +
+                                _vm._s(tag.name) +
+                                "\n                        "
+                            )
+                          ]
+                        )
+                      }),
+                      1
+                    )
                   ],
                   1
                 )
@@ -29148,20 +29251,22 @@ var render = function() {
                       attrs: { src: _vm.list.img, height: "200px" }
                     },
                     [
-                      _c(
-                        "v-card-title",
-                        [
-                          _c(
-                            "v-chip",
-                            {
-                              staticClass: "text-h4 pa-5",
-                              attrs: { label: "" }
-                            },
-                            [_vm._v(_vm._s(_vm.list.name))]
-                          )
-                        ],
-                        1
-                      )
+                      _c("v-card-title", [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "text-h4 rounded pa-2",
+                            staticStyle: { "background-color": "#808080" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.list.name) +
+                                "\n                        "
+                            )
+                          ]
+                        )
+                      ])
                     ],
                     1
                   )
@@ -29546,7 +29651,7 @@ var render = function() {
                                 _c("v-col", { attrs: { cols: "3" } }, [
                                   _vm._v(
                                     "\n                                    $" +
-                                      _vm._s(_vm.totalAmount) +
+                                      _vm._s(_vm.order.totalAmount) +
                                       "\n                                "
                                   )
                                 ])
@@ -29602,7 +29707,9 @@ var render = function() {
                                 _c("v-col", { attrs: { cols: "3" } }, [
                                   _vm._v(
                                     "\n                                    $" +
-                                      _vm._s(_vm.order.totalAmount) +
+                                      _vm._s(
+                                        _vm.order.totalAmount + _vm.deliveryFee
+                                      ) +
                                       "\n                                "
                                   )
                                 ])
@@ -30046,7 +30153,8 @@ var render = function() {
                                           bottom: "",
                                           large: "",
                                           block: ""
-                                        }
+                                        },
+                                        on: { click: _vm.sendRule }
                                       },
                                       [
                                         _vm._v(
@@ -31209,29 +31317,6 @@ var render = function() {
     "div",
     [
       _c(
-        "div",
-        {
-          staticClass:
-            "panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8",
-          attrs: { id: "heading-div" }
-        },
-        [
-          _c("v-img", {
-            staticClass: "mt-1 ",
-            attrs: {
-              "max-height": "40",
-              "max-width": "40",
-              src:
-                "https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000"
-            }
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "ml-5 " }, [_vm._v("Gura eAt 餐廳端")])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
         "v-container",
         { attrs: { fluid: "" } },
         [
@@ -31336,11 +31421,7 @@ var render = function() {
                                 }),
                                 _vm._v(" "),
                                 _c("v-list-item-subtitle", [
-                                  _vm._v(
-                                    "價格：" +
-                                      _vm._s(dishes.price) +
-                                      "\n                            "
-                                  )
+                                  _vm._v("價格：" + _vm._s(dishes.price))
                                 ])
                               ],
                               1
@@ -31489,11 +31570,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31505,11 +31582,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendEditDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31597,11 +31670,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31613,11 +31682,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendAddDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31663,11 +31728,7 @@ var render = function() {
                             }
                           }
                         },
-                        [
-                          _vm._v(
-                            "\n                        取消\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            取消\n          ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -31679,11 +31740,7 @@ var render = function() {
                           },
                           on: { click: _vm.sendDeleteDish }
                         },
-                        [
-                          _vm._v(
-                            "\n                        儲存\n                    "
-                          )
-                        ]
+                        [_vm._v("\n            儲存\n          ")]
                       )
                     ],
                     1
@@ -31741,28 +31798,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      {
-        staticClass:
-          "panel-heading pt-3 text-center d-flex justify-start pl-8 pr-8",
-        attrs: { id: "heading-div" }
-      },
-      [
-        _c("v-img", {
-          staticClass: "mt-1 ",
-          attrs: {
-            "max-height": "40",
-            "max-width": "40",
-            src:
-              "https://truth.bahamut.com.tw/s01/202010/55d91434a85c09cb5bd76131e2aa6589.PNG?w=1000"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "ml-5 " }, [_vm._v("餐廳資訊")])
-      ],
-      1
-    ),
+    _c("div", { staticClass: "panel-heading text-center" }, [
+      _vm._v("個人資訊")
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -31977,6 +32015,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "container" },
     [
       _c(
         "div",
@@ -95601,7 +95640,7 @@ var customerGetDeliveryTimeIDAPI = function customerGetDeliveryTimeIDAPI(config)
 }; // id 10
 
 var customerSendOrderAPI = function customerSendOrderAPI(config, data) {
-  return userRequest.post("unkown", config, data);
+  return userRequest.post("/api/v1/users/customer/order/send", config, data);
 }; // id 11
 
 var customerGetOrderstatusAPI = function customerGetOrderstatusAPI(config) {
@@ -95729,8 +95768,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuetify/dist/vuetify.min.css */ "./node_modules/vuetify/dist/vuetify.min.css");
 /* harmony import */ var vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(vuetify_dist_vuetify_min_css__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
-/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue2-google-maps */ "./node_modules/vue2-google-maps/dist/main.js");
-/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue2_google_maps__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue2-google-maps */ "./node_modules/vue2-google-maps/dist/main.js");
+/* harmony import */ var vue2_google_maps__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vue2_google_maps__WEBPACK_IMPORTED_MODULE_9__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -95745,7 +95784,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_8__, {
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_9__, {
   load: {
     key: "AIzaSyAPlZ_eM3IiwVve9V0PksphPfZ7Gk2IB-Q"
   }

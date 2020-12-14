@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <v-app-bar
             color="white"
             hide-on-scroll
@@ -26,14 +26,16 @@
 
         >
             <v-container class="mt-8" fluid style="background-color: white; height: 100vh">
-                <v-card class="mx-auto mt-10" >
+                <v-card class="mx-auto mt-10">
                     <v-img
                         :src="list.img"
                         class="white--text align-end"
                         height="200px"
                     >
                         <v-card-title>
-                            <v-chip class="text-h4 pa-5" label>{{ list.name }}</v-chip>
+                            <div class="text-h4 rounded pa-2" style="background-color: #808080">
+                                {{ list.name }}
+                            </div>
                         </v-card-title>
                     </v-img>
 
@@ -100,7 +102,7 @@
 
             </v-container>
         </v-sheet>
-        <v-footer padless fixed style="bottom:56px; max-width:500px; margin: 0 auto;"  color="white">
+        <v-footer padless fixed style="bottom:56px; max-width:500px; margin: 0 auto;" color="white">
             <v-col
                 class="text-center"
                 cols="12"
@@ -161,7 +163,7 @@
                                     </v-col>
                                     <v-spacer></v-spacer>
                                     <v-col cols="3">
-                                        ${{ totalAmount }}
+                                        ${{ order.totalAmount }}
                                     </v-col>
                                 </v-row>
                                 <v-row class="rounded mx-1" style="background-color:#77DDFF">
@@ -179,7 +181,7 @@
                                     </v-col>
                                     <v-spacer></v-spacer>
                                     <v-col cols="3">
-                                        ${{ order.totalAmount }}
+                                        ${{ order.totalAmount + deliveryFee }}
                                     </v-col>
                                 </v-row>
                                 <v-container></v-container>
@@ -337,7 +339,8 @@
                                         class="text-center"
                                         cols="12"
                                     >
-                                        <v-btn color="indigo" class="text-sm-button" outlined bottom large block>
+                                        <v-btn color="indigo" class="text-sm-button" @click="sendRule" outlined bottom
+                                               large block>
                                             送出
                                         </v-btn>
                                     </v-col>
@@ -349,7 +352,7 @@
                 </v-dialog>
             </v-col>
         </v-footer>
-        <div class="text-center" >
+        <div class="text-center">
             <v-dialog
                 v-model="isCorrectDialog"
                 width="500"
@@ -394,7 +397,8 @@ import {
     customerGetAllDishByRestaurantIDAPI,
     customerGetRestaurantByIDAPI,
     customerGetDeliveryTimeIDAPI,
-    customerlocationToAddressAPI
+    customerlocationToAddressAPI,
+    customerSendOrderAPI,
 } from "../../api";
 
 export default {
@@ -413,10 +417,14 @@ export default {
                 amount: [],
                 totalAmount: 0,
             },
-            totalAmount: 0,
-            deliveryFee: 25,
+            od: [],
+            deliveryFee: 20,
             MakingTime: 0,
             durationTime: {
+                text: 0,
+                value: 0,
+            },
+            orderDistance: {
                 text: 0,
                 value: 0,
             },
@@ -436,7 +444,7 @@ export default {
                 note: '',
             },
             tempAddress: '',
-            isEditing: null,
+            isEditing: false,
             Type: 0,
             isSelectingTime: true,
             isCorrectDialog: false,
@@ -448,7 +456,8 @@ export default {
             CurPos: {
                 latitude: '',
                 longitude: '',
-            }
+            },
+
         }
     ),
     props: ['id'],
@@ -563,16 +572,21 @@ export default {
             this.$set(this.order.amount, 0, this.amountTemp)
         },
         getTotalAmount() {
-            this.totalAmount = this.order.totalAmount = 0
+            let tempOrder = []
+            this.order.totalAmount = 0
             for (let i = 0; i < this.order.id.length; i++) {
                 if (this.order.amount[i] > 0) {
                     this.order.totalAmount += this.order.amount[i] * this.menu[i].price;
+                    tempOrder.push({id: this.order.id[i], amount: this.order.amount[i]})
                     if (this.menu[i].making_time > this.MakingTime) this.MakingTime = this.menu[i].making_time
                 }
             }
             this.TotalDeliveryTime()
-            this.totalAmount = this.order.totalAmount
-            this.order.totalAmount += this.deliveryFee;
+            this.od = tempOrder
+            console.log("this.od")
+            console.log(this.od)
+            //this.totalAmount = this.order.totalAmount
+            //this.order.totalAmount += this.deliveryFee;
         },
         storeImg(img) {
             this.imgTemp = img
@@ -650,14 +664,22 @@ export default {
             customerGetDeliveryTimeIDAPI(
                 config
             ).then((res) => {
+                console.log("addressToaddress")
                 console.log(res.data)
-                console.log(res.data["rows"])
                 this.durationTime.text = res.data.data.rows[0].elements[0].duration.text
                 this.durationTime.text = this.durationTime.text.substring(0, this.durationTime.text.length - 5)
                 this.durationTime.value = res.data.data.rows[0].elements[0].duration.value
+                this.orderDistance.text = res.data.data.rows[0].elements[0].distance.text
+                this.orderDistance.text = this.orderDistance.text.substring(0, this.orderDistance.text.length - 3)
+                this.orderDistance.value = res.data.data.rows[0].elements[0].distance.value
                 console.log("durationTime")
                 console.log(this.durationTime)
+                console.log("orderDistance")
+                console.log(this.orderDistance)
+                this.orderDistance.text = Math.round(this.orderDistance.text)
+                console.log(this.orderDistance)
                 this.TotalDeliveryTime()
+                this.DeliveryFee()
             })
                 .catch((error) => {
                     console.error(error)
@@ -667,10 +689,62 @@ export default {
         TotalDeliveryTime() {
             let temp
             if (this.durationTime.value + this.MakingTime > this.durationTime.text * 60) temp = parseInt(this.durationTime.text, 10) + 1
+            else temp = parseInt(this.durationTime.text, 10)
             this.maxMakingTime = temp
             console.log("maxMakingTime,durationTime.value,MakingTime")
             console.log(this.maxMakingTime + ',' + this.durationTime.value + ',' + this.MakingTime)
-        }
+        },
+        DeliveryFee() {
+            this.deliveryFee = 20
+            this.deliveryFee += this.orderDistance.text * 5
+        },
+        sendOut() {
+            let context = this
+            let dataa = {
+                restaurant_id: this.list.id, // This is the body part
+                type: this.Type,
+                note: this.CustomerInfo.note,
+                customer_address: this.CustomerInfo.address,
+                delivery_fee: this.deliveryFee,
+                food_price: this.order.totalAmount,
+                menu: this.od,
+            }
+            let datab = {
+                restaurant_id: this.list.id, // This is the body part
+                type: this.Type,
+                note: this.CustomerInfo.note,
+                send_time: this.date + " " + this.time,
+                customer_address: this.CustomerInfo.address,
+                delivery_fee: this.deliveryFee,
+                food_price: this.order.totalAmount,
+                menu: this.od,
+            };
+            let config = {
+                headers: {Authorization: "Bearer " + this.$store.getters.getAccessToken}
+            }
+            if (this.Type === 0) {  //立即送達
+                customerSendOrderAPI(dataa, config).then(function (response) {
+                    console.log(response);
+                })
+                    .catch(function (error) {
+                        context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        console.error(error);
+                    });
+            } else if (this.Type === 1) {  //指定時間送達
+                customerSendOrderAPI(datab, config).then(function (response) {
+                    console.log(response);
+                })
+                    .catch(function (error) {
+                        context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        console.error(error);
+                    });
+            }
+
+        },
+        sendRule() {
+            if (this.isEditing === false) this.sendOut()
+            else this.$emit("showSnackBar", "請儲存送餐資訊")
+        },
     }
 }
 ;
