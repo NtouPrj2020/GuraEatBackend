@@ -1981,6 +1981,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2018,6 +2019,7 @@ __webpack_require__.r(__webpack_exports__);
 
       map.fitBounds(bounds);
     });
+    console.log(this.markers);
   },
   methods: {
     onResize: function onResize() {
@@ -2032,8 +2034,11 @@ __webpack_require__.r(__webpack_exports__);
           lng: position.coords.longitude
         };
 
+        var mapMarker = __webpack_require__(/*! ./car.png */ "./resources/js/components/customer/car.png");
+
         _this2.markers.push({
-          position: marker
+          position: marker,
+          icon: mapMarker
         });
       });
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -2042,8 +2047,11 @@ __webpack_require__.r(__webpack_exports__);
           lng: position.coords.longitude + 0.01
         };
 
+        var mapMarker = __webpack_require__(/*! ./car.png */ "./resources/js/components/customer/car.png");
+
         _this2.markers.push({
-          position: marker
+          position: marker,
+          icon: mapMarker
         });
       });
     },
@@ -29093,7 +29101,12 @@ var render = function() {
         _vm._l(_vm.markers, function(m, index) {
           return _c("GmapMarker", {
             key: index,
-            attrs: { position: m.position, clickable: true, draggable: true },
+            attrs: {
+              position: m.position,
+              clickable: true,
+              draggable: true,
+              icon: m.icon
+            },
             on: {
               click: function($event) {
                 _vm.center = m.position
@@ -97431,6 +97444,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Search_vue_vue_type_template_id_fce665c4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/customer/car.png":
+/*!**************************************************!*\
+  !*** ./resources/js/components/customer/car.png ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/images/car.png?3864b4039915b1af805c8f23202bfbf1";
 
 /***/ }),
 
