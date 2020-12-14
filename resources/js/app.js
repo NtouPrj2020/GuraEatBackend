@@ -13,6 +13,7 @@ import * as VueGoogleMaps from "vue2-google-maps";
 Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(VueRouter);
+let e = "{{ env('MIX_GOOGLE_MAP_API') }}";
 Vue.use(VueGoogleMaps, {
     load: {
         key: process.env.MIX_GOOGLE_MAP_API

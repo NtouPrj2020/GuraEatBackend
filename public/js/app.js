@@ -1993,6 +1993,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {},
@@ -5189,7 +5200,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.panel-heading {\r\n  font-size: 30px;\r\n  font-weight: bold;\n}\n#app {\r\n  font-family: \"Noto Sans TC\", serif;\r\n    background: #3e6d97;\r\n    color: #fff;\n}\r\n\r\n\r\n", ""]);
+exports.push([module.i, "\n.panel-heading {\r\n  font-size: 30px;\r\n  font-weight: bold;\n}\n#app {\r\n  font-family: \"Noto Sans TC\", serif;\r\n    background: #3e6d97 ;\r\n    color: #fff;\n}\r\n\r\n\r\n", ""]);
 
 // exports
 
@@ -28817,7 +28828,7 @@ var render = function() {
         ],
         1
       ),
-      _vm._v(" "),
+      _vm._v("\n\n<<<<<<< HEAD\n    "),
       _c(
         "v-snackbar",
         {
@@ -28843,7 +28854,7 @@ var render = function() {
                       attrs,
                       false
                     ),
-                    [_vm._v("Close\n      ")]
+                    [_vm._v("Close\n        ")]
                   )
                 ]
               }
@@ -28857,9 +28868,51 @@ var render = function() {
             expression: "snackbar"
           }
         },
-        [_vm._v("\n    " + _vm._s(_vm.snackbarText) + "\n    ")]
+        [_vm._v("\n      " + _vm._s(_vm.snackbarText) + "\n      ")]
       ),
-      _vm._v(" "),
+      _vm._v("\n=======\n        "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: { timeout: _vm.snackBarTimeout },
+          scopedSlots: _vm._u([
+            {
+              key: "action",
+              fn: function(ref) {
+                var attrs = ref.attrs
+                return [
+                  _c(
+                    "v-btn",
+                    _vm._b(
+                      {
+                        attrs: { color: "pink", text: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.snackbar = false
+                          }
+                        }
+                      },
+                      "v-btn",
+                      attrs,
+                      false
+                    ),
+                    [_vm._v("Close\n                ")]
+                  )
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [_vm._v("\n            " + _vm._s(_vm.snackbarText) + "\n            ")]
+      ),
+      _vm._v("\n>>>>>>> 17b569de6bf351b8729aff105b66174817b79fb9\n\n    "),
       _c(
         "v-bottom-navigation",
         {
@@ -95947,6 +96000,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
+var e = "{{ env('MIX_GOOGLE_MAP_API') }}";
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue2_google_maps__WEBPACK_IMPORTED_MODULE_8__, {
   load: {
     key: "AIzaSyAheU2UTn1fkXyfFVdFeDYfuiupZDUP7Zo"

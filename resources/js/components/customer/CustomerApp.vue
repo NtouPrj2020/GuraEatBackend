@@ -8,6 +8,7 @@
       ></router-view>
     </div>
 
+<<<<<<< HEAD
     <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
@@ -16,6 +17,16 @@
         </v-btn>
       </template>
     </v-snackbar>
+=======
+        <v-snackbar v-model="snackbar" :timeout="snackBarTimeout" class="">
+            {{ snackbarText }}
+            <template v-slot:action="{ attrs }">
+                <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"
+                >Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+>>>>>>> 17b569de6bf351b8729aff105b66174817b79fb9
 
     <v-bottom-navigation grow fixed v-model="value">
       <v-btn value="home" @click="toHome()">

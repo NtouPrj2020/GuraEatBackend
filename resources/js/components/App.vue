@@ -40,7 +40,7 @@ export default {
 
 #app {
   font-family: "Noto Sans TC", serif;
-    background: #3e6d97;
+    background: #3e6d97 ;
     color: #fff;
 }
 
