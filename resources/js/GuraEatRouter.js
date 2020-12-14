@@ -120,7 +120,8 @@ export default class GuraEatRouter {
                         props: {
                             id: 1
                         }
-                    }
+                    },
+
                 ]
             },
             {
