@@ -2,6 +2,7 @@
   <div>
     <router-view
       v-on:showSnackBar="showSnackBar"
+      v-on:changefocus="changefocus"
       name="deliveryManView"
       id="deliView"
     ></router-view>
@@ -37,7 +38,7 @@ export default {
   props: {},
   mounted() {},
   data: () => ({
-    value: "home",
+    value: "",
     snackbar: false,
     snackbarText: "Hello, I'm a snackbar",
     snackBarTimeout: 3000,
@@ -46,6 +47,9 @@ export default {
     showSnackBar(text) {
       this.snackbar = true;
       this.snackbarText = text;
+    },
+    changefocus(value) {
+      this.value = value;
     },
     toHome() {
       this.$router.push("/delivery_man/home");
@@ -58,6 +62,6 @@ export default {
 </script>
 
 <style>
-#deliView{
+#deliView {
 }
 </style>

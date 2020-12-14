@@ -1,16 +1,19 @@
 <template>
   <div>
     <gmap-map
-      v-model="map"
       :center="center"
       :zoom="14"
-      :style="style"
-      :options="options"
+      :options="mapOptions"
+      :style="mapStyle"
     >
-      <gmap-marker
-        :position="position"
-        @click="center = position"
-      ></gmap-marker>
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="true"
+        :draggable="true"
+        @click="center = m.position"
+      />
     </gmap-map>
   </div>
 </template>
@@ -18,43 +21,13 @@
 <script>
 export default {
   name: "GoogleMap",
-  data: () => ({
-    style: "",
-    map: true,
-    windowSize: {
-      x: 0,
-      y: 0,
-    },
-    center: { lat: 45.508, lng: -73.587 },
-    position: { lat: 45.508, lng: -73.587 },
-    options: { disableDefaultUI: true, clickableIcons: false },
-  }),
+  props: ["mapOptions", "mapStyle", "markers", "center"],
+  data: () => ({}),
   mounted() {
-    this.geolocate();
-    this.onResize();
+    console.log(this.mapOptions);
+    console.log(this.mapStyle);
   },
 
-  methods: {
-    onResize() {
-      this.style =
-        "width:" +
-        window.innerWidth +
-        "px;  height: " +
-        (window.innerHeight - 200) +
-        "px;";
-    },
-    geolocate: function () {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        this.position = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-      });
-    },
-  },
+  methods: {},
 };
 </script>
