@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryMan;
 use Illuminate\Http\Request;
 
 class GeographyController extends Controller
@@ -45,9 +46,9 @@ class GeographyController extends Controller
     public function getDeliveryManLocation(Request $request)
     {
         # code...
-        $DeliveryManLocation = $request ->user();   
+        $DeliveryManLocation = $request ->user();
         if ($DeliveryManLocation != null)
-        {   
+        {
             $data = [
                         "status" => 200,
                         "method" => "getDeliveryManLocation",
@@ -69,6 +70,37 @@ class GeographyController extends Controller
                     ];
 
                     return response()->json($data,403);
+        }
+    }
+    public function getLocationByDeliveryManID(Request $request)
+    {
+        # code...
+        $customer = $request ->user();
+        $request->validate([
+            'deliveryman_id' => 'required',
+        ]);
+        $deliveryman = DeliveryMan::where('id', '=', $request->deliveryman_id)->first();
+        if ($deliveryman != null)
+        {
+            $data = [
+                "status" => 200,
+                "method" => "getLocationByDeliveryManID",
+                "message" => "sucess",
+                "longitude" => $deliveryman->longitude,
+                "latitude"=> $deliveryman->latitude,
+            ];
+            return response()->json($data, 200);
+        }
+        else
+        {
+            $data = [
+                "status" => 403,
+                "method" => "getLocationByDeliveryManID",
+                "message" => "user not found",
+                "longitude" => "",
+                "latitude" => ""
+            ];
+            return response()->json($data,403);
         }
     }
 }
