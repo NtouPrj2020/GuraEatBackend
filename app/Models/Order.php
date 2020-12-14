@@ -33,7 +33,7 @@ class Order extends Model
 
     public function items()
     {
-        return Cart::where('dish_id','=',$this->id)->get();
+        return Cart::where('order_id','=',$this->id);
     }
 
 }

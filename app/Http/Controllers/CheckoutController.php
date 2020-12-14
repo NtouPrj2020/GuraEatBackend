@@ -194,7 +194,7 @@ class CheckoutController extends Controller
                 "status" => 201,
                 "data" => [
                     'order'=>$order,
-                    'items'=>$order->items()
+                    'items'=>$order->items()->get()
                 ]
             ];
             event(new DeliveryManGetOrderEvent($chooseMan,$data));

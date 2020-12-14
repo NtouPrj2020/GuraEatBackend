@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dish;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -11,11 +12,16 @@ class DeliveryController extends Controller
     {
         $delivery = $request->user();
         $orderlist = $delivery->orders()->get();
+        for($i = 0;$i<count($orderlist);$i++){
+           OrderController::addItemForOrder($orderlist[$i]);
+        }
         $data = [
             "method" => "getAllOrders",
             "message" => "ok",
             "status" => 200,
-            "data" => $orderlist
+            "data" => [
+                'order'=>$orderlist,
+            ]
         ];
         return response()->json($data, 200);
     }
@@ -24,13 +30,17 @@ class DeliveryController extends Controller
         $request->validate([
             'id' => 'required',]);
         $delivery = $request->user();
-        $order = Order::where("delivery_man_id","=",$delivery->id)->find($request->id);
+        $order = Order::where("delivery_man_id","=",$delivery->id)->find($request->id)->first();
         if($order!=null){
+            OrderController::addItemForOrder($order);
             $data = [
                 "method" => "getOrderByID",
                 "message" => "ok",
                 "status" => 200,
-                "data" => $order->first()
+                "data" => [
+                    'order'=>$order,
+                    'items'=>$order->items()
+                ]
             ];
             return response()->json($data, 200);
         }else{
@@ -46,8 +56,9 @@ class DeliveryController extends Controller
     public function deliverymangetOrdernow(Request $request)
     {
         $deliveryman = $request->user();
-        $order = Order::where([['status', '<', 3],["delivery_man_id","=",$deliveryman->id]])->get();
-        if(count($order)!=0){
+        $order = Order::where([['status', '<', 3],["delivery_man_id","=",$deliveryman->id]])->first();
+        if($order!=null){
+            OrderController::addItemForOrder($order);
             $data = [
                 "method" => "deliverymangetOrdernow",
                 "message" => "ok",
