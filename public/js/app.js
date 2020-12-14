@@ -1993,17 +1993,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {},
   mounted: function mounted() {},
@@ -28828,7 +28817,7 @@ var render = function() {
         ],
         1
       ),
-      _vm._v("\n\n<<<<<<< HEAD\n    "),
+      _vm._v(" "),
       _c(
         "v-snackbar",
         {
@@ -28854,7 +28843,7 @@ var render = function() {
                       attrs,
                       false
                     ),
-                    [_vm._v("Close\n        ")]
+                    [_vm._v("Close\n      ")]
                   )
                 ]
               }
@@ -28868,51 +28857,9 @@ var render = function() {
             expression: "snackbar"
           }
         },
-        [_vm._v("\n      " + _vm._s(_vm.snackbarText) + "\n      ")]
+        [_vm._v("\n    " + _vm._s(_vm.snackbarText) + "\n    ")]
       ),
-      _vm._v("\n=======\n        "),
-      _c(
-        "v-snackbar",
-        {
-          attrs: { timeout: _vm.snackBarTimeout },
-          scopedSlots: _vm._u([
-            {
-              key: "action",
-              fn: function(ref) {
-                var attrs = ref.attrs
-                return [
-                  _c(
-                    "v-btn",
-                    _vm._b(
-                      {
-                        attrs: { color: "pink", text: "" },
-                        on: {
-                          click: function($event) {
-                            _vm.snackbar = false
-                          }
-                        }
-                      },
-                      "v-btn",
-                      attrs,
-                      false
-                    ),
-                    [_vm._v("Close\n                ")]
-                  )
-                ]
-              }
-            }
-          ]),
-          model: {
-            value: _vm.snackbar,
-            callback: function($$v) {
-              _vm.snackbar = $$v
-            },
-            expression: "snackbar"
-          }
-        },
-        [_vm._v("\n            " + _vm._s(_vm.snackbarText) + "\n            ")]
-      ),
-      _vm._v("\n>>>>>>> 17b569de6bf351b8729aff105b66174817b79fb9\n\n    "),
+      _vm._v(" "),
       _c(
         "v-bottom-navigation",
         {
