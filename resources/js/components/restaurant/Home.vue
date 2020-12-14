@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container  fluid>
+    <v-container fluid>
       <v-card>
         <v-img :src="resImg" class="white--text align-end" height="200px">
           <v-card-title>
@@ -153,11 +153,10 @@
               儲存
             </v-btn>
           </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-btn x-large icon fixed right bottom class="mb-15" @click="showAddDish"
-        ><v-icon>fas fa-plus-circle</v-icon></v-btn
-      >
+        </v-card> </v-dialog
+      ><v-btn fab fixed right bottom class="mb-15" @click="showAddDish">
+        <v-icon dark> mdi-plus </v-icon>
+      </v-btn>
     </v-container>
   </div>
 </template>
@@ -165,7 +164,7 @@
 import {
   restaurantGetInfoAPI,
   restaurantGetAllDishAPI,
-    restaurantGetDishByDishIDAPI,
+  restaurantGetDishByDishIDAPI,
   restaurantEditDishAPI,
   restaurantDeleteDishAPI,
   restaurantAddDishAPI,
@@ -202,6 +201,7 @@ export default {
   }),
   props: ["id"],
   mounted() {
+    this.$emit("changefocus", "home");
     this.onResize();
     this.config = {
       headers: {
@@ -269,7 +269,7 @@ export default {
         },
       };
       this.nowEditingID = id;
-        restaurantGetDishByDishIDAPI(config)
+      restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowEditingID = id;
@@ -374,7 +374,7 @@ export default {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
         },
       };
-        restaurantGetDishByDishIDAPI(config)
+      restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowDeletingID = id;

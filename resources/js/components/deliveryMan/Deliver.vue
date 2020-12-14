@@ -1,28 +1,44 @@
 <template>
   <div>
-    <gmap-map
-      v-show="map"
-      :center="center"
-      :zoom="15"
-      :options="mapOptions"
-      style="width: 100%; height: 1000px"
-    >
-    </gmap-map>
+    <v-container style="background-color: white; height: 85vh; width: 100vw">
+      <google-map :mapOptions="mapOptions" :mapStyle="mapStyle" />
+    </v-container>
   </div>
 </template>
 
-
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 import axios from "axios";
-import StaticMap from "vue-static-map";
+import GoogleMap from "./GoogleMap";
+import Pusher from "pusher-js";
+import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
 
 export default {
-  name: "StaticMap",
+  components: {
+    GoogleMap: GoogleMap,
+  },
+  props: ["id"],
   data: () => ({
-    map: false,
+    onlineloading: false,
+    mapOptions: { disableDefaultUI: false, clickableIcons: true },
+    mapStyle: "",
   }),
   created() {},
-  mounted() {},
-  methods: {},
+  mounted() {
+    this.$emit("changefocus", "");
+    this.onResize();
+    console.log(this.id);
+  },
+  methods: {
+    onResize() {
+      this.mapStyle =
+        "width:" +
+        window.innerWidth +
+        "px;  height: " +
+        window.innerHeight / 4 +
+        "px;";
+    },
+  },
 };
 </script>
