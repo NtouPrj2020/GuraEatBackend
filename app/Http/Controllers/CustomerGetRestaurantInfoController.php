@@ -27,8 +27,14 @@ class CustomerGetRestaurantInfoController extends Controller
         $star3 = $rate->star3;
         $star2 = $rate->star2;
         $star1 = $rate->star1;
-        $total=($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/CustomerGetRestaurantInfoController::sum_people($restaurant);
-        return  round($total,2);
+        if(CustomerGetRestaurantInfoController::sum_people($restaurant)>0)
+        {
+            $total=($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/CustomerGetRestaurantInfoController::sum_people($restaurant);
+            $ans = round($total,2);
+        }
+        else
+            $ans=0;
+        return  $ans;
     }
 
     public function getAllRestaurant(Request $request){
