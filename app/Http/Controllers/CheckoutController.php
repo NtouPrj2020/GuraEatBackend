@@ -108,7 +108,7 @@ class CheckoutController extends Controller
             return response()->json($data, 500);
         }
     }
-    
+
     public function checkoutAuto(Request $request)
     {
         $req = json_decode($request->getContent());
@@ -156,6 +156,7 @@ class CheckoutController extends Controller
 
             //建立訂單
             $order = new Order();
+            $order->restaurant_id = $req->restaurant_id;
             $order->delivery_man_id = $chooseMan->id;
             $order->customer_id = $customer->id;
             $order->delivery_fee = $req->delivery_fee;
