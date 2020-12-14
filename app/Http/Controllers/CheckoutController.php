@@ -137,6 +137,16 @@ class CheckoutController extends Controller
             //計算離餐廳最近的上線中外送員
             $restaurant = Restaurant::find($req->restaurant_id)->first();
             $obj = $this->addtolo($restaurant->address);
+            if(count($obj->results) == 0){
+                $data = [
+                    "method" => "checkoutAutogoog",
+                    "message" => "google api key expired or zero result",
+                    "status" => 500,
+                    "data" => [
+                    ]
+                ];
+                return response()->json($data, 500);
+            }
             $rest_lat = $obj->results[0]->geometry->location->lat;
             $rest_lng = $obj->results[0]->geometry->location->lng;
             $distanceList = [];

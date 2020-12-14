@@ -23,6 +23,7 @@ class OrderController extends Controller
     {
         $request->validate([
             'id' => 'required',]);
+
         $customer = $request->user();
         $order = Order::where("customer_id", "=", $customer->id)->find($request->id);
         if ($order != null) {
