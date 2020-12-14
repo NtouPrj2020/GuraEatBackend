@@ -4,6 +4,7 @@
       :mapStyle="mapStyle"
       :mapOptions="mapOptions"
       :center="center"
+      :markers="markers"
     />
     <v-btn
       fab
@@ -40,7 +41,7 @@ export default {
       "px; height: " +
       window.innerHeight +
       "px;",
-    mapOptions: { disableDefaultUI: true },
+    mapOptions: { disableDefaultUI: true, clickableIcons: false },
     markers: [],
     center: { lat: 45.508, lng: -73.587 },
     value: "home",
@@ -101,6 +102,8 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
+        console.log(this.center.lat);
+        console.log(this.center.lng);
       });
     },
     onResize() {
