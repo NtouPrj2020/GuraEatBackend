@@ -3,7 +3,7 @@
     <div class="panel-heading text-center">個人資訊</div>
     <div class="container mb-12">
       <v-card>
-        <v-card-text>餐廳名稱: {{ info.name }}</v-card-text>
+        <v-card-text>姓名: {{ info.name }}</v-card-text>
         <v-card-text>地址: {{ info.address }}</v-card-text>
         <v-card-text>電話: {{ info.phone }}</v-card-text>
         <v-card-text>電子郵件: {{ info.email }}</v-card-text>
@@ -110,7 +110,7 @@ export default {
     editDialog: false,
     editComfirmLoading: false,
     wanted_mode: 0,
-    role_list: ["外送員", "餐廳管理員"],
+    role_list: ["顧客", "餐廳管理員"],
     wanted_role: "",
     resp: "",
   }),

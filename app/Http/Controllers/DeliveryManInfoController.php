@@ -9,6 +9,16 @@ class DeliveryManInfoController extends Controller
     public function getDeliveryMan(Request $request)
     {
         $delivery_man = $request->user();
+        $delivery_man['rate'] = $delivery_man->rate()->get();
+
+        $star5 = $delivery_man['rate'][0]->star5;
+        $star4 = $delivery_man['rate'][0]->star4;
+        $star3 = $delivery_man['rate'][0]->star3;
+        $star2 = $delivery_man['rate'][0]->star2;
+        $star1 = $delivery_man['rate'][0]->star1;
+        $avg= ($star5 *5+ $star4 *4+ $star3 *3+ $star2 *2+ $star1)/($star5 + $star4 + $star3 + $star2 + $star1);
+        $avg = round($avg,2);
+        $delivery_man['rate'][0]['avg_rate'] = $avg;
 
         if ($delivery_man != null)
         {

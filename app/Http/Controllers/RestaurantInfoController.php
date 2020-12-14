@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\RestaurantTag;
+use App\Models\RestaurantRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RestaurantInfoController extends Controller
 {
     public function getRestaurant(Request $request){
+
         $restaurant = $request->user();
         $restaurant['tags'] = $restaurant->tags()->get();
+        $rate = $restaurant->rates()->first();
+        if ($rate!=null) {
+            $restaurants['avg_rate'] = CustomerGetRestaurantInfoController::count_avg($restaurant);
+            $restaurants['sum_people'] =CustomerGetRestaurantInfoController::sum_people($restaurant);
+        }
         if($restaurant != null){
             $data = [
                 "status" => 200,

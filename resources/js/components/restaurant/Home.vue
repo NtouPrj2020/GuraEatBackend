@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-container class="my-14" fluid>
+    <v-container  fluid>
       <v-card>
         <v-img :src="resImg" class="white--text align-end" height="200px">
           <v-card-title>
-            <v-chip class="text-h4 pa-5" :label="resName">res name</v-chip>
+            <v-chip class="text-h4 pa-5">{{ resName }}</v-chip>
           </v-card-title>
         </v-img>
       </v-card>
@@ -163,17 +163,18 @@
 </template>
 <script>
 import {
-  getDishByRestaurantID,
-  getDishByDishID,
-  restaurantEditDish,
-  restaurantDeleteDish,
-  restaurantAddDish,
+  restaurantGetInfoAPI,
+  restaurantGetAllDishAPI,
+    restaurantGetDishByDishIDAPI,
+  restaurantEditDishAPI,
+  restaurantDeleteDishAPI,
+  restaurantAddDishAPI,
 } from "../../api";
 
 export default {
   data: () => ({
-    resimg: "https://i.imgur.com/3f98UhC.jpg",
-    resName: "test res",
+    resImg: "https://i.imgur.com/3f98UhC.jpg",
+    resName: "no name",
     windowSize: {
       x: 0,
       y: 0,
@@ -207,14 +208,37 @@ export default {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
       },
     };
+    this.showResInfo();
     this.refreshAllDish();
   },
   methods: {
     onResize() {
       this.windowSize = { x: window.innerWidth, y: window.innerHeight };
     },
+    showResInfo() {
+      restaurantGetInfoAPI(this.config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.resName = resp.data.data.name;
+            this.Img = resp.data.data.resimg;
+            console.log(resp.data);
+            console.log("done");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            this.$emit("showSnackBar", "信箱/密碼錯誤");
+            console.log(err);
+          } else if (err.response.status === 404) {
+            this.$emit("showSnackBar", "未知的錯誤");
+            console.log(err);
+          }
+          console.log(err);
+        });
+    },
     refreshAllDish() {
-      getDishByRestaurantID(this.config)
+      restaurantGetAllDishAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
             this.menu = [];
@@ -245,7 +269,7 @@ export default {
         },
       };
       this.nowEditingID = id;
-      getDishByDishID(config)
+        restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowEditingID = id;
@@ -281,7 +305,7 @@ export default {
         img: this.editDishImg,
         price: this.editDishPrice,
       };
-      restaurantEditDish(data, config)
+      restaurantEditDishAPI(data, config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();
@@ -323,7 +347,7 @@ export default {
         img: this.addDishImg,
         price: this.addDishPrice,
       };
-      restaurantAddDish(data, config)
+      restaurantAddDishAPI(data, config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();
@@ -350,7 +374,7 @@ export default {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
         },
       };
-      getDishByDishID(config)
+        restaurantGetDishByDishIDAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.nowDeletingID = id;
@@ -380,7 +404,7 @@ export default {
         },
       };
       let data = {};
-      restaurantDeleteDish(config)
+      restaurantDeleteDishAPI(config)
         .then((resp) => {
           if (resp.status === 200) {
             this.refreshAllDish();

@@ -24,8 +24,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp');
         Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin');
         Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest');
+
         Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
         Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
+
         Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
         Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin');
     });
@@ -40,13 +42,22 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword');
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
             Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
-            Route::get('/addressToLocation', 'App\Http\Controllers\CheckoutController@addressToLocation');
+            Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
+            Route::get('/locationToAddress', 'App\Http\Controllers\CheckoutController@locationToAddress');
+            Route::post('/changeRoleCustomer', 'App\Http\Controllers\AuthController@changeRoleCustomer');
+            Route::post('/order/send', 'App\Http\Controllers\CheckoutController@checkoutAuto');
+            Route::get('/order/getAllOrders', 'App\Http\Controllers\OrderController@getAllOrders');
+            Route::get('/order/getOrderByID', 'App\Http\Controllers\OrderController@getOrderByID');
+            Route::post('/order/rate', 'App\Http\Controllers\confirmOrderController@rateOrder');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');
             Route::put('/info', 'App\Http\Controllers\DeliveryManInfoController@editDeliveryMan');
             Route::put('/status', 'App\Http\Controllers\DeliveryManChangeStateController@changeState');
-            Route::post('/logout', 'App\Http\Controllers\DeliveryManInfoController@deliveryManLogout');
+            Route::get('/location', 'App\Http\Controllers\GeographyController@getDeliveryManLocation');
+            Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
+            Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
+            Route::post('/changeRoleDeliveryMan', 'App\Http\Controllers\AuthController@changeRoleDeliveryMan');
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
@@ -57,6 +68,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/menu/editDish', 'App\Http\Controllers\RestaurantMenuController@editDish');
             Route::get('/menu/getAllDish', 'App\Http\Controllers\RestaurantMenuController@getAllDish');
             Route::get('/menu/getDishbyID', 'App\Http\Controllers\RestaurantMenuController@getDishbyID');
+            Route::post('/logout', 'App\Http\Controllers\AuthController@restaurantLogout');
+            Route::post('/changeRoleRestaurant', 'App\Http\Controllers\AuthController@changeRoleRestaurant');
         });
     });
 });

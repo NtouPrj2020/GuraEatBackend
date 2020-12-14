@@ -1,10 +1,10 @@
 import VueRouter from "vue-router";
 
-export default class GuraEatRouter{
+export default class GuraEatRouter {
     constructor(vuex) {
-        this.store = vuex
+        this.store = vuex;
     }
-    builds(){
+    builds() {
         let routes = [
             {
                 path: "/",
@@ -12,18 +12,18 @@ export default class GuraEatRouter{
                     default: require("./components/guest/GuestApp.vue").default
                 },
                 beforeEnter: (to, from, next) => {
-                    if (this.store.getters.getMode == 0){
-                        next({ path: '/guest/login' })
-                    }else if(this.store.getters.getMode == 1){
-                        next({ path: '/customer/home' })
-                    }else if(this.store.getters.getMode == 2){
-                        next({ path: '/delivery_man/home' })
-                    }else if(this.store.getters.getMode == 3){
-                        next({ path: '/restaurant/home' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode == 0) {
+                        next({ path: "/guest/login" });
+                    } else if (this.store.getters.getMode == 1) {
+                        next({ path: "/customer/home" });
+                    } else if (this.store.getters.getMode == 2) {
+                        next({ path: "/delivery_man/home" });
+                    } else if (this.store.getters.getMode == 3) {
+                        next({ path: "/restaurant/home" });
+                    } else {
+                        next();
                     }
-                },
+                }
             },
             {
                 path: "/guest",
@@ -31,42 +31,46 @@ export default class GuraEatRouter{
                     default: require("./components/guest/GuestApp.vue").default
                 },
                 beforeEnter: (to, from, next) => {
-                    if(this.store.getters.getMode == 1){
-                        next({ path: '/customer/home' })
-                    }else if(this.store.getters.getMode == 2){
-                        next({ path: '/delivery_man/home' })
-                    }else if(this.store.getters.getMode == 3){
-                        next({ path: '/restaurant/home' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode == 1) {
+                        next({ path: "/customer/home" });
+                    } else if (this.store.getters.getMode == 2) {
+                        next({ path: "/delivery_man/home" });
+                    } else if (this.store.getters.getMode == 3) {
+                        next({ path: "/restaurant/home" });
+                    } else {
+                        next();
                     }
                 },
                 children: [
                     {
                         path: "login",
                         components: {
-                            guestView: require("./components/guest/Login.vue").default,
+                            guestView: require("./components/guest/Login.vue")
+                                .default
                         },
                         props: true
                     },
                     {
                         path: "registration",
                         components: {
-                            guestView: require("./components/guest/Registration.vue").default,
+                            guestView: require("./components/guest/Registration.vue")
+                                .default
                         },
                         props: true
                     },
                     {
                         path: "forgotpasswd",
                         components: {
-                            guestView: require("./components/guest/ForgotPassword.vue").default,
+                            guestView: require("./components/guest/ForgotPassword.vue")
+                                .default
                         },
                         props: true
                     },
                     {
                         path: "resetpasswd",
                         components: {
-                            guestView: require("./components/guest/ResetPassword.vue").default,
+                            guestView: require("./components/guest/ResetPassword.vue")
+                                .default
                         },
                         props: true
                     }
@@ -75,13 +79,14 @@ export default class GuraEatRouter{
             {
                 path: "/customer",
                 components: {
-                    default: require("./components/customer/CustomerApp.vue").default
+                    default: require("./components/customer/CustomerApp.vue")
+                        .default
                 },
                 beforeEnter: (to, from, next) => {
-                    if (this.store.getters.getMode !== 1){
-                        next({ path: '/guest/login' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode !== 1) {
+                        next({ path: "/guest/login" });
+                    } else {
+                        next();
                     }
                 },
                 children: [
@@ -125,24 +130,24 @@ export default class GuraEatRouter{
                         .default
                 },
                 beforeEnter: (to, from, next) => {
-                    if (this.store.getters.getMode !== 2){
-                        next({ path: '/guest/login' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode !== 2) {
+                        next({ path: "/guest/login" });
+                    } else {
+                        next();
                     }
                 },
                 children: [
                     {
                         path: "home",
                         components: {
-                            customerView: require("./components/deliveryMan/DeliveryManApp.vue")
+                            deliveryManView: require("./components/deliveryMan/Home.vue")
                                 .default
                         }
                     },
                     {
                         path: "info",
                         components: {
-                            customerView: require("./components/deliveryMan/DeliveryManApp.vue")
+                            deliveryManView: require("./components/deliveryMan/Info.vue")
                                 .default
                         }
                     }
@@ -155,24 +160,24 @@ export default class GuraEatRouter{
                         .default
                 },
                 beforeEnter: (to, from, next) => {
-                    if (this.store.getters.getMode !== 3){
-                        next({ path: '/guest/login' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode !== 3) {
+                        next({ path: "/guest/login" });
+                    } else {
+                        next();
                     }
                 },
                 children: [
                     {
                         path: "home",
                         components: {
-                            customerView: require("./components/restaurant/Home.vue")
+                            restaurantView: require("./components/restaurant/Home.vue")
                                 .default
                         }
                     },
                     {
                         path: "info",
                         components: {
-                            customerView: require("./components/restaurant/Info.vue")
+                            restaurantView: require("./components/restaurant/Info.vue")
                                 .default
                         }
                     }
@@ -184,18 +189,18 @@ export default class GuraEatRouter{
                     default: require("./components/404.vue").default
                 },
                 beforeEnter: (to, from, next) => {
-                    if (this.store.getters.getMode == 0){
-                        next({ path: '/guest/login' })
-                    }else if(this.store.getters.getMode == 1){
-                        next({ path: '/customer/home' })
-                    }else if(this.store.getters.getMode == 2){
-                        next({ path: '/delivery_man/home' })
-                    }else if(this.store.getters.getMode == 3){
-                        next({ path: '/restaurant/home' })
-                    }else{
-                        next()
+                    if (this.store.getters.getMode == 0) {
+                        next({ path: "/guest/login" });
+                    } else if (this.store.getters.getMode == 1) {
+                        next({ path: "/customer/home" });
+                    } else if (this.store.getters.getMode == 2) {
+                        next({ path: "/delivery_man/home" });
+                    } else if (this.store.getters.getMode == 3) {
+                        next({ path: "/restaurant/home" });
+                    } else {
+                        next();
                     }
-                },
+                }
             }
         ];
         return routes;
