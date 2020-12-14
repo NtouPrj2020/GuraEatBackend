@@ -42,6 +42,5 @@ class DeliveryController extends Controller
             ];
             return response()->json($data, 404);
         }
-
     }
 }

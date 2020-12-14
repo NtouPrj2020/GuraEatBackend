@@ -7,7 +7,7 @@
             ></router-view>
         </div>
 
-        <v-snackbar v-model="snackbar" :timeout="snackBarTimeout">
+        <v-snackbar v-model="snackbar" :timeout="snackBarTimeout" class="">
             {{ snackbarText }}
             <template v-slot:action="{ attrs }">
                 <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"
