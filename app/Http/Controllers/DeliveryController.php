@@ -43,4 +43,26 @@ class DeliveryController extends Controller
             return response()->json($data, 404);
         }
     }
+    public function deliverymangetOrdernow(Request $request)
+    {
+        $deliveryman = $request->user();
+        $order = Order::where([['status', '<', 3],["delivery_man_id","=",$deliveryman->id]])->get();
+        if(count($order)!=0){
+            $data = [
+                "method" => "deliverymangetOrdernow",
+                "message" => "ok",
+                "status" => 200,
+                "data" => $order
+            ];
+            return response()->json($data, 200);
+        }else{
+            $data = [
+                "method" => "deliverymangetOrdernow",
+                "message" => "not found",
+                "status" => 404,
+                "data" => []
+            ];
+            return response()->json($data, 404);
+        }
+    }
 }

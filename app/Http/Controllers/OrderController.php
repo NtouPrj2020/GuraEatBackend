@@ -25,8 +25,8 @@ class OrderController extends Controller
             'id' => 'required',]);
 
         $customer = $request->user();
-        $order = Order::where("customer_id","=",$customer->id)->find($request->id);
-        if($order!=null){
+        $order = Order::where("customer_id", "=", $customer->id)->find($request->id);
+        if ($order != null) {
             $data = [
                 "method" => "getOrderByID",
                 "message" => "ok",
@@ -34,7 +34,7 @@ class OrderController extends Controller
                 "data" => $order->first()
             ];
             return response()->json($data, 200);
-        }else{
+        } else {
             $data = [
                 "method" => "getOrderByID",
                 "message" => "not found",
@@ -43,6 +43,28 @@ class OrderController extends Controller
             ];
             return response()->json($data, 404);
         }
-
     }
+        public function customergetOrdernow(Request $request)
+    {
+        $customer = $request->user();
+        $order = Order::where([['status', '<', 3],["customer_id","=",$customer->id]])->get();
+        if(count($order)!=0){
+            $data = [
+                "method" => "customergetOrdernow",
+                "message" => "ok",
+                "status" => 200,
+                "data" => $order
+            ];
+            return response()->json($data, 200);
+        }else{
+            $data = [
+                "method" => "customergetOrdernow",
+                "message" => "not found",
+                "status" => 404,
+                "data" => []
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
 }
