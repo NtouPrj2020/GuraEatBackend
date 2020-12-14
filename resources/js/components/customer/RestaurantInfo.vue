@@ -53,7 +53,7 @@
                 </v-row>
                 <v-row dense>
                     <v-col
-                    ><!--v-for="(item,i) in list[0]" :key="i" -->
+                    >
 
                         <v-list subheader two-line>
                             <v-subheader inset>菜單</v-subheader>
@@ -226,17 +226,6 @@
                                         </v-btn>
                                     </v-toolbar>
                                     <v-card-text>
-                                        <!--<v-text-field
-                                                                :disabled="!isEditing"
-                                                                label="取餐姓名"
-                                                                v-model="CustomerInfo.name"
-                                                                hint="例如: 魚餌,小蝦,有機物"
-                                                                :rules="[rules.required]"
-                                                                counter="10"
-                                                                maxlength="10"
-                                                                outlined
-                                                                persistent-hint
-                                                            ></v-text-field>-->
                                         <v-text-field
                                             :disabled="!isEditing"
                                             label="取餐地址"
@@ -577,7 +566,6 @@ export default {
             this.amountTemp = this.order.amount[index]++;
             //this.order.amount.splice(index, 1, this.amountTemp)
             this.$set(this.order.amount, this.index, this.amountTemp);
-            //this.order.amount[index]++
             console.log("amount");
             console.log(this.order.amount[index]);
         },
@@ -588,7 +576,6 @@ export default {
                 this.amountTemp = this.order.amount[index]--;
                 //this.order.amount.splice(index, 1, this.amountTemp)
                 this.$set(this.order.amount, this.index, this.amountTemp);
-                //this.order.amount[index]--
             }
             console.log("amount");
             console.log(this.order.amount[index]);
@@ -619,8 +606,6 @@ export default {
                 this.TotalDeliveryTime();
                 this.od = tempOrder;
             }
-            //this.totalAmount = this.order.totalAmount
-            //this.order.totalAmount += this.deliveryFee;
         },
         storeImg(img) {
             this.imgTemp = img;
@@ -637,7 +622,6 @@ export default {
         },
         getCurrentTime() {
             this.dayNow = this.date = new Date().toISOString().substr(0, 10);
-            //this.time = new Date().toISOString().substr(11, 5)
             let date = new Date();
             date.setDate(date.getDate() + 3);
             this.dayConstrain = date.toISOString().substr(0, 10);
@@ -820,9 +804,3 @@ export default {
     },
 };
 </script>
-
-<style>
-#container {
-    max-width: 400px;
-}
-</style>
