@@ -83,15 +83,12 @@ class CheckoutController extends Controller
             'des_address' => 'required',]);
 
         try {
-            $base_url = "https://maps.googleapis.com";
-            $url = "/maps/api/distancematrix/json?origins={$request->ori_address}&destinations={$request->des_address}&key={$_ENV['GOOGLE_MAP_API']}";
-            $client = new Client([
-                // Base URI is used with relative requests
-                'base_uri' => $base_url,
-                // You can set any number of default request options.
-                'timeout' => 2.0,
-            ]);
-            $res = $client->request('GET', $url);
+            $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 20.0,]);
+            $res = $client->get('/maps/api/distancematrix/json', ['query' => [
+                'origins' => $request->ori_address,
+                'destinations' => $request->des_address,
+                'key' => $_ENV['GOOGLE_MAP_API']
+            ]]);
             $dd = json_decode($res->getBody());
             $data = [
                 "method" => "getDistanceAndTimeByAddress",
