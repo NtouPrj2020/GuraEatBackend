@@ -119,13 +119,13 @@ class CheckoutController extends Controller
                 $data = [
                     "method" => "checkoutAuto",
                     "message" => "already have order",
-                    "status" => 5001,
+                    "status" => 4033,
                     "data" => [
                         'order'=>$orderlist[$i],
                         'items'=>$orderlist[$i]->items()
                     ]
                 ];
-                return response()->json($data, 500);
+                return response()->json($data, 403);
             }
         }
 
