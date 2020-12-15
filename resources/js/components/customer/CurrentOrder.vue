@@ -19,7 +19,10 @@
       </gmap-map>
     </div>
     <div class="container mb-15">
-      <v-card elevation="2" class="mx-1">
+      <v-card v-if="noorder" elevation="2" class="mx-1"
+        ><v-card-text>目前沒有等待中訂單喔~</v-card-text></v-card
+      >
+      <v-card elevation="2" class="mx-1" v-else>
         <v-card-text>
           <div class="font-weight-bold ml-8 mb-2">訂單狀態</div>
 
@@ -65,6 +68,7 @@ import { customerGetOrderstatusAPI } from "../../api";
 export default {
   props: ["id"],
   data: () => ({
+    noorder: true,
     config: {},
     mapStyle:
       "width: " +
@@ -145,6 +149,7 @@ export default {
       customerGetOrderstatusAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
+            this.noorder = false;
             console.log(resp.data.data.deliveryMan.latitude);
             // update map markers
             this.orderinfo = resp.data.data;
@@ -186,7 +191,7 @@ export default {
             this.$emit("showSnackBar", "401error");
             console.log(err);
           } else if (err.response.status === 404) {
-            this.$emit("showSnackBar", "404error");
+            this.noorder = true;
             console.log(err);
           }
           console.log(err);
