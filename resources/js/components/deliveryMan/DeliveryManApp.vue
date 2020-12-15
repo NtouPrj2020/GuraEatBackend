@@ -57,12 +57,14 @@ export default {
     },
     toHome() {
       this.$router.push("/delivery_man/home");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toOrder() {
       this.$router.push("/delivery_man/order");
     },
     toInfo() {
       this.$router.push("/delivery_man/info");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
   },
 };

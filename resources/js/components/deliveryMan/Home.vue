@@ -17,13 +17,13 @@
     </gmap-map>
     <v-btn
       fab
-      dark
       large
       color="primary"
       fixed
       x-large
       :style="{ left: '50%', transform: 'translateX(-50%)', top: '75%' }"
       :loading="onlineloading"
+      :disabled="btndisabled"
       @click="online"
     >
       {{ onlinestr }}
@@ -54,8 +54,9 @@ export default {
     markers: [],
     center: { lat: 45.508, lng: -73.587 },
     value: "home",
-    onlineloading: false,
-    onlinestr: "上線",
+    onlineloading: true,
+    onlinestr: "下線",
+    btndisabled: false,
   }),
   created() {},
   mounted() {
@@ -70,7 +71,9 @@ export default {
     })
       .then((resp) => {
         if (resp.status === 200) {
-          this.onlinestr = "下線";
+          this.onlinestr = "送餐中";
+          this.btndisabled = true;
+          this.onlineloading = false;
         }
       })
       .catch((err) => {
@@ -86,22 +89,26 @@ export default {
     })
       .then((resp) => {
         if (resp.status === 200) {
-          if (resp.data.status === 1) {
-            if (false) {
-              this.$router.push("/delivery_man/home");
+          console.log(resp.data.status);
+          if (resp.data.data.status === 1) {
+            if (this.onlinestr != "送餐中") {
+              this.onlinestr = "下線";
+              this.onlineloading = false;
             }
-            online();
+            Pusher.logToConsole = true;
+            var channel = pusher.subscribe(
+              "deliveryman-channel" + resp.data.data.id
+            );
+            channel.bind(".deliveryman.getorder", function (data) {
+              console.log(JSON.stringify(data));
+              console.log("訂單收到");
+              that.$emit("showSnackBar", "收到訂單!!");
+              new Notification("收到訂單!");
+            });
+          } else {
+            this.onlinestr = "上線";
+            this.onlineloading = false;
           }
-          Pusher.logToConsole = true;
-          var channel = pusher.subscribe(
-            "deliveryman-channel" + resp.data.data.id
-          );
-          channel.bind(".deliveryman.getorder", function (data) {
-            console.log(JSON.stringify(data));
-            console.log("訂單收到");
-            that.$emit("showSnackBar", "收到訂單!!");
-            new Notification("收到訂單!");
-          });
         }
       })
       .catch((err) => {
@@ -134,24 +141,27 @@ export default {
     online() {
       this.onlineloading = true;
       let status;
+      console.log(this.onlinestr);
+      console.log("!!");
       if (this.onlinestr === "上線") {
         status = 1;
       } else {
         status = 0;
       }
+      console.log(status);
       let config = {
         headers: {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
         },
       };
       let data = {
-        status: 1,
+        status: status,
       };
       deliveryManChangeStateAPI(data, config)
         .then((resp) => {
           if (resp.status === 200) {
             this.onlineloading = false;
-            if (status) {
+            if (resp.data.data.status) {
               this.onlinestr = "下線";
             } else {
               this.onlinestr = "上線";

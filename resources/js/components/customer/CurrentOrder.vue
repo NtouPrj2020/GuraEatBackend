@@ -73,7 +73,10 @@ export default {
       window.innerHeight +
       "px;",
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
-    markers: [],
+    markers: [
+      { position: { lag: 25, lng: 121 }, icon: require("../house.png") },
+      { position: { lag: 25, lng: 121 }, icon: require("../scooter.png") },
+    ],
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
     orderstatus: [
@@ -87,19 +90,21 @@ export default {
       },
       {
         status: "餐點製作中",
-        color: "deep-purple",
+        color: "grey",
       },
     ],
   }),
   created() {},
   mounted() {
-    console.log(this.markers.length);
+    window.setInterval(() => {
+      this.updateorder();
+    }, 10000);
     this.config = {
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
       },
     };
-    this.$emit("changefocus", "");
+    this.$emit("changefocus", "order");
     this.onResize();
     this.geolocate();
     this.updateorder();
@@ -143,25 +148,35 @@ export default {
             console.log(resp.data.data.deliveryMan.latitude);
             // update map markers
             this.orderinfo = resp.data.data;
+            if (this.orderinfo.status >= 1) {
+              this.orderstatus[2].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 2) {
+              this.orderstatus[1].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 3) {
+              this.orderstatus[0].color = "deep-purple";
+            }
             const dliverManMarker = {
               lat: parseFloat(resp.data.data.deliveryMan.latitude),
               lng: parseFloat(resp.data.data.deliveryMan.longitude),
             };
             const mapMarkerIcon = require("../scooter.png");
-            this.markers.push({
+            this.markers[0] = {
               position: dliverManMarker,
               icon: mapMarkerIcon,
-            });
+            };
+            console.log(this.markers);
             navigator.geolocation.getCurrentPosition((position) => {
               const customerMarker = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
               };
-              const mapMarkerIcon = require("../scooter.png");
-              this.markers.push({
+              const mapMarkerIcon = require("../house.png");
+              this.markers[1] = {
                 position: customerMarker,
                 icon: mapMarkerIcon,
-              });
+              };
             });
           }
         })

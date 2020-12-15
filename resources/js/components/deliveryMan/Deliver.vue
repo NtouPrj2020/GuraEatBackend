@@ -12,7 +12,11 @@
 import axios from "axios";
 import GoogleMap from "./GoogleMap";
 import Pusher from "pusher-js";
-import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
+import {
+  deliveryManChangeStateAPI,
+  deliveryManGetInfoAPI,
+  deliveryManSendLocationAPI,
+} from "../../api";
 
 export default {
   components: {
@@ -26,7 +30,7 @@ export default {
   }),
   created() {},
   mounted() {
-    this.$emit("changefocus", "");
+    this.$emit("changefocus", "order");
     this.onResize();
     console.log(this.id);
   },

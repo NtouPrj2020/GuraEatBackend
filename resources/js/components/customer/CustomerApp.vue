@@ -62,15 +62,18 @@ export default {
     },
     toHome() {
       this.$router.push("/customer/home");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toSearch() {
       this.$router.push("/customer/search");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toOrder() {
       this.$router.push("/customer/order");
     },
     toInfo() {
       this.$router.push("/customer/info");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
   },
 };

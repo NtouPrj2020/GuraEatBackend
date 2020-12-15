@@ -19,7 +19,10 @@
       </gmap-map>
     </div>
     <div class="container mb-15">
-      <v-card elevation="2" class="mx-1">
+      <v-card v-if="noorder" elevation="2" class="mx-1"
+        ><v-card-text>目前沒有接到訂單喔~</v-card-text></v-card
+      >
+      <v-card elevation="2" class="mx-1" v-else>
         <v-card-text>
           <div class="font-weight-bold ml-8 mb-2">訂單狀態</div>
 
@@ -60,7 +63,11 @@
 <script>
 import axios from "axios";
 import Pusher from "pusher-js";
-import { deliveryManGetOrderstatusAPI } from "../../api";
+import {
+  deliveryManGetOrderstatusAPI,
+  deliveryManSendLocationAPI,
+  deliveryManAddressToLocationAPI,
+} from "../../api";
 
 export default {
   props: ["id"],
@@ -73,9 +80,13 @@ export default {
       window.innerHeight +
       "px;",
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
-    markers: [],
+    markers: [
+      { position: { lag: 25, lng: 121 }, icon: require("../house.png") },
+      { position: { lag: 25, lng: 121 }, icon: require("../scooter.png") },
+    ],
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
+    noorder: true,
     orderstatus: [
       {
         status: "已送達",
@@ -87,21 +98,23 @@ export default {
       },
       {
         status: "餐點製作中",
-        color: "deep-purple",
+        color: "grey",
       },
     ],
   }),
   created() {},
   mounted() {
-    console.log(this.markers.length);
+    window.setInterval(() => {
+      this.updatelocate();
+    }, 10000);
     this.config = {
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
       },
     };
-    this.$emit("changefocus", "");
+    this.$emit("changefocus", "order");
     this.onResize();
-    this.geolocate();
+    this.updatelocate();
     this.updateorder();
     this.$refs.mapRef.$mapPromise.then((map) => {
       var bounds = new google.maps.LatLngBounds();
@@ -111,7 +124,7 @@ export default {
       }
 
       //now fit the map to the newly inclusive bounds
-      map.fitBounds(bounds);
+      if (markers.length > 0) map.fitBounds(bounds);
     });
     console.log(this.markers);
     console.log(this.markers.length);
@@ -126,42 +139,84 @@ export default {
         window.innerHeight / 4 +
         "px;";
     },
-    geolocate: function () {
+    updatelocate() {
       navigator.geolocation.getCurrentPosition((position) => {
         this.center = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        console.log(this.center.lat);
-        console.log(this.center.lng);
+        deliveryManSendLocationAPI(
+          {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          this.config
+        )
+          .then((resp) => {
+            console.log(resp.status);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
     },
     updateorder() {
       deliveryManGetOrderstatusAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
-            console.log(resp.data.data.deliveryMan.latitude);
+            this.noorder = false;
+            console.log(resp.data.data.customer.latitude);
             // update map markers
             this.orderinfo = resp.data.data;
-            const dliverManMarker = {
-              lat: parseFloat(resp.data.data.deliveryMan.latitude),
-              lng: parseFloat(resp.data.data.deliveryMan.longitude),
+            if (this.orderinfo.status >= 1) {
+              this.orderstatus[2].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 2) {
+              this.orderstatus[1].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 3) {
+              this.orderstatus[0].color = "deep-purple";
+            }
+            let config = {
+              params: { address: this.orderinfo.customer_address },
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.getAccessToken,
+              },
             };
-            const mapMarkerIcon = require("../scooter.png");
-            this.markers.push({
-              position: dliverManMarker,
-              icon: mapMarkerIcon,
-            });
+            deliveryManAddressToLocationAPI(config)
+              .then((resp1) => {
+                console.log(resp1.data.results[0].geometry.location.lat);
+                const customerMarker = {
+                  lat: resp1.data.results[0].geometry.location.lat,
+                  lng: resp1.data.results[0].geometry.location.lng,
+                };
+                const mapMarkerIcon = require("../house.png");
+                this.markers[0] = {
+                  position: customerMarker,
+                  icon: mapMarkerIcon,
+                };
+              })
+              .catch((err) => {
+                console.log(err);
+                if (err.response.status === 401) {
+                  this.$emit("showSnackBar", "401error");
+                  console.log(err);
+                } else if (err.response.status === 404) {
+                  this.$emit("showSnackBar", "404error");
+                  console.log(err);
+                }
+                console.log(err);
+              });
             navigator.geolocation.getCurrentPosition((position) => {
-              const customerMarker = {
+              const dliverManMarker = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
               };
               const mapMarkerIcon = require("../scooter.png");
-              this.markers.push({
-                position: customerMarker,
+              this.markers[1] = {
+                position: dliverManMarker,
                 icon: mapMarkerIcon,
-              });
+              };
             });
           }
         })
@@ -171,7 +226,6 @@ export default {
             this.$emit("showSnackBar", "401error");
             console.log(err);
           } else if (err.response.status === 404) {
-            this.$emit("showSnackBar", "404error");
             console.log(err);
           }
           console.log(err);

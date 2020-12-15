@@ -179,6 +179,8 @@ export const customerlocationToAddressAPI = config =>
     userRequest.get("/api/v1/users/customer/locationToAddress", config);
 export const customerGetAllOrdersAPI = config =>
     userRequest.get("/api/v1/users/customer/order/getAllOrders", config);
+export const deliveryManAddressToLocationAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/addressToLocation", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
 export const deliveryManGetOrderstatusAPI = config =>
