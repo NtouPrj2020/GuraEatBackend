@@ -2,24 +2,30 @@
     <div>
         <div class="panel-heading text-center">個人資訊</div>
         <div class="container mb-12">
-            <v-card>
-                <v-card-text>餐廳名稱: {{ info.name }}</v-card-text>
+            <v-card 
+            :key="this.change"
+             >
+             <div>
+                <v-card-text class="font-weight-medium">餐廳名稱: {{ info.name }}</v-card-text>
                 <v-card-text>地址: {{ info.address }}</v-card-text>
                 <v-card-text>電話: {{ info.phone }}</v-card-text>
                 <v-card-text>電子郵件: {{ info.email }}</v-card-text>
+                <v-card-text>餐廳標籤: {{ info.rest_tags_name }}</v-card-text>
+             </div>
             </v-card>
-            <v-row justify="center" class="pa-2">
+            <v-row class="ml-4 mr-4">
+                <v-col :cols="7">
                 <v-select
                     v-model="wanted_role"
                     :items="role_list"
                     label="切換至"
-                    class="px-14 pt-5"
+                    background-color="white"
                     outlined
                 ></v-select>
-                <v-btn min-width="200" @click="switch_user">切換使用者身分</v-btn>
-            </v-row>
-            <v-row justify="center" class="pa-2">
-                <v-btn min-width="200" @click="history_order">歷史訂單紀錄</v-btn>
+                </v-col>
+                <v-col :cols="5" class="mt-3">
+                <v-btn @click="switch_user">切換使用者身分</v-btn>
+                </v-col>
             </v-row>
             <v-row justify="center" class="pa-2">
                 <v-btn min-width="200" @click="show_edit">更改個人資料</v-btn>
@@ -65,26 +71,21 @@
                                     ></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-autocomplete
-                                        v-model="tags"
-                                        filled
-                                        chips
-                                        color="blue-grey lighten-2"
-                                        label="Select"
-                                        item-text="name"
-                                        item-value="id"
+                                    <v-text-field
+                                        label="餐廳照片"
+                                        outlined
+                                        v-model="info.img"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-select
+                                        background-color="white"
+                                        v-model="selected_tags"
+                                        :items="tag_names"
                                         multiple
-                                    >
-                                        <template v-slot:selection="data">
-                                            <v-chip
-                                                v-bind="data.attrs"
-                                                :input-value="data.selected"
-                                                close
-                                            >
-                                                {{ data.itme }}
-                                            </v-chip>
-                                        </template>
-                                    </v-autocomplete>
+                                        chips
+                                        label="請選擇要加入的標籤"
+                                    ></v-select>
                                 </v-col>
 
                                 <v-card-actions>
@@ -110,6 +111,7 @@
 
 <script>
 import {
+    restaurantGetAllTagAPI,
     restaurantGetInfoAPI,
     restaurantEditInfoAPI,
     restaurantSwitchUserModeAPI,
@@ -119,7 +121,36 @@ export default {
     props: {},
     mounted() {
         this.$emit("changefocus", "info");
-        let config = {
+        this.init_info();
+    },
+    data: () => ({
+        info: {
+            id: "id",
+            phone: "phone",
+            email: "email",
+            name: "name",
+            address: "address",
+            img:"",
+            rest_tags:[],
+            rest_tags_name:[],
+        },
+        tags:[],
+        id_tags:[],
+        tag_names:[],
+        selected_tags:[],
+        selected_tags_id:[],
+        editDialog: false,
+        editComfirmLoading: false,
+        wanted_mode: 0,
+        role_list: ["顧客", "外送員"],
+        wanted_role: "",
+        resp: "",
+        temp:"",
+        change:false,
+    }),
+    methods: {
+        init_info(){
+            let config = {
             params: {ID: this.$route.params.id},
             headers: {
                 Authorization: "Bearer " + this.$store.getters.getAccessToken,
@@ -133,35 +164,39 @@ export default {
                 this.info.phone = resp.data.data.phone;
                 this.info.address = resp.data.data.address;
                 this.info.email = resp.data.data.email;
-                this.$set(this.info.tags,0,resp.data.data.tags)
-                for(let i=0;i<resp.data.data.tags.length;i++){
-                    this.tags.push(resp.data.data.tags[i].name);
+                this.info.img = resp.data.data.img;
+                this.info.rest_tags = resp.data.data.tags;
+                for (let index = 0; index < this.info.rest_tags.length; index++) {
+                    const element = this.info.rest_tags[index];
+                    this.info.rest_tags_name[index] = element.name;
                 }
+                this.change = this.change?false:true;
                 console.log("info");
-                console.log(this.tags);
+                
             })
             .catch((error) => {
                 console.error(error);
             });
-    },
-    data: () => ({
-        info: {
-            id: "id",
-            phone: "phone",
-            email: "email",
-            name: "name",
-            address: "address",
-            tags: [],
+        this.get_all_tags();
         },
-        tags:[],
-        editDialog: false,
-        editComfirmLoading: false,
-        wanted_mode: 0,
-        role_list: ["顧客", "外送員"],
-        wanted_role: "",
-        resp: "",
-    }),
-    methods: {
+        get_all_tags() {
+        let config = {
+            headers: {
+            Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            },
+        };
+        restaurantGetAllTagAPI(config)
+        .then((resp) => {       
+            for (let index = 0; index < resp.data.data.length; index++) {
+                const element = resp.data.data[index];
+                this.tags[index] = element;
+                var name = element.name;
+                this.id_tags[name] = element.id;
+                this.tag_names[index] = (element.name);
+            }
+            //console.log(this.id_tags);
+        });
+        },
         switch_user() {
             /*console.log(this.wanted_role);*/
             if (this.wanted_role === "顧客") {
@@ -197,9 +232,7 @@ export default {
                 }
             });
         },
-        history_order() {
-            this.$router.push("");
-        },
+        
         edit_info() {
             this.editDialog = true;
             let config = {
@@ -207,18 +240,28 @@ export default {
                     Authorization: "Bearer " + this.$store.getters.getAccessToken,
                 },
             };
+            for (let index = 0; index < this.selected_tags.length; index++) {
+                const element = this.selected_tags[index];
+                this.selected_tags_id[index] = (this.id_tags[element]);
+            }
+            console.log(this.selected_tags_id)
             let data = {
                 name: this.info.name,
                 email: this.info.email,
                 address: this.info.address,
                 phone: this.info.phone,
+                img:this.info.img,
+                tags: this.selected_tags_id,
             };
-            restaurantEditInfoAPI(data, config)
+            restaurantEditInfoAPI(data,config)
                 .then((resp) => {
                     if (resp.status === 200) {
                         this.editComfirmLoading = false;
                         this.editDialog = false;
                         console.log("done");
+                        
+                        this.init_info();
+                        console.log("done rerender");
                     }
                 })
                 .catch((err) => {

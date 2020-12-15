@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
             Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
             Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
+            Route::get('/addressToLocation', 'App\Http\Controllers\CheckoutController@addressToLocation');
             Route::get('/locationToAddress', 'App\Http\Controllers\CheckoutController@locationToAddress');
             Route::post('/changeRoleCustomer', 'App\Http\Controllers\AuthController@changeRoleCustomer');
             Route::get('/order/getAllOrders', 'App\Http\Controllers\OrderController@getAllOrders');
