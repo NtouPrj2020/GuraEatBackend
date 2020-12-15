@@ -20,8 +20,8 @@ class CheckoutController extends Controller
         $request->validate([
             'address' => 'required|string',
         ]);
-        $res = $this->addtolo($request->address);
-        $data = json_decode($res->getBody());
+        $data = $this->addtolo($request->address);
+        $data = json_decode($data);
         return response()->json($data, 200);
     }
 
@@ -60,8 +60,8 @@ class CheckoutController extends Controller
             'key' => $_ENV['GOOGLE_MAP_API']
         ]
         ]);
-        $data = json_decode($res->getBody());
-        return $data;
+
+        return $res->getBody();
     }
 
     public function loToAdd($long, $lat)
@@ -129,11 +129,12 @@ class CheckoutController extends Controller
             }
         }
 
+
         //檢查是否有外送員上線中
         if (count($onlineDeliveryMans) > 0) {
-            //計算離餐廳最近的上線中外送員
-            $restaurant = Restaurant::find($req->restaurant_id)->first();
-            $obj = $this->addtolo($restaurant->address);
+            $restaurant = Restaurant::find($req->restaurant_id);
+            $res = $this->addtolo($restaurant->address);
+            $obj = json_decode($res);
             if(count($obj->results) == 0){
                 $data = [
                     "method" => "checkoutAutogoog",
@@ -146,21 +147,26 @@ class CheckoutController extends Controller
             }
             $rest_lat = $obj->results[0]->geometry->location->lat;
             $rest_lng = $obj->results[0]->geometry->location->lng;
+            //計算離餐廳最近的上線中外送員
             $distanceList = [];
-            for ($i = 0; $i < count($onlineDeliveryMans); $i++) {
-                array_push(
-                    $distanceList,
-                    $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng)
-                );
-            }
-            $closes = 0;
-            for ($i = 0; $i < count($distanceList); $i++) {
-                if($distanceList[$i]>$distanceList[$closes]){
-                    $closes = $i;
-                }
-            }
-            $chooseMan = $onlineDeliveryMans[$closes];
+            $manList = [];
 
+            for ($i = 0; $i < count($onlineDeliveryMans); $i++) {
+                $onlineDeliveryMans[$i]->distance = $this->getDistance($onlineDeliveryMans[$i]->latitude, $onlineDeliveryMans[$i]->longitude, $rest_lat, $rest_lng);
+            }
+            $chooseMan = null;
+            $onlineDeliveryMans = $onlineDeliveryMans->sortBy('distance');
+            $chooseMan = $this->getChooseMan($onlineDeliveryMans);
+            if($chooseMan==null){
+                $data = [
+                    "method" => "checkoutAuto",
+                    "message" => "no delivery man is available",
+                    "status" => 4032,
+                    "data" => [
+                    ]
+                ];
+                return response()->json($data, 403);
+            }
             //建立訂單
             $order = new Order();
             $order->restaurant_id = $req->restaurant_id;
@@ -171,12 +177,14 @@ class CheckoutController extends Controller
             $order->type = $req->type;
             $order->note = $req->note;
             $order->customer_address = $req->customer_address;
-            $order->distance = $distanceList[$closes];
+            $order->distance = $chooseMan->distance;
             if($req->type == 0 ){
                 $order->status = 1;
             }else if($req->type == 1){
                 $order->status = 0;
-                $order->send_time = Carbon::parse($req->send_time)->format('Y-m-d H:i');
+                $t = Carbon::parse($req->send_time)->addHours(8);
+                $t->format('Y-m-d H:i');;
+                $order->send_time = $t;
             }
             $order->save();
             //商品和訂單連結
@@ -203,10 +211,32 @@ class CheckoutController extends Controller
             $data = [
                 "method" => "checkoutAuto",
                 "message" => "no delivery man is online",
-                "status" => 5002,
+                "status" => 4031,
                 "data" => []
             ];
-            return response()->json($data, 500);
+            return response()->json($data, 403);
+        }
+    }
+
+
+    function getChooseMan($onlineDeliveryMans){
+        $chooseMan = null;
+        for($i = 0;$i<count($onlineDeliveryMans);$i++){
+            $manOrders = $onlineDeliveryMans[$i]->orders()->get();
+            $haveOrder = false;
+            for($j = 0;$j<count($manOrders);$j++){
+                if( $manOrders[$j]->status < 3){
+                    $haveOrder = true;
+                }
+            }
+            if(!$haveOrder){
+                $chooseMan = $onlineDeliveryMans[$i];
+            }
+        }
+        if($chooseMan != null){
+            return $chooseMan;
+        }else{
+            return null;
         }
     }
 
