@@ -1958,6 +1958,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 /* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api */ "./resources/js/api.js");
+var _this = undefined;
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1989,6 +2013,11 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id"],
   data: function data() {
     return {
+      config: {
+        headers: {
+          Authorization: "Bearer " + _this.$store.getters.getAccessToken
+        }
+      },
       mapStyle: "width: " + window.innerWidth + "px; height: " + window.innerHeight + "px;",
       mapOptions: {
         disableDefaultUI: true,
@@ -1998,12 +2027,22 @@ __webpack_require__.r(__webpack_exports__);
       center: {
         lat: 45.508,
         lng: -73.587
-      }
+      },
+      orderstatus: [{
+        status: "已送達",
+        color: "grey"
+      }, {
+        status: "送餐中",
+        color: "grey"
+      }, {
+        status: "餐點製作中",
+        color: "deep-purple"
+      }]
     };
   },
   created: function created() {},
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     this.$emit("changefocus", "");
     this.onResize();
@@ -2012,8 +2051,8 @@ __webpack_require__.r(__webpack_exports__);
     this.$refs.mapRef.$mapPromise.then(function (map) {
       var bounds = new google.maps.LatLngBounds();
 
-      for (var i = 0; i < _this.markers.length; i++) {
-        bounds.extend(_this.markers[i].position);
+      for (var i = 0; i < _this2.markers.length; i++) {
+        bounds.extend(_this2.markers[i].position);
       } //now fit the map to the newly inclusive bounds
 
 
@@ -2026,7 +2065,7 @@ __webpack_require__.r(__webpack_exports__);
       this.mapStyle = "width:" + window.innerWidth + "px;  height: " + window.innerHeight / 4 + "px;";
     },
     addMarker: function addMarker() {
-      var _this2 = this;
+      var _this3 = this;
 
       navigator.geolocation.getCurrentPosition(function (position) {
         var marker = {
@@ -2036,7 +2075,7 @@ __webpack_require__.r(__webpack_exports__);
 
         var mapMarker = __webpack_require__(/*! ./car.png */ "./resources/js/components/customer/car.png");
 
-        _this2.markers.push({
+        _this3.markers.push({
           position: marker,
           icon: mapMarker
         });
@@ -2049,22 +2088,47 @@ __webpack_require__.r(__webpack_exports__);
 
         var mapMarker = __webpack_require__(/*! ./car.png */ "./resources/js/components/customer/car.png");
 
-        _this2.markers.push({
+        _this3.markers.push({
           position: marker,
           icon: mapMarker
         });
       });
     },
     geolocate: function geolocate() {
-      var _this3 = this;
+      var _this4 = this;
 
       navigator.geolocation.getCurrentPosition(function (position) {
-        _this3.center = {
+        _this4.center = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        console.log(_this3.center.lat);
-        console.log(_this3.center.lng);
+        console.log(_this4.center.lat);
+        console.log(_this4.center.lng);
+      });
+    },
+    updateorder: function updateorder() {
+      var _this5 = this;
+
+      customerGetOrderstatusAPI(this.config).then(function (resp) {
+        if (resp.status === 200) {
+          _this5.resName = resp.data.data.name;
+          _this5.Img = resp.data.data.resimg;
+          console.log(resp.data);
+        }
+      })["catch"](function (err) {
+        console.log(err);
+
+        if (err.response.status === 401) {
+          _this5.$emit("showSnackBar", "401error");
+
+          console.log(err);
+        } else if (err.response.status === 404) {
+          _this5.$emit("showSnackBar", "404error");
+
+          console.log(err);
+        }
+
+        console.log(err);
       });
     }
   }
@@ -2414,7 +2478,9 @@ __webpack_require__.r(__webpack_exports__);
     switch_user: function switch_user() {
       var _this2 = this;
 
+      var context = this;
       /*console.log(this.wanted_role);*/
+
       if (this.wanted_role === "外送員") {
         this.wanted_mode = 2;
       } else {
@@ -2432,7 +2498,11 @@ __webpack_require__.r(__webpack_exports__);
         role: this.wanted_mode,
         device_name: this.$store.getters.getDeviceName
       }, config).then(function (resp) {
+        console.log(resp.status);
+
         if (resp.status === 200) {
+          context.$emit("showSnackBar", "切換中...");
+
           _this2.$store.commit("MODE", _this2.wanted_mode);
 
           _this2.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
@@ -2440,10 +2510,12 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$store.commit("USER_NAME", resp.data.data.name);
 
           _this2.$router.push("/guest");
-        } else if (resp.status === 403) {
-          _this2.$emit("showSnackBar", "無其他身分");
-        } else if (resp.status === 404) {
-          _this2.$emit("showSnackBar", "未知的錯誤");
+        }
+      })["catch"](function (err) {
+        if (err.response.status === 403) {
+          context.$emit("showSnackBar", "無其他身分");
+        } else if (err.response.status === 404) {
+          context.$emit("showSnackBar", "未知的錯誤");
         }
       });
     },
@@ -4130,6 +4202,12 @@ __webpack_require__.r(__webpack_exports__);
         } else if (resp.status === 404) {
           _this2.$emit("showSnackBar", "未知的錯誤");
         }
+      })["catch"](function (err) {
+        if (err.response.status === 403) {
+          context.$emit("showSnackBar", "無其他身分");
+        } else if (err.response.status === 404) {
+          context.$emit("showSnackBar", "未知的錯誤");
+        }
       });
     },
     history_order: function history_order() {
@@ -5369,10 +5447,12 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$store.commit("USER_NAME", resp.data.data.name);
 
           _this2.$router.push("/guest");
-        } else if (resp.status === 403) {
-          _this2.$emit("showSnackBar", "無其他身分");
-        } else if (resp.status === 404) {
-          _this2.$emit("showSnackBar", "未知的錯誤");
+        }
+      })["catch"](function (err) {
+        if (err.response.status === 403) {
+          context.$emit("showSnackBar", "無其他身分");
+        } else if (err.response.status === 404) {
+          context.$emit("showSnackBar", "未知的錯誤");
         }
       });
     },
@@ -29088,37 +29168,81 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "gmap-map",
-        {
-          ref: "mapRef",
-          style: _vm.mapStyle,
-          attrs: { center: _vm.center, zoom: 14, options: _vm.mapOptions }
-        },
-        _vm._l(_vm.markers, function(m, index) {
-          return _c("GmapMarker", {
-            key: index,
-            attrs: {
-              position: m.position,
-              clickable: true,
-              draggable: true,
-              icon: m.icon
-            },
-            on: {
-              click: function($event) {
-                _vm.center = m.position
+  return _c("div", [
+    _c(
+      "div",
+      { attrs: { id: "map" } },
+      [
+        _c(
+          "gmap-map",
+          {
+            ref: "mapRef",
+            style: _vm.mapStyle,
+            attrs: { center: _vm.center, zoom: 14, options: _vm.mapOptions }
+          },
+          _vm._l(_vm.markers, function(m, index) {
+            return _c("GmapMarker", {
+              key: index,
+              attrs: {
+                position: m.position,
+                clickable: true,
+                draggable: true,
+                icon: m.icon
+              },
+              on: {
+                click: function($event) {
+                  _vm.center = m.position
+                }
               }
-            }
-          })
-        }),
-        1
-      )
-    ],
-    1
-  )
+            })
+          }),
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "container mb-15" },
+      [
+        _c(
+          "v-card",
+          { staticClass: "mx-1", attrs: { elevation: "2" } },
+          [
+            _c(
+              "v-card-text",
+              [
+                _c("div", { staticClass: "font-weight-bold ml-8 mb-2" }, [
+                  _vm._v("訂單狀態")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "v-timeline",
+                  { attrs: { "align-top": "", dense: "" } },
+                  _vm._l(_vm.orderstatus, function(status, index) {
+                    return _c(
+                      "v-timeline-item",
+                      { key: index, attrs: { color: status.color, small: "" } },
+                      [
+                        _c("div", { staticClass: "font-weight-normal" }, [
+                          _c("strong", [_vm._v(_vm._s(status.status))])
+                        ])
+                      ]
+                    )
+                  }),
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -29643,7 +29767,11 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n            取消\n          ")]
+                      [
+                        _vm._v(
+                          "\n                        取消\n                    "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
@@ -29655,7 +29783,11 @@ var render = function() {
                         },
                         on: { click: _vm.edit_info }
                       },
-                      [_vm._v("\n            儲存\n          ")]
+                      [
+                        _vm._v(
+                          "\n                        儲存\n                    "
+                        )
+                      ]
                     )
                   ],
                   1
@@ -31590,7 +31722,11 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n            取消\n          ")]
+                      [
+                        _vm._v(
+                          "\n                        取消\n                    "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
@@ -31602,7 +31738,11 @@ var render = function() {
                         },
                         on: { click: _vm.edit_info }
                       },
-                      [_vm._v("\n            儲存\n          ")]
+                      [
+                        _vm._v(
+                          "\n                        儲存\n                    "
+                        )
+                      ]
                     )
                   ],
                   1
@@ -96494,15 +96634,15 @@ var restaurantLoginAPI = function restaurantLoginAPI(config) {
 }; //id 2
 
 var customerSwitchUserModeAPI = function customerSwitchUserModeAPI(config, data) {
-  return guestRequest.post("/api/v1/users/customer/changeRoleCustomer", config, data);
+  return userRequest.post("/api/v1/users/customer/changeRoleCustomer", config, data);
 }; //id 2
 
 var deliveryManSwitchUserModeAPI = function deliveryManSwitchUserModeAPI(config, data) {
-  return guestRequest.post("/api/v1/users/delivery_man/changeRoleDeliveryMan", config, data);
+  return userRequest.post("/api/v1/users/delivery_man/changeRoleDeliveryMan", config, data);
 }; //id 2
 
 var restaurantSwitchUserModeAPI = function restaurantSwitchUserModeAPI(config, data) {
-  return guestRequest.post("/api/v1/users/restaurant/changeRoleRestaurant", config, data);
+  return userRequest.post("/api/v1/users/restaurant/changeRoleRestaurant", config, data);
 }; //id 3
 
 var forgotPasswordAPI = function forgotPasswordAPI(config, data) {
@@ -96510,11 +96650,11 @@ var forgotPasswordAPI = function forgotPasswordAPI(config, data) {
 }; // id 4
 
 var customerGetInfoAPI = function customerGetInfoAPI(config) {
-  return guestRequest.get("/api/v1/users/customer/info", config);
+  return userRequest.get("/api/v1/users/customer/info", config);
 }; //id 5
 
 var customerEditInfoAPI = function customerEditInfoAPI(config, data) {
-  return guestRequest.put("/api/v1/users/customer/info", config, data);
+  return userRequest.put("/api/v1/users/customer/info", config, data);
 }; //id 6
 
 var customerGetAllRestaurantAPI = function customerGetAllRestaurantAPI(config) {
@@ -96554,7 +96694,7 @@ var deliveryManGetInfoAPI = function deliveryManGetInfoAPI(config) {
 }; //id 15
 
 var deliveryManEditInfoAPI = function deliveryManEditInfoAPI(config, data) {
-  return guestRequest.put("/api/v1/users/delivery_man/info", config, data);
+  return userRequest.put("/api/v1/users/delivery_man/info", config, data);
 }; // id 16
 
 var deliveryManChangeStateAPI = function deliveryManChangeStateAPI(config, data) {
@@ -96594,7 +96734,7 @@ var restaurantGetInfoAPI = function restaurantGetInfoAPI(config) {
 }; // id 24
 
 var restaurantEditInfoAPI = function restaurantEditInfoAPI(config, data) {
-  return guestRequest.put("/api/v1/users/restaurant/info", config, data);
+  return userRequest.put("/api/v1/users/restaurant/info", config, data);
 }; // id 25
 
 var deliveryManSwitchOrderStateAPI = function deliveryManSwitchOrderStateAPI(config, data) {

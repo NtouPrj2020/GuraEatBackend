@@ -62,21 +62,17 @@ export const restaurantLoginAPI = config =>
     guestRequest.post("/api/v1/guest/restaurant/login", config);
 //id 2
 export const customerSwitchUserModeAPI = (config, data) =>
-    guestRequest.post(
-        "/api/v1/users/customer/changeRoleCustomer",
-        config,
-        data
-    );
+    userRequest.post("/api/v1/users/customer/changeRoleCustomer", config, data);
 //id 2
 export const deliveryManSwitchUserModeAPI = (config, data) =>
-    guestRequest.post(
+    userRequest.post(
         "/api/v1/users/delivery_man/changeRoleDeliveryMan",
         config,
         data
     );
 //id 2
 export const restaurantSwitchUserModeAPI = (config, data) =>
-    guestRequest.post(
+    userRequest.post(
         "/api/v1/users/restaurant/changeRoleRestaurant",
         config,
         data
@@ -86,10 +82,10 @@ export const forgotPasswordAPI = (config, data) =>
     guestRequest.post("unknown", config, data);
 // id 4
 export const customerGetInfoAPI = config =>
-    guestRequest.get("/api/v1/users/customer/info", config);
+    userRequest.get("/api/v1/users/customer/info", config);
 //id 5
 export const customerEditInfoAPI = (config, data) =>
-    guestRequest.put("/api/v1/users/customer/info", config, data);
+    userRequest.put("/api/v1/users/customer/info", config, data);
 //id 6
 export const customerGetAllRestaurantAPI = config =>
     userRequest.get("/api/v1/users/customer/restaurant/all", config);
@@ -125,7 +121,7 @@ export const deliveryManGetInfoAPI = config =>
     userRequest.get("/api/v1/users/delivery_man/info", config);
 //id 15
 export const deliveryManEditInfoAPI = (config, data) =>
-    guestRequest.put("/api/v1/users/delivery_man/info", config, data);
+    userRequest.put("/api/v1/users/delivery_man/info", config, data);
 // id 16
 export const deliveryManChangeStateAPI = (config, data) =>
     userRequest.put("/api/v1/users/delivery_man/status", config, data);
@@ -155,7 +151,7 @@ export const restaurantGetInfoAPI = config =>
     userRequest.get("/api/v1/users/restaurant/info", config);
 // id 24
 export const restaurantEditInfoAPI = (config, data) =>
-    guestRequest.put("/api/v1/users/restaurant/info", config, data);
+    userRequest.put("/api/v1/users/restaurant/info", config, data);
 // id 25
 export const deliveryManSwitchOrderStateAPI = (config, data) =>
     userRequest.put("unknown", config, data);

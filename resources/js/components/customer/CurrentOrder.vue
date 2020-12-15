@@ -1,22 +1,44 @@
 <template>
   <div>
-    <gmap-map
-      :center="center"
-      :zoom="14"
-      :options="mapOptions"
-      :style="mapStyle"
-      ref="mapRef"
-    >
-      <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="true"
-        :icon="m.icon"
-        @click="center = m.position"
-      />
-    </gmap-map>
+    <div id="map">
+      <gmap-map
+        :center="center"
+        :zoom="14"
+        :options="mapOptions"
+        :style="mapStyle"
+        ref="mapRef"
+      >
+        <GmapMarker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          :clickable="true"
+          :draggable="true"
+          :icon="m.icon"
+          @click="center = m.position"
+        />
+      </gmap-map>
+    </div>
+    <div class="container mb-15">
+      <v-card elevation="2" class="mx-1">
+        <v-card-text>
+          <div class="font-weight-bold ml-8 mb-2">訂單狀態</div>
+
+          <v-timeline align-top dense>
+            <v-timeline-item
+              v-for="(status, index) in orderstatus"
+              :key="index"
+              :color="status.color"
+              small
+            >
+              <div class="font-weight-normal">
+                <strong>{{ status.status }}</strong>
+              </div>
+            </v-timeline-item>
+          </v-timeline>
+        </v-card-text>
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -30,6 +52,11 @@ import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
 export default {
   props: ["id"],
   data: () => ({
+    config: {
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken,
+      },
+    },
     mapStyle:
       "width: " +
       window.innerWidth +
@@ -39,6 +66,20 @@ export default {
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
     markers: [],
     center: { lat: 45.508, lng: -73.587 },
+    orderstatus: [
+      {
+        status: "已送達",
+        color: "grey",
+      },
+      {
+        status: "送餐中",
+        color: "grey",
+      },
+      {
+        status: "餐點製作中",
+        color: "deep-purple",
+      },
+    ],
   }),
   created() {},
   mounted() {
@@ -94,6 +135,30 @@ export default {
         console.log(this.center.lng);
       });
     },
+    updateorder() {
+      customerGetOrderstatusAPI(this.config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            this.resName = resp.data.data.name;
+            this.Img = resp.data.data.resimg;
+            console.log(resp.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            this.$emit("showSnackBar", "401error");
+            console.log(err);
+          } else if (err.response.status === 404) {
+            this.$emit("showSnackBar", "404error");
+            console.log(err);
+          }
+          console.log(err);
+        });
+    },
   },
 };
 </script>
+
+<style>
+</style>
