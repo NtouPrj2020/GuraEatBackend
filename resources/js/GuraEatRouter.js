@@ -14,13 +14,13 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode == 0) {
-                        next({path: "/guest/login"});
+                        next({ path: "/guest/login" });
                     } else if (this.store.getters.getMode == 1) {
-                        next({path: "/customer/home"});
+                        next({ path: "/customer/home" });
                     } else if (this.store.getters.getMode == 2) {
-                        next({path: "/delivery_man/home"});
+                        next({ path: "/delivery_man/home" });
                     } else if (this.store.getters.getMode == 3) {
-                        next({path: "/restaurant/home"});
+                        next({ path: "/restaurant/home" });
                     } else {
                         next();
                     }
@@ -33,11 +33,11 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode == 1) {
-                        next({path: "/customer/home"});
+                        next({ path: "/customer/home" });
                     } else if (this.store.getters.getMode == 2) {
-                        next({path: "/delivery_man/home"});
+                        next({ path: "/delivery_man/home" });
                     } else if (this.store.getters.getMode == 3) {
-                        next({path: "/restaurant/home"});
+                        next({ path: "/restaurant/home" });
                     } else {
                         next();
                     }
@@ -85,7 +85,7 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode !== 1) {
-                        next({path: "/guest/login"});
+                        next({ path: "/guest/login" });
                     } else {
                         next();
                     }
@@ -125,14 +125,14 @@ export default class GuraEatRouter {
                     {
                         path: "order",
                         components: {
-                            customerView: require("./components/customer/Order.vue")
+                            customerView: require("./components/customer/CurrentOrder.vue")
                                 .default
                         }
                     },
                     {
-                        path: "currentorder",
+                        path: "history",
                         components: {
-                            customerView: require("./components/customer/CurrentOrder.vue")
+                            customerView: require("./components/customer/history.vue")
                                 .default
                         }
                     }
@@ -146,7 +146,7 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode !== 2) {
-                        next({path: "/guest/login"});
+                        next({ path: "/guest/login" });
                     } else {
                         next();
                     }
@@ -176,14 +176,14 @@ export default class GuraEatRouter {
                     {
                         path: "order",
                         components: {
-                            deliveryManView: require("./components/deliveryMan/Order.vue")
+                            deliveryManView: require("./components/deliveryMan/CurrentOrder.vue")
                                 .default
                         }
                     },
                     {
-                        path: "currentorder",
+                        path: "history",
                         components: {
-                            deliveryManView: require("./components/deliveryMan/CurrentOrder.vue")
+                            deliveryManView: require("./components/deliveryMan/history.vue")
                                 .default
                         }
                     }
@@ -197,7 +197,7 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode !== 3) {
-                        next({path: "/guest/login"});
+                        next({ path: "/guest/login" });
                     } else {
                         next();
                     }
@@ -226,13 +226,13 @@ export default class GuraEatRouter {
                 },
                 beforeEnter: (to, from, next) => {
                     if (this.store.getters.getMode == 0) {
-                        next({path: "/guest/login"});
+                        next({ path: "/guest/login" });
                     } else if (this.store.getters.getMode == 1) {
-                        next({path: "/customer/home"});
+                        next({ path: "/customer/home" });
                     } else if (this.store.getters.getMode == 2) {
-                        next({path: "/delivery_man/home"});
+                        next({ path: "/delivery_man/home" });
                     } else if (this.store.getters.getMode == 3) {
-                        next({path: "/restaurant/home"});
+                        next({ path: "/restaurant/home" });
                     } else {
                         next();
                     }

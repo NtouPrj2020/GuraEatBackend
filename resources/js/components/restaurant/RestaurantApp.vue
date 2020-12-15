@@ -41,6 +41,7 @@ export default {
     snackbar: false,
     snackbarText: "Hello, I'm a snackbar",
     snackBarTimeout: 3000,
+    value:"",
   }),
   methods: {
     showSnackBar(text) {
@@ -62,7 +63,6 @@ export default {
 
 <style>
 #resView {
-  background-color: #477eae;
   max-width: 500px;
   height: 100vh;
   margin: 0 auto;
