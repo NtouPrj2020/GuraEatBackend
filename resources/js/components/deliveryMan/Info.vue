@@ -3,10 +3,12 @@
     <div class="panel-heading text-center">個人資訊</div>
     <div class="container mb-12">
       <v-card>
-        <v-card-text>姓名: {{ info.name }}</v-card-text>
+        <div>
+        <v-card-text  class="font-weight-medium">姓名: {{ info.name }}</v-card-text>
         <v-card-text>地址: {{ info.address }}</v-card-text>
         <v-card-text>電話: {{ info.phone }}</v-card-text>
         <v-card-text>電子郵件: {{ info.email }}</v-card-text>
+        </div>
       </v-card>
       <v-row justify="center" class="pa-2">
         <v-select
