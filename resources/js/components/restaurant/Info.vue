@@ -188,10 +188,12 @@ export default {
                     this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
                     this.$store.commit("USER_NAME", resp.data.data.name);
                     this.$router.push("/guest");
-                } else if (resp.status === 403) {
-                    this.$emit("showSnackBar", "無其他身分");
-                } else if (resp.status === 404) {
-                    this.$emit("showSnackBar", "未知的錯誤");
+                }
+            }).catch((err) => {
+                if (err.response.status === 403) {
+                    context.$emit("showSnackBar", "無其他身分");
+                } else if (err.response.status === 404) {
+                    context.$emit("showSnackBar", "未知的錯誤");
                 }
             });
         },
