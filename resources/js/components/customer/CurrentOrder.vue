@@ -13,6 +13,7 @@
         :position="m.position"
         :clickable="true"
         :draggable="true"
+        :icon="m.icon"
         @click="center = m.position"
       />
     </gmap-map>
@@ -54,6 +55,7 @@ export default {
       //now fit the map to the newly inclusive bounds
       map.fitBounds(bounds);
     });
+    console.log(this.markers);
   },
   methods: {
     onResize() {
@@ -70,14 +72,16 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        this.markers.push({ position: marker });
+        const mapMarker = require("./car.png");
+        this.markers.push({ position: marker, icon: mapMarker });
       });
       navigator.geolocation.getCurrentPosition((position) => {
         const marker = {
           lat: position.coords.latitude + 0.0005,
           lng: position.coords.longitude + 0.01,
         };
-        this.markers.push({ position: marker });
+        const mapMarker = require("./car.png");
+        this.markers.push({ position: marker, icon: mapMarker });
       });
     },
     geolocate: function () {
