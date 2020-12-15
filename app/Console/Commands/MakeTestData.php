@@ -239,6 +239,10 @@ class MakeTestData extends Command
         $tag1->save();
 
         $tag1 = new RestaurantTag();
+        $tag1->name = "晚餐";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
         $tag1->name = "日式";
         $tag1->save();
 
@@ -256,6 +260,10 @@ class MakeTestData extends Command
 
         $tag1 = new RestaurantTag();
         $tag1->name = "西式";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "下午茶";
         $tag1->save();
 
         for($i = 0;$i<count($email);$i++){
