@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\DeliveryMan;
 use App\Models\Dish;
 use App\Models\Order;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -20,6 +23,12 @@ class OrderController extends Controller
             }
         }
         $order['items'] = $items;
+        $restaurant = Restaurant::find($order->restaurant_id);
+        $order['restaurant'] = $restaurant;
+        $deliveryMan = DeliveryMan::find($order->delivery_man_id);
+        $order['deliveryMan'] = $deliveryMan;
+        $customer = Customer::find($order->customer_id);
+        $order['customer'] = $customer;
     }
 
     public function getAllOrders(Request $request)
