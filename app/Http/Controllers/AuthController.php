@@ -1123,7 +1123,7 @@ class AuthController extends Controller
                     return response()->json($data, 200);
                 } else {
                     $data = [
-                        "status" => 401,
+                        "status" => 403,
                         "method" => "changeRoleCustomer",
                         "message" => "failed",
                         "data" => [
@@ -1134,7 +1134,7 @@ class AuthController extends Controller
                             "address" => ""
                         ]
                     ];
-                    return response()->json($data, 401);
+                    return response()->json($data, 403);
                 }
             } else if ($request->role == "3") {
                 $restaurant = Restaurant::where("email", '=', $user->email)->first();
@@ -1154,7 +1154,7 @@ class AuthController extends Controller
                     return response()->json($data, 200);
                 } else {
                     $data = [
-                        "status" => 401,
+                        "status" => 403,
                         "method" => "changeRoleCustomer",
                         "message" => "failed",
                         "data" => [
@@ -1165,11 +1165,11 @@ class AuthController extends Controller
                             "address" => ""
                         ]
                     ];
-                    return response()->json($data, 401);
+                    return response()->json($data, 403);
                 }
             } else {
                 $data = [
-                    "status" => 401,
+                    "status" => 403,
                     "method" => "changeRoleCustomer",
                     "message" => "failed",
                     "data" => [
@@ -1180,7 +1180,7 @@ class AuthController extends Controller
                         "address" => ""
                     ]
                 ];
-                return response()->json($data, 401);
+                return response()->json($data, 403);
             }
         }
 
@@ -1224,7 +1224,7 @@ class AuthController extends Controller
                             "address" => ""
                         ]
                     ];
-                    return response()->json($data, 401);
+                    return response()->json($data, 403);
                 }
             } else if ($request->role == "3") {
                 $restaurant = Restaurant::where("email", '=', $user->email)->first();
@@ -1244,7 +1244,7 @@ class AuthController extends Controller
                     return response()->json($data, 200);
                 } else {
                     $data = [
-                        "status" => 401,
+                        "status" => 403,
                         "method" => "changeRoleDeliveryMan",
                         "message" => "failed",
                         "data" => [
@@ -1255,11 +1255,11 @@ class AuthController extends Controller
                             "address" => ""
                         ]
                     ];
-                    return response()->json($data, 401);
+                    return response()->json($data, 403);
                 }
             } else {
                 $data = [
-                    "status" => 401,
+                    "status" => 403,
                     "method" => "changeRoleDeliveryMan",
                     "message" => "failed",
                     "data" => [
@@ -1270,7 +1270,7 @@ class AuthController extends Controller
                         "address" => ""
                     ]
                 ];
-                return response()->json($data, 401);
+                return response()->json($data, 403);
             }
         }
     }
@@ -1302,7 +1302,7 @@ class AuthController extends Controller
                 }
             } else {
                 $data = [
-                    "status" => 401,
+                    "status" => 403,
                     "method" => "changeRoleRestaurant",
                     "message" => "failed",
                     "data" => [
@@ -1313,7 +1313,7 @@ class AuthController extends Controller
                         "address" => ""
                     ]
                 ];
-                return response()->json($data, 401);
+                return response()->json($data, 403);
             }
             if ($request->role == "2") {
                 $delivery_man = DeliveryMan::where("email", '=', $user->email)->first();
@@ -1333,7 +1333,7 @@ class AuthController extends Controller
                     return response()->json($data, 200);
                 } else {
                     $data = [
-                        "status" => 401,
+                        "status" => 403,
                         "method" => "changeRoleRestaurant",
                         "message" => "failed",
                         "data" => [
@@ -1344,11 +1344,11 @@ class AuthController extends Controller
                             "address" => ""
                         ]
                     ];
-                    return response()->json($data, 401);
+                    return response()->json($data, 403);
                 }
             } else {
                 $data = [
-                    "status" => 401,
+                    "status" => 403,
                     "method" => "changeRoleRestaurant",
                     "message" => "failed",
                     "data" => [
@@ -1359,7 +1359,7 @@ class AuthController extends Controller
                         "address" => ""
                     ]
                 ];
-                return response()->json($data, 401);
+                return response()->json($data, 403);
             }
         }
     }
