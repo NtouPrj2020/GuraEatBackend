@@ -185,28 +185,36 @@ class MakeTestData extends Command
             '百餃咖喱',
             '日町壽司屋',
             '鮮味鍋',
-            '樂食意大利餐廳'
+            '樂食意大利餐廳',
+            'すき家Sukiya',
+            '王鼎牛排D62'
         ];
         $phone = [
             '02-24625968',
             '02-21427546',
             '02-24252232',
             '02-24691580',
-            '02-24221314'
+            '02-24221314',
+            '02-25528700',
+            '02-24261017'
         ];
         $address = [
             '基隆市中正區北寧路1號',
             '基隆市中正區祥豐街119號',
             '基隆市仁愛區孝三路16號',
             '基隆市中正區義二路176號1樓',
-            '200基隆市仁愛區仁二路98號'
+            '200基隆市仁愛區仁二路98號',
+            '200基隆市仁愛區仁二路236號',
+            '200基隆市仁愛區愛三路21號仁愛 市場 號'
         ];
         $img = [
             'https://lh5.googleusercontent.com/p/AF1QipOtZ4M8fSxv-VekMa5oTVtHAnXk4Pajb1PN9lb6=w408-h306-k-no',
             'https://lh5.googleusercontent.com/p/AF1QipNxBocQDvd8miE5x7uLgC33pzEh_-Vg9KUCFN6l=w426-h240-k-no',
             'https://lh5.googleusercontent.com/p/AF1QipNWemip9PsoMSyP3iWA8kVhz6HZTz2Spu6Nc_o7=w408-h306-k-no',
             'https://lh5.googleusercontent.com/p/AF1QipOaeeViMSONqwK7394EUKwfg6CyBV9fJbKVplLH=w408-h306-k-no',
-            'https://lh5.googleusercontent.com/p/AF1QipPJ1WUnatQmE1JGkSQ6k7DfKQqQZY6P1HqGkg3K=w408-h306-k-no'
+            'https://lh5.googleusercontent.com/p/AF1QipPJ1WUnatQmE1JGkSQ6k7DfKQqQZY6P1HqGkg3K=w408-h306-k-no',
+            'https://lh5.googleusercontent.com/p/AF1QipNkwx9Nz-COxc8EfHpZQP58oyiEXsLMD4nCsjmI=w408-h306-k-no',
+            'https://lh5.googleusercontent.com/p/AF1QipMcXVu04k5vPHXoRsesoXoGGRCXVm6zRnEExiUE=w408-h306-k-no'
         ];
         $email = [
             'testrest1@test.com',
@@ -214,8 +222,43 @@ class MakeTestData extends Command
             'testrest3@test.com',
             'testrest4@test.com',
             'testrest5@test.com',
+            'testrest6@test.com',
+            'testrest7@test.com',
         ];
-        for($i = 0;$i<5;$i++){
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "早餐";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "咖哩";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "午餐";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "日式";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "火鍋";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "義大利餐廳";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "牛排";
+        $tag1->save();
+
+        $tag1 = new RestaurantTag();
+        $tag1->name = "西式";
+        $tag1->save();
+
+        for($i = 0;$i<count($email);$i++){
             $res = new Restaurant();
             $res->name = $name[$i];
             $res->phone = $phone[$i];
@@ -232,9 +275,7 @@ class MakeTestData extends Command
             $rate->restaurant_id = $res->id;
             if($i == 0){
 
-                $tag1 = new RestaurantTag();
-                $tag1->name = "早餐";
-                $tag1->save();
+                $tag1 = RestaurantTag::where('name','=','早餐')->first();
                 $res->tags()->save($tag1);
 
                 $rate->star5 = 5;
@@ -256,9 +297,10 @@ class MakeTestData extends Command
             }
             if($i == 1){
 
-                $tag1 = new RestaurantTag();
-                $tag1->name = "咖哩";
-                $tag1->save();
+                $tag1 = RestaurantTag::where('name','=','咖哩')->first();
+                $res->tags()->save($tag1);
+
+                $tag1 = RestaurantTag::where('name','=','午餐')->first();
                 $res->tags()->save($tag1);
 
                 $rate->star5 = 5;
@@ -279,9 +321,11 @@ class MakeTestData extends Command
                 ];
             }
             if($i == 2){
-                $tag1 = new RestaurantTag();
-                $tag1->name = "日式";
-                $tag1->save();
+                $tag1 = RestaurantTag::where('name','=','日式')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','午餐')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','晚餐')->first();
                 $res->tags()->save($tag1);
 
                 $rate->star5 = 3;
@@ -302,9 +346,7 @@ class MakeTestData extends Command
                 ];
             }
             if($i == 3){
-                $tag1 = new RestaurantTag();
-                $tag1->name = "火鍋";
-                $tag1->save();
+                $tag1 = RestaurantTag::where('name','=','火鍋')->first();
                 $res->tags()->save($tag1);
 
                 $rate->star5 = 1;
@@ -325,10 +367,17 @@ class MakeTestData extends Command
                 ];
             }
             if($i == 4){
-                $tag1 = new RestaurantTag();
-                $tag1->name = "義大利餐廳";
-                $tag1->save();
+                $tag1 = RestaurantTag::where('name','=','義大利餐廳')->first();
                 $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','下午茶')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','午餐')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','晚餐')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','西式')->first();
+                $res->tags()->save($tag1);
+
                 $dishlist1 = ['焗烤燉飯','燻腸義大利麵','青醬義大利麵'];
                 $pricelist1 = [150,180,180];
 
@@ -345,6 +394,56 @@ class MakeTestData extends Command
                 ];
                 $makingTimeList = [
                     40,40,40
+                ];
+            }
+            if($i == 5){
+                $tag1 = RestaurantTag::where('name','=','日式')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','午餐')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','晚餐')->first();
+                $res->tags()->save($tag1);
+                $rate->star5 = 3;
+                $rate->star4 = 3;
+                $rate->star3 = 2;
+                $rate->star2 = 0;
+                $rate->star1 = 1;
+
+                $dishlist1 = ['起司牛丼','味增湯','雞肉丼','咖哩牛丼'];
+                $pricelist1 = [150,30,120,150];
+                $imglist1 = [
+                    'https://lh5.googleusercontent.com/p/AF1QipPcdn9cSXwpDZ5emAdnTl2HeGCvmkP5J7eFRlem=s483-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipPmFGgTHYBBUuPnQ2LUeAcqg4JAZS3e6jELkw6h=s483-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipMXWcmEOZbfEZVJNDXDNI_PGTUt1y_7YlupxFGW=w203-h152-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipPijbrUHb2nwbgv3sT90KBq3ASuvnMSjHTE1ZAm=s644-k-no'
+                ];
+                $makingTimeList = [
+                    25,25,25,25
+                ];
+            }
+            if($i == 6){
+                $tag1 = RestaurantTag::where('name','=','西式')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','午餐')->first();
+                $res->tags()->save($tag1);
+                $tag1 = RestaurantTag::where('name','=','晚餐')->first();
+                $res->tags()->save($tag1);
+                $rate->star5 = 55;
+                $rate->star4 = 5;
+                $rate->star3 = 2;
+                $rate->star2 = 0;
+                $rate->star1 = 1;
+
+                $dishlist1 = ['羊小排','海陸總匯','香蒜麵包','蝦排拚牛排'];
+                $pricelist1 = [300,400,20,350];
+                $imglist1 = [
+                    'https://lh5.googleusercontent.com/p/AF1QipPzbBb3FFZ-7DBkQhydWbv3wKHQ7zx6_U_is0Ug=s644-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipO5hEJ3E39Hgd1ao27S5vsxERrucm2xeKWCrMgN=s563-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipO2tJGOBhH4SYR5RSSnpTEPcDeDfirKvNGSJKpe=w203-h152-k-no',
+                    'https://lh5.googleusercontent.com/p/AF1QipPBIRh-pM09QeW85xTR3___OMvLmsiNo8kgx3Qw=s483-k-no'
+                ];
+                $makingTimeList = [
+                    40,40,40,40
                 ];
             }
             $rate->save();
