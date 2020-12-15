@@ -35,7 +35,7 @@
                         </v-card-title>
                     </v-img>
                 </v-card>
-                <v-row>
+                <v-row dense>
                     <v-col cols="3">
                         地址：
                     </v-col>
@@ -779,20 +779,40 @@ export default {
                 //立即送達
                 customerSendOrderAPI(dataa, config)
                     .then(function (response) {
+                        context.$emit("showSnackBar", "送出成功");
                         console.log(response);
+                        context.$router.push("/customer/order");
                     })
                     .catch(function (error) {
-                        context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        if(error.response.body.status===4031){
+                            context.$emit("showSnackBar", "目前無外送員在線上");
+                        }
+                        else if(error.response.body.status===4032){
+                            context.$emit("showSnackBar", "目前無外送員可以派送訂單");
+                        }
+                        else if(error.response.body.status===4033){
+                            context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        }
                         console.error(error);
                     });
             } else if (this.Type === 1) {
                 //指定時間送達
                 customerSendOrderAPI(datab, config)
                     .then(function (response) {
+                        context.$emit("showSnackBar", "送出成功");
                         console.log(response);
+                        context.$router.push("/customer/order");
                     })
                     .catch(function (error) {
-                        context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        if(error.response.body.status===4031){
+                            context.$emit("showSnackBar", "目前無外送員在線上");
+                        }
+                        else if(error.response.body.status===4032){
+                            context.$emit("showSnackBar", "目前無外送員可以派送訂單");
+                        }
+                        else if(error.response.body.status===4033){
+                            context.$emit("showSnackBar", "同一時間只能有一筆訂單");
+                        }
                         console.error(error);
                     });
             }

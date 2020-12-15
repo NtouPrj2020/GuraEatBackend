@@ -64,7 +64,6 @@ export default {
 #resView {
   background-color: #477eae;
   max-width: 500px;
-  height: 100vh;
   margin: 0 auto;
 }
 </style>
