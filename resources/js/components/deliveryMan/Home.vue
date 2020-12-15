@@ -26,7 +26,7 @@
       :loading="onlineloading"
       @click="online"
     >
-      上線
+      {{ onlinestr }}
     </v-btn>
   </div>
 </template>
@@ -36,7 +36,11 @@
 <script>
 import axios from "axios";
 import Pusher from "pusher-js";
-import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
+import {
+  deliveryManChangeStateAPI,
+  deliveryManGetInfoAPI,
+  deliveryManGetOrderstatusAPI,
+} from "../../api";
 
 export default {
   data: () => ({
@@ -51,6 +55,7 @@ export default {
     center: { lat: 45.508, lng: -73.587 },
     value: "home",
     onlineloading: false,
+    onlinestr: "上線",
   }),
   created() {},
   mounted() {
@@ -58,7 +63,19 @@ export default {
     this.$emit("changefocus", "home");
     this.addMarker();
     this.geolocate();
-    console.log(this.markers);
+    deliveryManGetOrderstatusAPI({
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken,
+      },
+    })
+      .then((resp) => {
+        if (resp.status === 200) {
+          this.onlinestr = "下線";
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     var pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
       cluster: "ap3",
     });
@@ -116,6 +133,12 @@ export default {
     },
     online() {
       this.onlineloading = true;
+      let status;
+      if (this.onlinestr === "上線") {
+        status = 1;
+      } else {
+        status = 0;
+      }
       let config = {
         headers: {
           Authorization: "Bearer " + this.$store.getters.getAccessToken,
@@ -128,6 +151,11 @@ export default {
         .then((resp) => {
           if (resp.status === 200) {
             this.onlineloading = false;
+            if (status) {
+              this.onlinestr = "下線";
+            } else {
+              this.onlinestr = "上線";
+            }
             console.log(resp.data);
             console.log("done");
           }

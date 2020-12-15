@@ -181,6 +181,8 @@ export const customerGetAllOrdersAPI = config =>
     userRequest.get("/api/v1/users/customer/order/getAllOrders", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
+export const deliveryManGetOrderstatusAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/order/now", config);
 export const restaurantGetDishByDishIDAPI = config =>
     userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
 export const restaurantGetAllTagAPI = config =>

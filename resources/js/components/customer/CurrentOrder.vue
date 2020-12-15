@@ -3,7 +3,7 @@
     <div id="map">
       <gmap-map
         :center="center"
-        :zoom="14"
+        :zoom="12"
         :options="mapOptions"
         :style="mapStyle"
         ref="mapRef"
@@ -12,10 +12,9 @@
           :key="index"
           v-for="(m, index) in markers"
           :position="m.position"
-          :clickable="true"
-          :draggable="true"
+          :clickable="false"
+          :draggable="false"
           :icon="m.icon"
-          @click="center = m.position"
         />
       </gmap-map>
     </div>
@@ -37,6 +36,20 @@
             </v-timeline-item>
           </v-timeline>
         </v-card-text>
+        <v-card-text> 餐廳: {{ orderinfo.restaurant.name }} </v-card-text>
+        <v-card-text> 送達地址: {{ orderinfo.customer_address }} </v-card-text>
+        <v-card-text> 餐點內容: </v-card-text>
+        <div v-for="dish in orderinfo.items" :key="dish.id" class="ml-7">
+          {{ dish.name }} x {{ dish.amount }}
+        </div>
+        <v-card-text> 餐點費用: {{ orderinfo.food_price }} </v-card-text>
+        <v-card-text> 外送費用: {{ orderinfo.delivery_fee }} </v-card-text>
+        <v-card-text>
+          總共: {{ orderinfo.food_price + orderinfo.delivery_fee }}
+        </v-card-text>
+        <v-card-text>
+          外送員電話: {{ orderinfo.deliveryMan.phone }}
+        </v-card-text>
       </v-card>
     </div>
   </div>
@@ -47,16 +60,12 @@
 <script>
 import axios from "axios";
 import Pusher from "pusher-js";
-import { deliveryManChangeStateAPI, deliveryManGetInfoAPI } from "../../api";
+import { customerGetOrderstatusAPI } from "../../api";
 
 export default {
   props: ["id"],
   data: () => ({
-    config: {
-      headers: {
-        Authorization: "Bearer " + this.$store.getters.getAccessToken,
-      },
-    },
+    config: {},
     mapStyle:
       "width: " +
       window.innerWidth +
@@ -66,6 +75,7 @@ export default {
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
     markers: [],
     center: { lat: 45.508, lng: -73.587 },
+    orderinfo: {},
     orderstatus: [
       {
         status: "已送達",
@@ -83,20 +93,29 @@ export default {
   }),
   created() {},
   mounted() {
+    console.log(this.markers.length);
+    this.config = {
+      headers: {
+        Authorization: "Bearer " + this.$store.getters.getAccessToken,
+      },
+    };
     this.$emit("changefocus", "");
     this.onResize();
-    this.addMarker();
     this.geolocate();
+    this.updateorder();
     this.$refs.mapRef.$mapPromise.then((map) => {
       var bounds = new google.maps.LatLngBounds();
-      for (let i = 0; i < this.markers.length; i++) {
-        bounds.extend(this.markers[i].position);
+      for (let i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].position);
+        console.log("in");
       }
 
       //now fit the map to the newly inclusive bounds
       map.fitBounds(bounds);
     });
     console.log(this.markers);
+    console.log(this.markers.length);
+    console.log(this.markers[2]);
   },
   methods: {
     onResize() {
@@ -106,24 +125,6 @@ export default {
         "px;  height: " +
         window.innerHeight / 4 +
         "px;";
-    },
-    addMarker() {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const marker = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        const mapMarker = require("./car.png");
-        this.markers.push({ position: marker, icon: mapMarker });
-      });
-      navigator.geolocation.getCurrentPosition((position) => {
-        const marker = {
-          lat: position.coords.latitude + 0.0005,
-          lng: position.coords.longitude + 0.01,
-        };
-        const mapMarker = require("./car.png");
-        this.markers.push({ position: marker, icon: mapMarker });
-      });
     },
     geolocate: function () {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -139,9 +140,29 @@ export default {
       customerGetOrderstatusAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
-            this.resName = resp.data.data.name;
-            this.Img = resp.data.data.resimg;
-            console.log(resp.data);
+            console.log(resp.data.data.deliveryMan.latitude);
+            // update map markers
+            this.orderinfo = resp.data.data;
+            const dliverManMarker = {
+              lat: parseFloat(resp.data.data.deliveryMan.latitude),
+              lng: parseFloat(resp.data.data.deliveryMan.longitude),
+            };
+            const mapMarkerIcon = require("../scooter.png");
+            this.markers.push({
+              position: dliverManMarker,
+              icon: mapMarkerIcon,
+            });
+            navigator.geolocation.getCurrentPosition((position) => {
+              const customerMarker = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              const mapMarkerIcon = require("../scooter.png");
+              this.markers.push({
+                position: customerMarker,
+                icon: mapMarkerIcon,
+              });
+            });
           }
         })
         .catch((err) => {
