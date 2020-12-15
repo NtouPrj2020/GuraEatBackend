@@ -179,7 +179,7 @@ export default {
     data: () => ({
         resImg: "https://cdn.discordapp.com/attachments/758534409023389700/786551377962336276/24884996f313402e30875c5aa4a0c66d.JPG",
         imgTemp: '',
-        resName: "-/////-",
+        resName: "loading",
         windowSize: {
             x: 0,
             y: 0,
