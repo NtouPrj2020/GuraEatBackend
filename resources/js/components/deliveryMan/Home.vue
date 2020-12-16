@@ -11,7 +11,8 @@
         v-for="(m, index) in markers"
         :position="m.position"
         :clickable="true"
-        :draggable="true"
+        :draggable="false"
+        :icon="m.icon"
         @click="center = m.position"
       />
     </gmap-map>
@@ -51,7 +52,9 @@ export default {
       window.innerHeight +
       "px;",
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
-    markers: [],
+    markers: [
+      { position: { lag: 25, lng: 121 }, icon: require("../scooter.png") },
+    ],
     center: { lat: 45.508, lng: -73.587 },
     value: "home",
     onlineloading: true,
@@ -60,6 +63,12 @@ export default {
   }),
   created() {},
   mounted() {
+    window.setInterval(() => {
+      this.addMarker();
+    }, 10000);
+    this.markers = [
+      { position: { lag: 25, lng: 121 }, icon: require("../scooter.png") },
+    ];
     let that = this;
     this.$emit("changefocus", "home");
     this.addMarker();
@@ -117,12 +126,19 @@ export default {
   },
   methods: {
     addMarker() {
+      this.geolocate();
       navigator.geolocation.getCurrentPosition((position) => {
-        const marker = {
+        const dliverManMarker = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        this.markers.push({ position: marker });
+        const mapMarkerIcon = require("../scooter.png");
+        this.markers[0] = {
+          position: dliverManMarker,
+          icon: mapMarkerIcon,
+        };
+        console.log("done update");
+        console.log(this.markers);
       });
     },
     geolocate: function () {

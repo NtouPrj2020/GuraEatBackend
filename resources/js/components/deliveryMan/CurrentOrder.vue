@@ -81,8 +81,8 @@ export default {
       "px;",
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
     markers: [
-      { position: { lag: 25, lng: 121 }, icon: require("../house.png") },
-      { position: { lag: 25, lng: 121 }, icon: require("../scooter.png") },
+      { position: { lat: 25, lng: 121 }, icon: require("../house.png") },
+      { position: { lat: 25, lng: 121 }, icon: require("../scooter.png") },
     ],
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
@@ -105,7 +105,7 @@ export default {
   created() {},
   mounted() {
     window.setInterval(() => {
-      this.updatelocate();
+      this.update();
     }, 10000);
     this.config = {
       headers: {
@@ -116,21 +116,30 @@ export default {
     this.onResize();
     this.updatelocate();
     this.updateorder();
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      var bounds = new google.maps.LatLngBounds();
-      for (let i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].position);
-        console.log("in");
-      }
-
-      //now fit the map to the newly inclusive bounds
-      if (markers.length > 0) map.fitBounds(bounds);
-    });
+    this.updatebound();
+    this.$emit("showSnackBar", "獲取位置中...請稍後");
     console.log(this.markers);
     console.log(this.markers.length);
     console.log(this.markers[2]);
   },
   methods: {
+    update() {
+      this.updatelocate();
+      this.updateorder();
+      this.updatebound();
+    },
+    updatebound() {
+      this.$refs.mapRef.$mapPromise.then((map) => {
+        var bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < this.markers.length; i++) {
+          bounds.extend(this.markers[i].position);
+          console.log("in");
+        }
+
+        //now fit the map to the newly inclusive bounds
+        if (this.markers.length > 0) map.fitBounds(bounds);
+      });
+    },
     onResize() {
       this.mapStyle =
         "width:" +

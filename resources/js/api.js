@@ -132,8 +132,8 @@ export const deliveryManCheckOrderStateAPI = config =>
 export const deliveryManConfirmOrderAPI = (config, data) =>
     userRequest.post("unknown", config, data);
 // id 19
-export const deliveryManGetHistoryOrderAPI = config =>
-    userRequest.get("unknown", config);
+export const deliveryManGetAllOrdersAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/order/getAllOrders", config);
 // id 20
 export const restaurantAddDishAPI = (config, data) =>
     userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);

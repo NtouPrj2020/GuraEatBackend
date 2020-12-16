@@ -61,6 +61,7 @@ export default {
     },
     toOrder() {
       this.$router.push("/delivery_man/order");
+      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toInfo() {
       this.$router.push("/delivery_man/info");

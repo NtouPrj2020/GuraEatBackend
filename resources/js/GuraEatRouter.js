@@ -167,13 +167,6 @@ export default class GuraEatRouter {
                         }
                     },
                     {
-                        path: "deliver",
-                        components: {
-                            deliveryManView: require("./components/deliveryMan/Deliver.vue")
-                                .default
-                        }
-                    },
-                    {
                         path: "order",
                         components: {
                             deliveryManView: require("./components/deliveryMan/CurrentOrder.vue")
