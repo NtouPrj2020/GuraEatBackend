@@ -61,6 +61,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/locationToAddress', 'App\Http\Controllers\CheckoutController@locationToAddress');
             Route::get('/location', 'App\Http\Controllers\GeographyController@getDeliveryManLocation');
             Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
+            Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
             Route::get('/order/getAllOrders', 'App\Http\Controllers\DeliveryController@getAllOrders');
             Route::get('/order/getOrderByID', 'App\Http\Controllers\DeliveryController@getOrderByID');
