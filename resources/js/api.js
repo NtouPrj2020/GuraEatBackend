@@ -104,6 +104,11 @@ export const customerGetDeliveryTimeIDAPI = config =>
         "/api/v1/users/customer/getDistanceAndTimeByAddress",
         config
     );
+export const deliveryManGetDeliveryTimeIDAPI = config =>
+    userRequest.get(
+        "/api/v1/users/delivery_man/getDistanceAndTimeByAddress",
+        config
+    );
 // id 10
 export const customerSendOrderAPI = (config, data) =>
     userRequest.post("/api/v1/users/customer/order/send", config, data);

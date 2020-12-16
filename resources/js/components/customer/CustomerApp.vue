@@ -61,19 +61,20 @@ export default {
       this.value = value;
     },
     toHome() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/home");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toSearch() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/search");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toOrder() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/order");
     },
     toInfo() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/info");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
   },
 };

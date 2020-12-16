@@ -56,16 +56,16 @@ export default {
       this.value = value;
     },
     toHome() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/delivery_man/home");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toOrder() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/delivery_man/order");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
     toInfo() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/delivery_man/info");
-      for (var i = 1; i < 99999; i++) window.clearInterval(i);
     },
   },
 };

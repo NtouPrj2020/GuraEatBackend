@@ -10,10 +10,9 @@
         :key="index"
         v-for="(m, index) in markers"
         :position="m.position"
-        :clickable="true"
+        :clickable="false"
         :draggable="false"
         :icon="m.icon"
-        @click="center = m.position"
       />
     </gmap-map>
     <v-btn
@@ -41,6 +40,7 @@ import {
   deliveryManChangeStateAPI,
   deliveryManGetInfoAPI,
   deliveryManGetOrderstatusAPI,
+  deliveryManSendLocationAPI,
 } from "../../api";
 
 export default {
@@ -128,6 +128,23 @@ export default {
     addMarker() {
       this.geolocate();
       navigator.geolocation.getCurrentPosition((position) => {
+        deliveryManSendLocationAPI(
+          {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.$store.getters.getAccessToken,
+            },
+          }
+        )
+          .then((resp) => {
+            console.log(resp.status);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         const dliverManMarker = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,

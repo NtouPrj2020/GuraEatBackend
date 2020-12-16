@@ -50,9 +50,11 @@
         <v-card-text>
           總共: {{ orderinfo.food_price + orderinfo.delivery_fee }}
         </v-card-text>
+        <v-card-text> 預估剩餘時間: {{ remaintime }} </v-card-text>
         <v-card-text>
           外送員電話: {{ orderinfo.deliveryMan.phone }}
         </v-card-text>
+        <v-card-text> 備註: {{ orderinfo.note }} </v-card-text>
       </v-card>
     </div>
   </div>
@@ -67,6 +69,7 @@ import {
   deliveryManGetOrderstatusAPI,
   deliveryManSendLocationAPI,
   deliveryManAddressToLocationAPI,
+  deliveryManGetDeliveryTimeIDAPI,
 } from "../../api";
 
 export default {
@@ -86,6 +89,7 @@ export default {
     ],
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
+    remaintime: "loading",
     noorder: true,
     orderstatus: [
       {
@@ -226,6 +230,28 @@ export default {
                 position: dliverManMarker,
                 icon: mapMarkerIcon,
               };
+              //remain time
+              deliveryManGetDeliveryTimeIDAPI({
+                headers: {
+                  Authorization: "Bearer " + this.$store.getters.getAccessToken,
+                },
+                params: {
+                  ori_address:
+                    resp.data.data.deliveryMan.latitude +
+                    "," +
+                    resp.data.data.deliveryMan.longitude,
+                  des_address: this.orderinfo.customer_address,
+                },
+              })
+                .then((res) => {
+                  console.log(res.data);
+                  this.remaintime =
+                    res.data.data.rows[0].elements[0].duration.text;
+                  console.log("done get time");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
             });
           }
         })
