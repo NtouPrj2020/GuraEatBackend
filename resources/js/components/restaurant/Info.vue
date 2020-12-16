@@ -226,7 +226,7 @@ export default {
                 }
             }).catch((err) => {
                 if (err.response.status === 403) {
-                    context.$emit("showSnackBar", "無其他身分");
+                    context.$emit("showSnackBar", "此帳號無所選身分");
                 } else if (err.response.status === 404) {
                     context.$emit("showSnackBar", "未知的錯誤");
                 }

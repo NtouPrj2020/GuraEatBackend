@@ -3,21 +3,28 @@
     <div class="panel-heading text-center">個人資訊</div>
     <div class="container mb-12">
       <v-card>
-        <v-card-text>姓名: {{ info.name }}</v-card-text>
+        <div>
+        <v-card-text class="font-weight-medium">姓名: {{ info.name }}</v-card-text>
         <v-card-text>地址: {{ info.address }}</v-card-text>
         <v-card-text>電話: {{ info.phone }}</v-card-text>
         <v-card-text>電子郵件: {{ info.email }}</v-card-text>
+        </div>
       </v-card>
-      <v-row justify="center" class="pa-2">
-        <v-select
-          v-model="wanted_role"
-          :items="role_list"
-          label="切換至"
-          class="px-14 pt-5"
-          outlined
-        ></v-select>
-        <v-btn min-width="200" @click="switch_user">切換使用者身分</v-btn>
-      </v-row>
+      <v-row class="ml-4 mr-4">
+                <v-col :cols="7">
+                    <v-select
+                        v-model="wanted_role"
+                        :items="role_list"
+                        label="切換至"
+                        background-color="white"
+                        outlined
+                    ></v-select>
+                </v-col>
+                <v-col :cols="5" class="mt-3">
+                    <v-btn @click="switch_user">切換使用者身分</v-btn>
+                </v-col>
+            </v-row>
+
       <v-row justify="center" class="pa-2">
         <v-btn min-width="200" @click="history_order">歷史訂單紀錄</v-btn>
       </v-row>
@@ -145,15 +152,11 @@ export default {
             this.$store.commit("ACCESS_TOKEN", resp.data.data.access_token);
             this.$store.commit("USER_NAME", resp.data.data.name);
             this.$router.push("/guest");
-          } else if (resp.status === 403) {
-            this.$emit("showSnackBar", "無其他身分");
-          } else if (resp.status === 404) {
-            this.$emit("showSnackBar", "未知的錯誤");
           }
         })
         .catch((err) => {
           if (err.response.status === 403) {
-            context.$emit("showSnackBar", "無其他身分");
+            context.$emit("showSnackBar", "此帳號無所選身分");
           } else if (err.response.status === 404) {
             context.$emit("showSnackBar", "未知的錯誤");
           }
