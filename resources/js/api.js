@@ -104,6 +104,11 @@ export const customerGetDeliveryTimeIDAPI = config =>
         "/api/v1/users/customer/getDistanceAndTimeByAddress",
         config
     );
+export const deliveryManGetDeliveryTimeIDAPI = config =>
+    userRequest.get(
+        "/api/v1/users/delivery_man/getDistanceAndTimeByAddress",
+        config
+    );
 // id 10
 export const customerSendOrderAPI = (config, data) =>
     userRequest.post("/api/v1/users/customer/order/send", config, data);
@@ -132,8 +137,8 @@ export const deliveryManCheckOrderStateAPI = config =>
 export const deliveryManConfirmOrderAPI = (config, data) =>
     userRequest.post("unknown", config, data);
 // id 19
-export const deliveryManGetHistoryOrderAPI = config =>
-    userRequest.get("unknown", config);
+export const deliveryManGetAllOrdersAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/order/getAllOrders", config);
 // id 20
 export const restaurantAddDishAPI = (config, data) =>
     userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
@@ -179,6 +184,8 @@ export const customerlocationToAddressAPI = config =>
     userRequest.get("/api/v1/users/customer/locationToAddress", config);
 export const customerGetAllOrdersAPI = config =>
     userRequest.get("/api/v1/users/customer/order/getAllOrders", config);
+export const deliveryManAddressToLocationAPI = config =>
+    userRequest.get("/api/v1/users/delivery_man/addressToLocation", config);
 export const deliveryManLogoutAPI = (config, data) =>
     userRequest.post("/api/v1/users/delivery_man/logout", config, data);
 export const deliveryManGetOrderstatusAPI = config =>

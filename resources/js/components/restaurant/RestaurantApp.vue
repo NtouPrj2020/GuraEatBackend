@@ -64,7 +64,6 @@ export default {
 <style>
 #resView {
   max-width: 500px;
-  height: 100vh;
   margin: 0 auto;
 }
 </style>

@@ -61,15 +61,19 @@ export default {
       this.value = value;
     },
     toHome() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/home");
     },
     toSearch() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/search");
     },
     toOrder() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/order");
     },
     toInfo() {
+      for (var i = 1; i < 999; i++) window.clearInterval(i);
       this.$router.push("/customer/info");
     },
   },

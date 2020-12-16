@@ -19,7 +19,10 @@
       </gmap-map>
     </div>
     <div class="container mb-15">
-      <v-card elevation="2" class="mx-1">
+      <v-card v-if="noorder" elevation="2" class="mx-1"
+        ><v-card-text>目前沒有等待中訂單喔~</v-card-text></v-card
+      >
+      <v-card elevation="2" class="mx-1" v-else>
         <v-card-text>
           <div class="font-weight-bold ml-8 mb-2">訂單狀態</div>
 
@@ -47,6 +50,7 @@
         <v-card-text>
           總共: {{ orderinfo.food_price + orderinfo.delivery_fee }}
         </v-card-text>
+        <v-card-text> 預估剩餘時間: {{ remaintime }} </v-card-text>
         <v-card-text>
           外送員電話: {{ orderinfo.deliveryMan.phone }}
         </v-card-text>
@@ -60,11 +64,15 @@
 <script>
 import axios from "axios";
 import Pusher from "pusher-js";
-import { customerGetOrderstatusAPI } from "../../api";
+import {
+  customerGetOrderstatusAPI,
+  customerGetDeliveryTimeIDAPI,
+} from "../../api";
 
 export default {
   props: ["id"],
   data: () => ({
+    noorder: true,
     config: {},
     mapStyle:
       "width: " +
@@ -73,9 +81,13 @@ export default {
       window.innerHeight +
       "px;",
     mapOptions: { disableDefaultUI: true, clickableIcons: false },
-    markers: [],
+    markers: [
+      { position: { lat: 25, lng: 121 }, icon: require("../house.png") },
+      { position: { lat: 25, lng: 121 }, icon: require("../scooter.png") },
+    ],
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
+    remaintime: "loading",
     orderstatus: [
       {
         status: "已送達",
@@ -87,37 +99,48 @@ export default {
       },
       {
         status: "餐點製作中",
-        color: "deep-purple",
+        color: "grey",
       },
     ],
   }),
   created() {},
   mounted() {
-    console.log(this.markers.length);
+    window.setInterval(() => {
+      this.update();
+    }, 10000);
     this.config = {
       headers: {
         Authorization: "Bearer " + this.$store.getters.getAccessToken,
       },
     };
-    this.$emit("changefocus", "");
+    this.$emit("changefocus", "order");
     this.onResize();
     this.geolocate();
     this.updateorder();
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      var bounds = new google.maps.LatLngBounds();
-      for (let i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].position);
-        console.log("in");
-      }
-
-      //now fit the map to the newly inclusive bounds
-      map.fitBounds(bounds);
-    });
+    this.$emit("showSnackBar", "獲取位置中...請稍後");
     console.log(this.markers);
     console.log(this.markers.length);
     console.log(this.markers[2]);
   },
   methods: {
+    update() {
+      this.geolocate();
+      this.updateorder();
+      this.updatebound();
+    },
+    updatebound() {
+      this.$refs.mapRef.$mapPromise.then((map) => {
+        console.log(this.markers.length);
+        var bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < this.markers.length; i++) {
+          bounds.extend(this.markers[i].position);
+          console.log("in");
+        }
+
+        //now fit the map to the newly inclusive bounds
+        if (this.markers.length > 0) map.fitBounds(bounds);
+      });
+    },
     onResize() {
       this.mapStyle =
         "width:" +
@@ -140,29 +163,61 @@ export default {
       customerGetOrderstatusAPI(this.config)
         .then((resp) => {
           if (resp.status === 200) {
+            this.noorder = false;
             console.log(resp.data.data.deliveryMan.latitude);
             // update map markers
             this.orderinfo = resp.data.data;
+            if (this.orderinfo.status >= 1) {
+              this.orderstatus[2].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 2) {
+              this.orderstatus[1].color = "deep-purple";
+            }
+            if (this.orderinfo.status >= 3) {
+              this.orderstatus[0].color = "deep-purple";
+            }
             const dliverManMarker = {
               lat: parseFloat(resp.data.data.deliveryMan.latitude),
               lng: parseFloat(resp.data.data.deliveryMan.longitude),
             };
             const mapMarkerIcon = require("../scooter.png");
-            this.markers.push({
+            this.markers[0] = {
               position: dliverManMarker,
               icon: mapMarkerIcon,
-            });
+            };
+            console.log(this.markers);
             navigator.geolocation.getCurrentPosition((position) => {
               const customerMarker = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
               };
-              const mapMarkerIcon = require("../scooter.png");
-              this.markers.push({
+              const mapMarkerIcon = require("../house.png");
+              this.markers[1] = {
                 position: customerMarker,
                 icon: mapMarkerIcon,
-              });
+              };
             });
+            customerGetDeliveryTimeIDAPI({
+              headers: {
+                Authorization: "Bearer " + this.$store.getters.getAccessToken,
+              },
+              params: {
+                ori_address:
+                  resp.data.data.deliveryMan.latitude +
+                  "," +
+                  resp.data.data.deliveryMan.longitude,
+                des_address: this.orderinfo.customer_address,
+              },
+            })
+              .then((res) => {
+                console.log("addressToaddress:");
+                console.log(res.data);
+                this.remaintime =
+                  res.data.data.rows[0].elements[0].duration.text;
+              })
+              .catch((error) => {
+                console.error(error);
+              });
           }
         })
         .catch((err) => {
@@ -171,7 +226,7 @@ export default {
             this.$emit("showSnackBar", "401error");
             console.log(err);
           } else if (err.response.status === 404) {
-            this.$emit("showSnackBar", "404error");
+            this.noorder = true;
             console.log(err);
           }
           console.log(err);

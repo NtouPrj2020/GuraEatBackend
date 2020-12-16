@@ -57,8 +57,11 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');
             Route::put('/info', 'App\Http\Controllers\DeliveryManInfoController@editDeliveryMan');
             Route::put('/status', 'App\Http\Controllers\DeliveryManChangeStateController@changeState');
+            Route::get('/addressToLocation', 'App\Http\Controllers\CheckoutController@addressToLocation');
+            Route::get('/locationToAddress', 'App\Http\Controllers\CheckoutController@locationToAddress');
             Route::get('/location', 'App\Http\Controllers\GeographyController@getDeliveryManLocation');
             Route::post('/location', 'App\Http\Controllers\GeographyController@editDeliveryManLocation');
+            Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
             Route::post('/logout', 'App\Http\Controllers\AuthController@deliveryManLogout');
             Route::get('/order/getAllOrders', 'App\Http\Controllers\DeliveryController@getAllOrders');
             Route::get('/order/getOrderByID', 'App\Http\Controllers\DeliveryController@getOrderByID');

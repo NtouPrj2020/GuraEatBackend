@@ -15,10 +15,12 @@
         </div>
         <div class="container mb-12">
             <v-card class="ml-5 mr-5">
-                <v-card-text>姓名: {{ info.name }}</v-card-text>
+                <div>
+                <v-card-text class="font-weight-medium">姓名: {{ info.name }}</v-card-text>
                 <v-card-text>地址: {{ info.address }}</v-card-text>
                 <v-card-text>電話: {{ info.phone }}</v-card-text>
                 <v-card-text>電子郵件: {{ info.email }}</v-card-text>
+                </div>
             </v-card>
             <v-row class="ml-4 mr-4">
                 <v-col :cols="7">
@@ -166,7 +168,7 @@ export default {
                 }
             }).catch((err) => {
                 if (err.response.status === 403) {
-                    context.$emit("showSnackBar", "無其他身分");
+                    context.$emit("showSnackBar", "此帳號無所選身分");
                 } else if (err.response.status === 404) {
                     context.$emit("showSnackBar", "未知的錯誤");
                 }
