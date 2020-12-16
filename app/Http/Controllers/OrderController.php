@@ -15,11 +15,11 @@ class OrderController extends Controller
         $items = [];
         for($j = 0;$j<count($order->items()->get());$j++){
             $it = $order->items()->get()[$j];
-            $dish = Dish::find($it->dish_id); 
+            $dish = Dish::find($it->dish_id);
             if($dish!=null){
                 $items[$j]['id'] = $dish->id;
                 $items[$j]['name'] = $dish->name;
-                $items[$j]['name'] = $dish->making_time;
+                $items[$j]['making_time'] = $dish->making_time;
                 $items[$j]['img'] = $dish->img;
                 $items[$j]['amount'] = $order->items()->get()[$j]['amount'];
             }
