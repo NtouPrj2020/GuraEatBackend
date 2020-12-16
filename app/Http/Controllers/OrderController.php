@@ -15,7 +15,7 @@ class OrderController extends Controller
         $items = [];
         for($j = 0;$j<count($order->items()->get());$j++){
             $it = $order->items()->get()[$j];
-            $dish = Dish::find($it->dish_id);
+            $dish = Dish::find($it->dish_id); 
             if($dish!=null){
                 $items[$j]['id'] = $dish->id;
                 $items[$j]['name'] = $dish->name;
