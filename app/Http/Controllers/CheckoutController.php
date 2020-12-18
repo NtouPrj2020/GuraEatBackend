@@ -57,7 +57,7 @@ class CheckoutController extends Controller
         $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 20.0,]);
         $res = $client->post('/maps/api/geocode/json', ['query' => [
             'address' => $address,
-            'key' => $_ENV['GOOGLE_MAP_API']
+            'key' => env('GOOGLE_MAP_API')
         ]
         ]);
 
@@ -69,7 +69,7 @@ class CheckoutController extends Controller
         $client = new Client(['base_uri' => 'https://maps.googleapis.com', 'timeout' => 20.0,]);
         $res = $client->get('/maps/api/geocode/json', ['query' => [
             'latlng' => $lat . ',' . $long,
-            'key' => $_ENV['GOOGLE_MAP_API'],
+            'key' => env('GOOGLE_MAP_API'),
             'language' => 'zh-TW'
         ]
         ]);
@@ -87,7 +87,7 @@ class CheckoutController extends Controller
             $res = $client->get('/maps/api/distancematrix/json', ['query' => [
                 'origins' => $request->ori_address,
                 'destinations' => $request->des_address,
-                'key' => $_ENV['GOOGLE_MAP_API']
+                'key' => env('GOOGLE_MAP_API')
             ]]);
             $dd = json_decode($res->getBody());
             $data = [
