@@ -22,14 +22,14 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => 'guest'], function () {
         Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp')->name('customer.signup');
-        Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin');
-        Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest');
+        Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin')->name('customer.login');
+        Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest')->name('customer.createPwdResetRequest');
 
         Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp')->name('delivery_man.signup');
-        Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
+        Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin')->name('delivery_man.login');
 
-        Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
-        Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin');
+        Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp')->name('restaurant.signup');
+        Route::post('/restaurant/login', 'App\Http\Controllers\AuthController@restaurantLogin')->name('restaurant.login');
     });
 
     Route::group(['prefix' => 'users', 'middleware' => ['auth:sanctum']], function () {
@@ -39,7 +39,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/info', 'App\Http\Controllers\CustomerInfoController@editCustomer');
             Route::get('/restaurant/all', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllRestaurant');
             Route::get('/restaurant/searchByID', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByID');
-            Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword');
+            Route::get('/restaurant/searchByKeyword', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByKeyword')->name('customer.searchByKeyword');
             Route::get('/restaurant/searchByTag', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getRestaurantByTag');
             Route::get('/restaurant/getAllDish', 'App\Http\Controllers\CustomerGetRestaurantInfoController@getAllDish');
             Route::get('/getDistanceAndTimeByAddress', 'App\Http\Controllers\CheckoutController@getDistanceAndTimeByAddress');
