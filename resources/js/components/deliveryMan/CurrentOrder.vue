@@ -50,7 +50,7 @@
         <v-card-text>
           總共: {{ orderinfo.food_price + orderinfo.delivery_fee }}
         </v-card-text>
-        <v-card-text> 預估剩餘時間: {{ remaintime }} </v-card-text>
+        <v-card-text> 預估剩餘時間: {{ remaintime }} 分鐘</v-card-text>
         <v-card-text>
           外送員電話: {{ orderinfo.deliveryMan.phone }}
         </v-card-text>
@@ -90,6 +90,7 @@ export default {
     center: { lat: 45.508, lng: -73.587 },
     orderinfo: {},
     remaintime: "loading",
+    timearray: [],
     noorder: true,
     orderstatus: [
       {
@@ -245,8 +246,13 @@ export default {
               })
                 .then((res) => {
                   console.log(res.data);
+                  // add food making time
+                  this.orderinfo.items.forEach((element) => {
+                    this.timearray.push(element.making_time);
+                  });
                   this.remaintime =
-                    res.data.data.rows[0].elements[0].duration.text;
+                    parseInt(res.data.data.rows[0].elements[0].duration.text) +
+                    Math.max(...this.timearray);
                   console.log("done get time");
                 })
                 .catch((error) => {

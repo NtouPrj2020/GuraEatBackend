@@ -19,6 +19,8 @@ class OrderController extends Controller
             if($dish!=null){
                 $items[$j]['id'] = $dish->id;
                 $items[$j]['name'] = $dish->name;
+                $items[$j]['making_time'] = $dish->making_time;
+                $items[$j]['img'] = $dish->img;
                 $items[$j]['amount'] = $order->items()->get()[$j]['amount'];
             }
         }
