@@ -14,18 +14,18 @@ class TestguestApitest extends TestCase
      * @return void
      */
     //guest api : signup
-    // public function test_can_signup_customer()
-    // {
-    //     $formdata =[
-    //         'email' => 'wc2014920@gmail.com',
-    //         'phone' => '0955711581',
-    //         'address' => '基隆市中正區中正路87號',
-    //         'password' => '123456'
-    //     ];
-    //     $this->post(route('customer.signup'),$formdata)
-    //         ->assertStatus(200);
+    public function test_can_signup_customer()
+    {
+        $formdata =[
+            'email' => 'wc2014920@gmail.com',
+            'phone' => '0955711581',
+            'address' => '基隆市中正區中正路87號',
+            'password' => '123456'
+        ];
+        $this->post(route('customer.signup'),$formdata)
+            ->assertStatus(200);
             
-    // }
+    }
 
     // public function test_can_signup_delivery_man()
     // {
