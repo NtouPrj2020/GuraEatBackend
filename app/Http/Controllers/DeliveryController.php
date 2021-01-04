@@ -28,7 +28,7 @@ class DeliveryController extends Controller
     public function getOrderByID(Request $request)
     {
         $request->validate([
-            'id' => 'required',]);
+            'status' => 'required',]);
         $delivery = $request->user();
         $order = Order::where("delivery_man_id","=",$delivery->id)->find($request->id)->first();
         if($order!=null){
@@ -69,6 +69,30 @@ class DeliveryController extends Controller
         }else{
             $data = [
                 "method" => "deliverymangetOrdernow",
+                "message" => "not found",
+                "status" => 404,
+                "data" => []
+            ];
+            return response()->json($data, 404);
+        }
+    }
+    public function deliveryManChangeOrderStatus(Request $request)
+    {
+        $request->validate([
+            'stauts' => 'required',]);
+        $order = Order::where('id','=',$request->id)->first();
+        if($order!=null){
+            $order->stauts = $request->stauts;
+            $data = [
+                "method" => "deliveryManChangeOrderStatus",
+                "message" => "ok",
+                "status" => 200,
+                "data" => $order
+            ];
+            return response()->json($data, 200);
+        }else{
+            $data = [
+                "method" => "deliveryManChangeOrderStatus",
                 "message" => "not found",
                 "status" => 404,
                 "data" => []
