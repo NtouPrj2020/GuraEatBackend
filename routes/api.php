@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -67,7 +67,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/order/getOrderByID', 'App\Http\Controllers\DeliveryController@getOrderByID');
             Route::post('/changeRoleDeliveryMan', 'App\Http\Controllers\AuthController@changeRoleDeliveryMan');
             Route::get('/order/now', 'App\Http\Controllers\DeliveryController@deliverymangetOrdernow');
-            Route::get('/order/changestatus', 'App\Http\Controllers\DeliveryController@deliveryManChangeOrderStatus');
+            Route::put('/order/changestatus', 'App\Http\Controllers\DeliveryController@deliveryManChangeOrderStatus');
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
