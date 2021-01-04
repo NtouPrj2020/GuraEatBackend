@@ -176,6 +176,7 @@ export default {
             }
             if (this.orderinfo.status >= 3) {
               this.orderstatus[0].color = "deep-purple";
+              this.$router.push("/customer/comment");
             }
             const dliverManMarker = {
               lat: parseFloat(resp.data.data.deliveryMan.latitude),
