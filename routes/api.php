@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -21,11 +21,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => 'guest'], function () {
-        Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp');
+        Route::post('/customer/signup', 'App\Http\Controllers\AuthController@customerSignUp')->name('customer.signup');
         Route::post('/customer/login', 'App\Http\Controllers\AuthController@customerLogin');
         Route::post('/customer/createPwdResetRequest', 'App\Http\Controllers\AuthController@customerCreatePasswordResetRequest');
 
-        Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp');
+        Route::post('/delivery_man/signup', 'App\Http\Controllers\AuthController@deliveryManSignUp')->name('delivery_man.signup');
         Route::post('/delivery_man/login', 'App\Http\Controllers\AuthController@deliveryManLogin');
 
         Route::post('/restaurant/signup', 'App\Http\Controllers\AuthController@restaurantSignUp');
@@ -67,6 +67,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('/order/getOrderByID', 'App\Http\Controllers\DeliveryController@getOrderByID');
             Route::post('/changeRoleDeliveryMan', 'App\Http\Controllers\AuthController@changeRoleDeliveryMan');
             Route::get('/order/now', 'App\Http\Controllers\DeliveryController@deliverymangetOrdernow');
+            Route::put('/order/changestatus', 'App\Http\Controllers\DeliveryController@deliveryManChangeOrderStatus');
         });
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('/info', 'App\Http\Controllers\RestaurantInfoController@getRestaurant');
