@@ -52,6 +52,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/order/rate', 'App\Http\Controllers\confirmOrderController@rateOrder');
             Route::get('/order/now', 'App\Http\Controllers\OrderController@customergetOrdernow');
             Route::get('/getDeliveryManLocation', 'App\Http\Controllers\GeographyController@getLocationByDeliveryManID');
+            Route::get('/order/changestatus', 'App\Http\Controllers\DeliveryController@deliveryManChangeOrderStatus');
         });
         Route::group(['prefix' => 'delivery_man'], function () {
             Route::get('/info', 'App\Http\Controllers\DeliveryManInfoController@getDeliveryMan');

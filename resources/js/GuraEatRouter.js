@@ -135,6 +135,13 @@ export default class GuraEatRouter {
                             customerView: require("./components/customer/history.vue")
                                 .default
                         }
+                    },
+                    {
+                        path: "comment",
+                        components: {
+                            customerView: require("./components/customer/Comment.vue")
+                                .default
+                        }
                     }
                 ]
             },
