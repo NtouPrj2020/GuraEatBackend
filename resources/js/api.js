@@ -159,7 +159,11 @@ export const restaurantEditInfoAPI = (config, data) =>
     userRequest.put("/api/v1/users/restaurant/info", config, data);
 // id 25
 export const deliveryManSwitchOrderStateAPI = (config, data) =>
-    userRequest.put("unknown", config, data);
+    userRequest.put(
+        "/api/v1/users/delivery_man/order/changestatus",
+        data,
+        config
+    );
 // id 26
 export const customerSendLocationAPI = (config, data) =>
     userRequest.post("/api/v1/users/customer/location", config, data);

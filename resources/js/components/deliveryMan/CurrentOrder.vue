@@ -56,6 +56,30 @@
         </v-card-text>
         <v-card-text> 備註: {{ orderinfo.note }} </v-card-text>
       </v-card>
+      <v-speed-dial
+        v-show="speedshow"
+        v-model="fab"
+        :top="false"
+        :bottom="true"
+        :right="true"
+        :left="false"
+        :direction="'top'"
+        :open-on-hover="false"
+        :transition="'slide-y-reverse-transition'"
+        :fixed="true"
+        class="mb-15 mr-3"
+      >
+        <template v-slot:activator>
+          <v-btn v-model="fab" color="primary" dark fab>
+            <v-icon v-if="fab">mdi-close</v-icon>
+            <v-icon v-else>fas fa-chevron-up</v-icon>
+          </v-btn>
+        </template>
+        <v-btn fab dark small color="green" @click="changeorderstatus">
+          <v-icon>fas fa-check</v-icon>
+          <div class="fab-text-custom green">{{ changestatusmsg }}</div>
+        </v-btn>
+      </v-speed-dial>
     </div>
   </div>
 </template>
@@ -70,11 +94,15 @@ import {
   deliveryManSendLocationAPI,
   deliveryManAddressToLocationAPI,
   deliveryManGetDeliveryTimeIDAPI,
+  deliveryManSwitchOrderStateAPI,
 } from "../../api";
 
 export default {
   props: ["id"],
   data: () => ({
+    speedshow: true,
+    fab: false,
+    changestatusmsg: "",
     config: {},
     mapStyle:
       "width: " +
@@ -94,7 +122,7 @@ export default {
     noorder: true,
     orderstatus: [
       {
-        status: "已送達",
+        status: "已送達/等待顧客評價",
         color: "grey",
       },
       {
@@ -128,6 +156,28 @@ export default {
     console.log(this.markers[2]);
   },
   methods: {
+    changeorderstatus() {
+      console.log("changeorderstatus" + this.changestatusmsg);
+      deliveryManSwitchOrderStateAPI(this.config, {
+        status: this.orderinfo.status + 1,
+        id: this.orderinfo.id,
+      })
+        .then((resp1) => {
+          if (resp1.data.data.status === 3) this.$router.go(0);
+          this.updateorder();
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            this.$emit("showSnackBar", "401error");
+            console.log(err);
+          } else if (err.response.status === 404) {
+            this.$emit("showSnackBar", "404error");
+            console.log(err);
+          }
+          console.log(err);
+        });
+    },
     update() {
       this.updatelocate();
       this.updateorder();
@@ -184,12 +234,15 @@ export default {
             this.orderinfo = resp.data.data;
             if (this.orderinfo.status >= 1) {
               this.orderstatus[2].color = "deep-purple";
+              this.changestatusmsg = "通知顧客已取餐";
             }
             if (this.orderinfo.status >= 2) {
               this.orderstatus[1].color = "deep-purple";
+              this.changestatusmsg = "通知顧客已送達";
             }
             if (this.orderinfo.status >= 3) {
               this.orderstatus[0].color = "deep-purple";
+              this.speedshow = false;
             }
             let config = {
               params: { address: this.orderinfo.customer_address },
@@ -276,5 +329,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.fab-text-custom {
+  position: absolute;
+  right: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+}
 </style>
