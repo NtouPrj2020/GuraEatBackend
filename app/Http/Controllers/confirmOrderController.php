@@ -48,10 +48,12 @@ class confirmOrderController extends Controller
         $request->validate([
             'delivery_man_star' => 'required|int',
             'restaurant_star' => 'required|int',
+            'order_id' => 'required'
         ]);
         if($customer!=null)
         {
-            $finishedOrder = $customer->orders()->where('status','=','2')->where('customer_id','=',$customer->id)->first();
+            $order_id = $request->order_id;
+            $finishedOrder = $customer->orders()->where('id','=',$order_id)->first();
             $chooseMan = $finishedOrder->delivery_man_id;
             $DeliveryManRate = DeliveryManRate::where('delivery_man_id','=',$chooseMan)->first();
             $DeliveryManRate = DeliveryManRate::findorfail($DeliveryManRate->id);
@@ -68,6 +70,7 @@ class confirmOrderController extends Controller
             $customer['deliveryManRate'] = $request->delivery_man_star;
             $customer['restaurant_id'] =$chooseRestaurant;
             $customer['delivery_man_id'] =$chooseMan;
+            $customer['order_status'] = 4;
             if($AfterDeliveryManRate->getChanges() != null)
             {
                 $data = [
