@@ -85,6 +85,8 @@
                                         multiple
                                         chips
                                         label="請選擇要加入的標籤"
+                                        :error="tag_null"
+                                        
                                     ></v-select>
                                 </v-col>
 
@@ -147,6 +149,7 @@ export default {
         resp: "",
         temp:"",
         change:false,
+        tag_null:false,
     }),
     methods: {
         init_info(){
@@ -154,8 +157,8 @@ export default {
             params: {ID: this.$route.params.id},
             headers: {
                 Authorization: "Bearer " + this.$store.getters.getAccessToken,
-            },
-        };
+                },
+            };
 
         restaurantGetInfoAPI(config)
             .then((resp) => {
@@ -166,12 +169,15 @@ export default {
                 this.info.email = resp.data.data.email;
                 this.info.img = resp.data.data.img;
                 this.info.rest_tags = resp.data.data.tags;
+                this.info.rest_tags_name = [];
                 for (let index = 0; index < this.info.rest_tags.length; index++) {
                     const element = this.info.rest_tags[index];
                     this.info.rest_tags_name[index] = element.name;
                 }
                 this.change = this.change?false:true;
-                console.log("info");
+                this.selected_tags = this.info.rest_tags_name;
+                console.log(this.info.rest_tags_name);
+                this.tag_null = false;
                 
             })
             .catch((error) => {
@@ -234,16 +240,24 @@ export default {
         },
         
         edit_info() {
+            if(this.selected_tags.length<1){
+                this.tag_null=true;
+                console.log("WOW");
+            }else{
+                this.tag_null=false;
+            }
             this.editDialog = true;
             let config = {
                 headers: {
                     Authorization: "Bearer " + this.$store.getters.getAccessToken,
                 },
             };
+            this.selected_tags_id = [];
             for (let index = 0; index < this.selected_tags.length; index++) {
                 const element = this.selected_tags[index];
                 this.selected_tags_id[index] = (this.id_tags[element]);
             }
+
             console.log(this.selected_tags_id)
             let data = {
                 name: this.info.name,
@@ -276,6 +290,8 @@ export default {
         },
         show_edit() {
             this.editDialog = true;
+            this.selected_tags = this.info.rest_tags_name;
+            //console.log(this.info.rest_tags_name);
         },
         signout() {
             if (this.$store.getters.getAccessToken != "") {
