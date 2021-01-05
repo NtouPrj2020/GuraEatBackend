@@ -40,7 +40,12 @@
           </v-timeline>
         </v-card-text>
         <v-card-text> 餐廳: {{ orderinfo.restaurant.name }} </v-card-text>
-        <v-card-text> 送達地址: {{ orderinfo.customer_address }} </v-card-text>
+        <v-card-text> 送達地址: {{ orderinfo.customer_address }} </v-card-text
+        ><v-card-text
+          ><v-btn icon :href="mapurl">
+            <v-icon>fas fa-map-marked-alt</v-icon>
+          </v-btn></v-card-text
+        >
         <v-card-text> 餐點內容: </v-card-text>
         <div v-for="dish in orderinfo.items" :key="dish.id" class="ml-7">
           {{ dish.name }} x {{ dish.amount }}
@@ -100,6 +105,7 @@ import {
 export default {
   props: ["id"],
   data: () => ({
+    mapurl: "",
     speedshow: true,
     fab: false,
     changestatusmsg: "",
@@ -257,6 +263,11 @@ export default {
                   lat: resp1.data.results[0].geometry.location.lat,
                   lng: resp1.data.results[0].geometry.location.lng,
                 };
+                this.mapurl =
+                  "https://www.google.com/maps/search/?api=1&query=" +
+                  resp1.data.results[0].geometry.location.lat +
+                  "," +
+                  resp1.data.results[0].geometry.location.lng;
                 const mapMarkerIcon = require("../house.png");
                 this.markers[0] = {
                   position: customerMarker,
@@ -303,9 +314,18 @@ export default {
                   this.orderinfo.items.forEach((element) => {
                     this.timearray.push(element.making_time);
                   });
-                  this.remaintime =
-                    parseInt(res.data.data.rows[0].elements[0].duration.text) +
-                    Math.max(...this.timearray);
+
+                  if (this.orderinfo.status === 1) {
+                    this.remaintime =
+                      parseInt(
+                        res.data.data.rows[0].elements[0].duration.text
+                      ) + Math.max(...this.timearray);
+                  }
+                  if (this.orderinfo.status === 2) {
+                    this.remaintime = parseInt(
+                      res.data.data.rows[0].elements[0].duration.text
+                    );
+                  }
                   console.log("done get time");
                 })
                 .catch((error) => {

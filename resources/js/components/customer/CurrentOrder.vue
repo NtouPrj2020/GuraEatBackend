@@ -218,9 +218,16 @@ export default {
                 this.orderinfo.items.forEach((element) => {
                   this.timearray.push(element.making_time);
                 });
-                this.remaintime =
-                  parseInt(res.data.data.rows[0].elements[0].duration.text) +
-                  Math.max(...this.timearray);
+                if (this.orderinfo.status === 1) {
+                  this.remaintime =
+                    parseInt(res.data.data.rows[0].elements[0].duration.text) +
+                    Math.max(...this.timearray);
+                }
+                if (this.orderinfo.status === 2) {
+                  this.remaintime = parseInt(
+                    res.data.data.rows[0].elements[0].duration.text
+                  );
+                }
               })
               .catch((error) => {
                 console.error(error);
