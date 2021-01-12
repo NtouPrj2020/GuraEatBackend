@@ -12,7 +12,7 @@ let userRequest = axios.create({
 });
 
 //正式機
-if (process.env.APP_ENV === "production") {
+if (process.env.MIX_APP_ENV === "production") {
     //不需要authorization
     guestRequest = axios.create({
         baseURL: process.env.MIX_APP_URL_PRODUCTION,
@@ -27,7 +27,7 @@ if (process.env.APP_ENV === "production") {
 }
 
 //本地測試機
-if (process.env.APP_ENV === "local") {
+if (process.env.MIX_APP_ENV === "local") {
     //不需要authorization
     guestRequest = axios.create({
         baseURL: process.env.MIX_APP_URL_LOCALHOST,
@@ -47,33 +47,33 @@ if (process.env.APP_ENV === "local") {
 
 //id 0
 export const customerSignUpAPI = config =>
-    guestRequest.post("/api/v1/guest/customer/signup", config);
+    guestRequest.post("api/v1/guest/customer/signup", config);
 //id 0
 export const deliveryManSignUpAPI = config =>
-    guestRequest.post("/api/v1/guest/delivery_man/signup", config);
+    guestRequest.post("api/v1/guest/delivery_man/signup", config);
 //id 1
 export const customerLoginAPI = config =>
-    guestRequest.post("/api/v1/guest/customer/login", config);
+    guestRequest.post("api/v1/guest/customer/login", config);
 //id 1
 export const deliveryManLoginAPI = config =>
-    guestRequest.post("/api/v1/guest/delivery_man/login", config);
+    guestRequest.post("api/v1/guest/delivery_man/login", config);
 //id 1
 export const restaurantLoginAPI = config =>
-    guestRequest.post("/api/v1/guest/restaurant/login", config);
+    guestRequest.post("api/v1/guest/restaurant/login", config);
 //id 2
 export const customerSwitchUserModeAPI = (config, data) =>
-    userRequest.post("/api/v1/users/customer/changeRoleCustomer", config, data);
+    userRequest.post("api/v1/users/customer/changeRoleCustomer", config, data);
 //id 2
 export const deliveryManSwitchUserModeAPI = (config, data) =>
     userRequest.post(
-        "/api/v1/users/delivery_man/changeRoleDeliveryMan",
+        "api/v1/users/delivery_man/changeRoleDeliveryMan",
         config,
         data
     );
 //id 2
 export const restaurantSwitchUserModeAPI = (config, data) =>
     userRequest.post(
-        "/api/v1/users/restaurant/changeRoleRestaurant",
+        "api/v1/users/restaurant/changeRoleRestaurant",
         config,
         data
     );
@@ -82,54 +82,54 @@ export const forgotPasswordAPI = (config, data) =>
     guestRequest.post("unknown", config, data);
 // id 4
 export const customerGetInfoAPI = config =>
-    userRequest.get("/api/v1/users/customer/info", config);
+    userRequest.get("api/v1/users/customer/info", config);
 //id 5
 export const customerEditInfoAPI = (config, data) =>
-    userRequest.put("/api/v1/users/customer/info", config, data);
+    userRequest.put("api/v1/users/customer/info", config, data);
 //id 6
 export const customerGetAllRestaurantAPI = config =>
-    userRequest.get("/api/v1/users/customer/restaurant/all", config);
+    userRequest.get("api/v1/users/customer/restaurant/all", config);
 //id 7
 export const customerGetRestaurantByKeywordAPI = config =>
     userRequest.get(
-        "/api/v1/users/customer/restaurant/searchByKeyword",
+        "api/v1/users/customer/restaurant/searchByKeyword",
         config
     );
 // id 8
 export const customerGetAllDishByRestaurantIDAPI = config =>
-    userRequest.get("/api/v1/users/customer/restaurant/getAllDish", config);
+    userRequest.get("api/v1/users/customer/restaurant/getAllDish", config);
 // id 9
 export const customerGetDeliveryTimeIDAPI = config =>
     userRequest.get(
-        "/api/v1/users/customer/getDistanceAndTimeByAddress",
+        "api/v1/users/customer/getDistanceAndTimeByAddress",
         config
     );
 export const deliveryManGetDeliveryTimeIDAPI = config =>
     userRequest.get(
-        "/api/v1/users/delivery_man/getDistanceAndTimeByAddress",
+        "api/v1/users/delivery_man/getDistanceAndTimeByAddress",
         config
     );
 // id 10
 export const customerSendOrderAPI = (config, data) =>
-    userRequest.post("/api/v1/users/customer/order/send", config, data);
+    userRequest.post("api/v1/users/customer/order/send", config, data);
 // id 11
 export const customerGetOrderstatusAPI = config =>
-    userRequest.get("/api/v1/users/customer/order/now", config);
+    userRequest.get("api/v1/users/customer/order/now", config);
 // id 12
 export const customerGiveRateAPI = config =>
-    userRequest.get("/api/v1/users/customer/order/rate", config);
+    userRequest.get("api/v1/users/customer/order/rate", config);
 // id 13
 export const customerGetOrderHistoryAPI = config =>
     userRequest.get("unkown", config);
 // id 14
 export const deliveryManGetInfoAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/info", config);
+    userRequest.get("api/v1/users/delivery_man/info", config);
 //id 15
 export const deliveryManEditInfoAPI = (config, data) =>
-    userRequest.put("/api/v1/users/delivery_man/info", config, data);
+    userRequest.put("api/v1/users/delivery_man/info", config, data);
 // id 16
 export const deliveryManChangeStateAPI = (config, data) =>
-    userRequest.put("/api/v1/users/delivery_man/status", config, data);
+    userRequest.put("api/v1/users/delivery_man/status", config, data);
 // id 17
 export const deliveryManCheckOrderStateAPI = config =>
     userRequest.get("unknown", config);
@@ -138,69 +138,69 @@ export const deliveryManConfirmOrderAPI = (config, data) =>
     userRequest.post("unknown", config, data);
 // id 19
 export const deliveryManGetAllOrdersAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/order/getAllOrders", config);
+    userRequest.get("api/v1/users/delivery_man/order/getAllOrders", config);
 // id 20
 export const restaurantAddDishAPI = (config, data) =>
-    userRequest.post("/api/v1/users/restaurant/menu/addDish", config, data);
+    userRequest.post("api/v1/users/restaurant/menu/addDish", config, data);
 // id 21
 export const restaurantEditDishAPI = (config, data) =>
-    userRequest.put("/api/v1/users/restaurant/menu/editDish", config, data);
+    userRequest.put("api/v1/users/restaurant/menu/editDish", config, data);
 // id 22
 export const restaurantDeleteDishAPI = config =>
-    userRequest.delete("/api/v1/users/restaurant/menu/deleteDish", config);
+    userRequest.delete("api/v1/users/restaurant/menu/deleteDish", config);
 // id 23
 export const restaurantGetAllDishAPI = config =>
-    userRequest.get("/api/v1/users/restaurant/menu/getAllDish", config);
+    userRequest.get("api/v1/users/restaurant/menu/getAllDish", config);
 // id unknown
 export const restaurantGetInfoAPI = config =>
-    userRequest.get("/api/v1/users/restaurant/info", config);
+    userRequest.get("api/v1/users/restaurant/info", config);
 // id 24
 export const restaurantEditInfoAPI = (config, data) =>
-    userRequest.put("/api/v1/users/restaurant/info", config, data);
+    userRequest.put("api/v1/users/restaurant/info", config, data);
 // id 25
 export const deliveryManSwitchOrderStateAPI = (config, data) =>
     userRequest.put(
-        "/api/v1/users/delivery_man/order/changestatus",
+        "api/v1/users/delivery_man/order/changestatus",
         data,
         config
     );
 export const customerSwitchOrderStateAPI = (config, data) =>
     userRequest.put(
-        "/api/v1/users/customer/order/changestatus",
+        "api/v1/users/customer/order/changestatus",
         data,
         config
     );
 // id 26
 export const customerSendLocationAPI = (config, data) =>
-    userRequest.post("/api/v1/users/customer/location", config, data);
+    userRequest.post("api/v1/users/customer/location", config, data);
 // id 27
 export const customerGetLocationAPI = config =>
-    userRequest.get("/api/v1/users/customer/location", config);
+    userRequest.get("api/v1/users/customer/location", config);
 // id 28
 export const deliveryManSendLocationAPI = (config, data) =>
-    userRequest.post("/api/v1/users/delivery_man/location", config, data);
+    userRequest.post("api/v1/users/delivery_man/location", config, data);
 // id 29
 export const deliveryManGetLocationAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/location", config);
+    userRequest.get("api/v1/users/delivery_man/location", config);
 
 //以下為未定義在SDD中的
 export const customerLogoutAPI = (config, data) =>
-    userRequest.post("/api/v1/users/customer/logout", config, data);
+    userRequest.post("api/v1/users/customer/logout", config, data);
 export const customerGetRestaurantByTagAPI = config =>
-    userRequest.get("/api/v1/users/customer/restaurant/searchByTag", config);
+    userRequest.get("api/v1/users/customer/restaurant/searchByTag", config);
 export const customerGetRestaurantByIDAPI = config =>
-    userRequest.get("/api/v1/users/customer/restaurant/searchByID", config);
+    userRequest.get("api/v1/users/customer/restaurant/searchByID", config);
 export const customerlocationToAddressAPI = config =>
-    userRequest.get("/api/v1/users/customer/locationToAddress", config);
+    userRequest.get("api/v1/users/customer/locationToAddress", config);
 export const customerGetAllOrdersAPI = config =>
-    userRequest.get("/api/v1/users/customer/order/getAllOrders", config);
+    userRequest.get("api/v1/users/customer/order/getAllOrders", config);
 export const deliveryManAddressToLocationAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/addressToLocation", config);
+    userRequest.get("api/v1/users/delivery_man/addressToLocation", config);
 export const deliveryManLogoutAPI = (config, data) =>
-    userRequest.post("/api/v1/users/delivery_man/logout", config, data);
+    userRequest.post("api/v1/users/delivery_man/logout", config, data);
 export const deliveryManGetOrderstatusAPI = config =>
-    userRequest.get("/api/v1/users/delivery_man/order/now", config);
+    userRequest.get("api/v1/users/delivery_man/order/now", config);
 export const restaurantGetDishByDishIDAPI = config =>
-    userRequest.get("/api/v1/users/restaurant/menu/getDishbyID", config);
+    userRequest.get("api/v1/users/restaurant/menu/getDishbyID", config);
 export const restaurantGetAllTagAPI = config =>
-    userRequest.get("/api/v1/users/restaurant/tags", config);
+    userRequest.get("api/v1/users/restaurant/tags", config);
