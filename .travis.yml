@@ -3,8 +3,8 @@ language: php
 php:
   - 7.4
 
-addons:
-  mariadb: 10.4
+services:
+  - mysql
 
 cache:
   directories:
